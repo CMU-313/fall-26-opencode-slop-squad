@@ -1018,6 +1018,23 @@ describe("session HttpApi", () => {
   )
 
   it.instance(
+    "rejects non-string summarize instructions",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const session = yield* createSession({ title: "summarize instructions" })
+        const response = yield* request(pathFor(SessionPaths.summarize, { sessionID: session.id }), {
+          method: "POST",
+          headers: { "x-opencode-directory": test.directory, "content-type": "application/json" },
+          body: JSON.stringify({ providerID: "test", modelID: "test", instructions: 42 }),
+        })
+
+        expect(response.status).toBe(400)
+      }),
+    { git: true, config: { formatter: false, lsp: false } },
+  )
+
+  it.instance(
     "rejects part updates whose path and body ids disagree",
     () =>
       Effect.gen(function* () {
