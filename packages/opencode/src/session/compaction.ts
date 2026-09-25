@@ -175,6 +175,7 @@ export interface Interface {
     sessionID: SessionID
     auto: boolean
     overflow?: boolean
+    instructions?: string
   }) => Effect.Effect<"continue" | "stop">
   readonly create: (input: {
     sessionID: SessionID
@@ -182,6 +183,7 @@ export interface Interface {
     model: { providerID: ProviderV2.ID; modelID: ModelV2.ID }
     auto: boolean
     overflow?: boolean
+    instructions?: string
   }) => Effect.Effect<void>
 }
 
@@ -328,6 +330,8 @@ const layer = Layer.effect(
       sessionID: SessionID
       auto: boolean
       overflow?: boolean
+      // Accepted but not yet used; the prompt is unchanged until instructions are wired in.
+      instructions?: string
     }) {
       const parent = input.messages.findLast((m) => m.info.id === input.parentID)
       if (!parent || parent.info.role !== "user") {
@@ -555,6 +559,7 @@ const layer = Layer.effect(
       model: { providerID: ProviderV2.ID; modelID: ModelV2.ID }
       auto: boolean
       overflow?: boolean
+      instructions?: string
     }) {
       const msg = yield* session.updateMessage({
         id: MessageID.ascending(),
@@ -571,6 +576,7 @@ const layer = Layer.effect(
         type: "compaction",
         auto: input.auto,
         overflow: input.overflow,
+        instructions: input.instructions,
       })
     })
 

@@ -1153,6 +1153,7 @@ const layer = Layer.effect(
               sessionID,
               auto: task.auto,
               overflow: task.overflow,
+              instructions: task.instructions,
             })
             if (result === "stop") break
             continue

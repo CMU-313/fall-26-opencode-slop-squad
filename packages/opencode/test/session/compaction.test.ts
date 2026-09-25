@@ -580,6 +580,33 @@ describe("session.compaction.create", () => {
     ),
   )
 
+  it.live(
+    "persists instructions on the compaction part",
+    provideTmpdirInstance(() =>
+      Effect.gen(function* () {
+        const compact = yield* SessionCompaction.Service
+        const ssn = yield* SessionNs.Service
+
+        const info = yield* ssn.create({})
+
+        yield* compact.create({
+          sessionID: info.id,
+          agent: "build",
+          model: ref,
+          auto: false,
+          instructions: "Focus on the auth refactor",
+        })
+
+        const msgs = yield* ssn.messages({ sessionID: info.id })
+        expect(msgs[0].parts[0]).toMatchObject({
+          type: "compaction",
+          auto: false,
+          instructions: "Focus on the auth refactor",
+        })
+      }),
+    ),
+  )
+
   it.live.skip(
     "projects a compaction message to v2 (v2 projector disabled)",
     provideTmpdirInstance(() =>
