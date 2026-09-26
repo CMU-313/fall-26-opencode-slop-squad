@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "dezactivat",
   "mcp.auth.clickToAuthenticate": "Autentifică-te",
   "dialog.fork.empty": "Niciun mesaj de bifurcat",
+
+  "dialog.compact.title": "Compactează sesiunea",
+  "dialog.compact.instructions": "Instrucțiuni (opțional)",
+  "dialog.compact.instructions.placeholder": "Concentrează-te pe modificările API; renunță la ocolișurile de depanare",
+  "dialog.compact.submit": "Compactează",
   "dialog.directory.search.placeholder": "Caută foldere",
   "dialog.directory.empty": "Nu s-au găsit foldere",
   "dialog.directory.action.selectFile": "Selectează fișier",

@@ -450,6 +450,11 @@ export const dict = {
 
   "dialog.fork.empty": "没有可用于创建新会话的消息",
 
+  "dialog.compact.title": "压缩会话",
+  "dialog.compact.instructions": "说明（可选）",
+  "dialog.compact.instructions.placeholder": "重点关注 API 变更；省略调试过程中的弯路",
+  "dialog.compact.submit": "压缩",
+
   "dialog.directory.search.placeholder": "搜索文件夹",
   "dialog.directory.empty": "未找到文件夹",
   "dialog.directory.action.selectFile": "选择文件",

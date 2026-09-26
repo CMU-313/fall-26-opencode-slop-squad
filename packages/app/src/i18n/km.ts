@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "បានបិទ",
   "mcp.auth.clickToAuthenticate": "ចុចដើម្បីផ្ទៀងផ្ទាត់",
   "dialog.fork.empty": "គ្មានសារដែលត្រូវបំបែកពី",
+
+  "dialog.compact.title": "បង្រួមវគ្គ",
+  "dialog.compact.instructions": "ការណែនាំ (ស្រេចចិត្ត)",
+  "dialog.compact.instructions.placeholder": "ផ្តោតលើការផ្លាស់ប្តូរ API; លុបចោលការវង្វេងពេលបំបាត់កំហុស",
+  "dialog.compact.submit": "បង្រួម",
   "dialog.directory.search.placeholder": "ស្វែងរកថត",
   "dialog.directory.empty": "រកមិនឃើញថតឯកសារទេ។",
   "dialog.directory.action.selectFile": "ជ្រើសរើសឯកសារ",

@@ -401,6 +401,11 @@ export const dict = {
   "mcp.status.disabled": "uitgeschakeld",
   "mcp.auth.clickToAuthenticate": "Klik om te authenticeren",
   "dialog.fork.empty": "Geen berichten om van af te splitsen",
+
+  "dialog.compact.title": "Sessie comprimeren",
+  "dialog.compact.instructions": "Instructies (optioneel)",
+  "dialog.compact.instructions.placeholder": "Focus op de API-wijzigingen; laat de debug-omwegen weg",
+  "dialog.compact.submit": "Comprimeren",
   "dialog.directory.search.placeholder": "Zoek in mappen",
   "dialog.directory.empty": "Geen mappen gevonden",
   "dialog.directory.action.selectFile": "Selecteer bestand",

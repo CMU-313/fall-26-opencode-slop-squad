@@ -402,6 +402,11 @@ export const dict = {
   "mcp.status.disabled": "nogiron",
   "mcp.auth.clickToAuthenticate": "Haqiqiylikni tekshirish uchun bosing",
   "dialog.fork.empty": "Hech qanday xabar yo'q",
+
+  "dialog.compact.title": "Sessiyani ixchamlash",
+  "dialog.compact.instructions": "Ko'rsatmalar (ixtiyoriy)",
+  "dialog.compact.instructions.placeholder": "API o'zgarishlariga e'tibor qarat; nosozliklarni tuzatishdagi chalg'ishlarni olib tashla",
+  "dialog.compact.submit": "Ixchamlash",
   "dialog.directory.search.placeholder": "Jildlarni qidirish",
   "dialog.directory.empty": "Hech qanday jild topilmadi",
   "dialog.directory.action.selectFile": "Faylni tanlang",

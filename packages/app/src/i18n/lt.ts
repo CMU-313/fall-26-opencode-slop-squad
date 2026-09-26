@@ -405,6 +405,11 @@ export const dict = {
   "mcp.status.disabled": "neįgalus",
   "mcp.auth.clickToAuthenticate": "Spustelėkite, kad patvirtintumėte",
   "dialog.fork.empty": "Nėra pranešimų, iš kurių būtų galima išsišakoti",
+
+  "dialog.compact.title": "Suglaudinti seansą",
+  "dialog.compact.instructions": "Instrukcijos (neprivaloma)",
+  "dialog.compact.instructions.placeholder": "Susitelk į API pakeitimus; praleisk derinimo nukrypimus",
+  "dialog.compact.submit": "Suglaudinti",
   "dialog.directory.search.placeholder": "Ieškokite aplankų",
   "dialog.directory.empty": "Aplankų nerasta",
   "dialog.directory.action.selectFile": "Pasirinkite failą",

@@ -437,6 +437,11 @@ export const dict = {
 
   "dialog.fork.empty": "Dallandırılacak mesaj yok",
 
+  "dialog.compact.title": "Oturumu sıkıştır",
+  "dialog.compact.instructions": "Talimatlar (isteğe bağlı)",
+  "dialog.compact.instructions.placeholder": "API değişikliklerine odaklan; hata ayıklama sapmalarını çıkar",
+  "dialog.compact.submit": "Sıkıştır",
+
   "dialog.directory.search.placeholder": "Klasör ara",
   "dialog.directory.empty": "Klasör bulunamadı",
   "dialog.directory.action.selectFile": "Dosya seç",

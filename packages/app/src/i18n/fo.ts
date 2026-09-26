@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "óarbeiðsførur",
   "mcp.auth.clickToAuthenticate": "Trýst fyri at vátta",
   "dialog.fork.empty": "Eingi boð at greina frá",
+
+  "dialog.compact.title": "Samanpressa setu",
+  "dialog.compact.instructions": "Leiðbeiningar (valfrítt)",
+  "dialog.compact.instructions.placeholder": "Legg dent á API-broytingarnar; slepp villuleitingar-útúrsnúningunum",
+  "dialog.compact.submit": "Samanpressa",
   "dialog.directory.search.placeholder": "Leita eftir mappum",
   "dialog.directory.empty": "Ongar mappur eru funnar",
   "dialog.directory.action.selectFile": "Vel fílu",

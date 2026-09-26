@@ -293,6 +293,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "클릭하여 인증",
   "mcp.status.disabled": "비활성화됨",
   "dialog.fork.empty": "분기할 메시지 없음",
+
+  "dialog.compact.title": "세션 압축",
+  "dialog.compact.instructions": "지침 (선택 사항)",
+  "dialog.compact.instructions.placeholder": "API 변경 사항에 집중하고 디버깅 우회 과정은 생략",
+  "dialog.compact.submit": "압축",
   "dialog.directory.search.placeholder": "폴더 검색",
   "dialog.directory.empty": "폴더 없음",
   "dialog.directory.action.selectFile": "파일 선택",

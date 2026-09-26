@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "vypnuté",
   "mcp.auth.clickToAuthenticate": "Kliknite na overenie",
   "dialog.fork.empty": "Žiadne správy na vytvorenie vetvy",
+
+  "dialog.compact.title": "Zhustiť reláciu",
+  "dialog.compact.instructions": "Pokyny (voliteľné)",
+  "dialog.compact.instructions.placeholder": "Zameraj sa na zmeny API; vynechaj odbočky pri ladení",
+  "dialog.compact.submit": "Zhustiť",
   "dialog.directory.search.placeholder": "Hľadať priečinky",
   "dialog.directory.empty": "Nenašli sa žiadne priečinky",
   "dialog.directory.action.selectFile": "Vybrať súbor",

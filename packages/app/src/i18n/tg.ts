@@ -402,6 +402,11 @@ export const dict = {
   "mcp.status.disabled": "маъюб",
   "mcp.auth.clickToAuthenticate": "Барои тасдиқ кардан клик кунед",
   "dialog.fork.empty": "Паёме барои сохтани шоха нест",
+
+  "dialog.compact.title": "Фишурдани сессия",
+  "dialog.compact.instructions": "Дастурҳо (ихтиёрӣ)",
+  "dialog.compact.instructions.placeholder": "Ба тағйироти API диққат диҳед; инҳирофҳои ислоҳи хатоҳоро партоед",
+  "dialog.compact.submit": "Фишурдан",
   "dialog.directory.search.placeholder": "Ҷустуҷӯи ҷузвдонҳо",
   "dialog.directory.empty": "Ягон папка ёфт нашуд",
   "dialog.directory.action.selectFile": "Файлро интихоб кунед",

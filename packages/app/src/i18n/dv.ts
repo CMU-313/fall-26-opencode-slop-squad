@@ -406,6 +406,11 @@ export const dict = {
   "mcp.status.disabled": "ނުކުޅެދޭ",
   "mcp.auth.clickToAuthenticate": "ސައްހަ ކުރުމަށް ކްލިކް ކުރާށެވެ",
   "dialog.fork.empty": "ފޯކް ކުރާނެ މެސެޖެއް ނެތެވެ",
+
+  "dialog.compact.title": "ސެޝަން ކުޑަކުރޭ",
+  "dialog.compact.instructions": "އިރުޝާދު (އިޚްތިޔާރީ)",
+  "dialog.compact.instructions.placeholder": "API ބަދަލުތަކަށް ސަމާލުކަން ދޭ؛ ޑީބަގިންގ ތަފްސީލު ދޫކޮށްލާ",
+  "dialog.compact.submit": "ކުޑަކުރޭ",
   "dialog.directory.search.placeholder": "ފޯލްޑަރުތައް ހޯދުން",
   "dialog.directory.empty": "ފޯލްޑަރެއް ނުފެނެއެވެ",
   "dialog.directory.action.selectFile": "ފައިލް ހޮވާށެވެ",

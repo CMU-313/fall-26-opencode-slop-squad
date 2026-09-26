@@ -431,6 +431,11 @@ export const dict = {
 
   "dialog.fork.empty": "Нет сообщений для ответвления",
 
+  "dialog.compact.title": "Сжать сессию",
+  "dialog.compact.instructions": "Инструкции (необязательно)",
+  "dialog.compact.instructions.placeholder": "Сосредоточься на изменениях API; опусти отступления при отладке",
+  "dialog.compact.submit": "Сжать",
+
   "dialog.directory.search.placeholder": "Поиск папок",
   "dialog.directory.empty": "Папки не найдены",
   "dialog.directory.action.selectFile": "Выбрать файл",

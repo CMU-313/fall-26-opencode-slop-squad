@@ -401,6 +401,11 @@ export const dict = {
   "mcp.status.disabled": "me aftësi të kufizuara",
   "mcp.auth.clickToAuthenticate": "Kliko për të vërtetuar",
   "dialog.fork.empty": "Nuk ka mesazhe për të marrë nga",
+
+  "dialog.compact.title": "Ngjesh seancën",
+  "dialog.compact.instructions": "Udhëzime (opsionale)",
+  "dialog.compact.instructions.placeholder": "Përqendrohu te ndryshimet e API-së; hiq devijimet e korrigjimit",
+  "dialog.compact.submit": "Ngjesh",
   "dialog.directory.search.placeholder": "Kërko dosjet",
   "dialog.directory.empty": "Nuk u gjet asnjë dosje",
   "dialog.directory.action.selectFile": "Zgjidhni skedarin",

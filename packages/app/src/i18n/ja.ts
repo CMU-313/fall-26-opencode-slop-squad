@@ -404,6 +404,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "クリックして認証",
   "mcp.status.disabled": "無効",
   "dialog.fork.empty": "フォーク元のメッセージがありません",
+
+  "dialog.compact.title": "セッションを圧縮",
+  "dialog.compact.instructions": "指示（任意）",
+  "dialog.compact.instructions.placeholder": "API の変更に焦点を当て、デバッグの寄り道は省く",
+  "dialog.compact.submit": "圧縮",
   "dialog.directory.search.placeholder": "フォルダを検索",
   "dialog.directory.empty": "フォルダが見つかりません",
   "dialog.directory.action.selectFile": "ファイルを選択",

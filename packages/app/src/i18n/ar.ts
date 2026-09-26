@@ -405,6 +405,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "انقر للمصادقة",
   "mcp.status.disabled": "معطل",
   "dialog.fork.empty": "لا توجد رسائل للتفرع منها",
+
+  "dialog.compact.title": "ضغط الجلسة",
+  "dialog.compact.instructions": "التعليمات (اختياري)",
+  "dialog.compact.instructions.placeholder": "ركّز على تغييرات API؛ تجاهل مسارات تصحيح الأخطاء الجانبية",
+  "dialog.compact.submit": "ضغط",
   "dialog.directory.search.placeholder": "البحث في المجلدات",
   "dialog.directory.empty": "لم يتم العثور على مجلدات",
   "dialog.directory.action.selectFile": "اختيار ملف",

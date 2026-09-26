@@ -407,6 +407,11 @@ export const dict = {
   "mcp.status.disabled": "अक्षम",
   "mcp.auth.clickToAuthenticate": "प्रमाणित करने के लिए क्लिक करें",
   "dialog.fork.empty": "फ़ोर्क करने के लिए कोई संदेश नहीं",
+
+  "dialog.compact.title": "सत्र संक्षिप्त करें",
+  "dialog.compact.instructions": "निर्देश (वैकल्पिक)",
+  "dialog.compact.instructions.placeholder": "API परिवर्तनों पर ध्यान दें; डिबगिंग के भटकाव हटा दें",
+  "dialog.compact.submit": "संक्षिप्त करें",
   "dialog.directory.search.placeholder": "फ़ोल्डर खोजें",
   "dialog.directory.empty": "कोई फ़ोल्डर नहीं मिला",
   "dialog.directory.action.selectFile": "फ़ाइल का चयन करें",

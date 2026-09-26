@@ -307,6 +307,11 @@ export const dict = {
   "mcp.status.disabled": "pois käytöstä",
   "mcp.auth.clickToAuthenticate": "Todenna napsauttamalla",
   "dialog.fork.empty": "Ei viestejä, joista voisi haarauttaa",
+
+  "dialog.compact.title": "Tiivistä istunto",
+  "dialog.compact.instructions": "Ohjeet (valinnainen)",
+  "dialog.compact.instructions.placeholder": "Keskity API-muutoksiin; jätä virheenkorjauksen sivupolut pois",
+  "dialog.compact.submit": "Tiivistä",
   "dialog.directory.search.placeholder": "Hae kansioita",
   "dialog.directory.empty": "Kansioita ei löytynyt",
   "dialog.directory.action.selectFile": "Valitse tiedosto",

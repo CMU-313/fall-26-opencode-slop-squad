@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "онемогућен",
   "mcp.auth.clickToAuthenticate": "Кликните да бисте потврдили аутентичност",
   "dialog.fork.empty": "Нема порука од којих треба да се рачвате",
+
+  "dialog.compact.title": "Сажми сесију",
+  "dialog.compact.instructions": "Упутства (опционо)",
+  "dialog.compact.instructions.placeholder": "Фокусирај се на промене API-ја; изостави скретања при отклањању грешака",
+  "dialog.compact.submit": "Сажми",
   "dialog.directory.search.placeholder": "Претражите фасцикле",
   "dialog.directory.empty": "Нису пронађене фасцикле",
   "dialog.directory.action.selectFile": "Изаберите датотеку",

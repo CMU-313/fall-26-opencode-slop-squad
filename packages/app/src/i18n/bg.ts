@@ -403,6 +403,11 @@ export const dict = {
   "mcp.status.disabled": "деактивиран",
   "mcp.auth.clickToAuthenticate": "Щракнете за удостоверяване",
   "dialog.fork.empty": "Няма съобщения за разклонение",
+
+  "dialog.compact.title": "Уплътняване на сесията",
+  "dialog.compact.instructions": "Инструкции (по избор)",
+  "dialog.compact.instructions.placeholder": "Фокусирай се върху промените в API; пропусни отклоненията при отстраняване на грешки",
+  "dialog.compact.submit": "Уплътни",
   "dialog.directory.search.placeholder": "Папки за търсене",
   "dialog.directory.empty": "Няма намерени папки",
   "dialog.directory.action.selectFile": "Изберете файл",

@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "atspējots",
   "mcp.auth.clickToAuthenticate": "Autentificējieties",
   "dialog.fork.empty": "Nav ziņu, no kurām atzarot",
+
+  "dialog.compact.title": "Saspiest sesiju",
+  "dialog.compact.instructions": "Norādījumi (pēc izvēles)",
+  "dialog.compact.instructions.placeholder": "Koncentrējies uz API izmaiņām; izlaid atkļūdošanas novirzes",
+  "dialog.compact.submit": "Saspiest",
   "dialog.directory.search.placeholder": "Meklēt mapes",
   "dialog.directory.empty": "Mapes nav atrastas",
   "dialog.directory.action.selectFile": "Izvēlieties failu",

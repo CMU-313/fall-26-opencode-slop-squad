@@ -402,6 +402,11 @@ export const dict = {
   "mcp.status.disabled": "απενεργοποιημένο",
   "mcp.auth.clickToAuthenticate": "Κάντε κλικ για έλεγχο ταυτότητας",
   "dialog.fork.empty": "Δεν υπάρχουν μηνύματα για διακλάδωση",
+
+  "dialog.compact.title": "Συμπύκνωση συνεδρίας",
+  "dialog.compact.instructions": "Οδηγίες (προαιρετικά)",
+  "dialog.compact.instructions.placeholder": "Εστίασε στις αλλαγές του API· παράλειψε τις παρεκβάσεις αποσφαλμάτωσης",
+  "dialog.compact.submit": "Συμπύκνωση",
   "dialog.directory.search.placeholder": "Αναζήτηση φακέλων",
   "dialog.directory.empty": "Δεν βρέθηκαν φάκελοι",
   "dialog.directory.action.selectFile": "Επιλογή αρχείου",

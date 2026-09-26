@@ -402,6 +402,11 @@ export const dict = {
   "mcp.status.disabled": "discapacitat",
   "mcp.auth.clickToAuthenticate": "Feu clic per autenticar-vos",
   "dialog.fork.empty": "No hi ha missatges per bifurcar",
+
+  "dialog.compact.title": "Compacta la sessió",
+  "dialog.compact.instructions": "Instruccions (opcional)",
+  "dialog.compact.instructions.placeholder": "Centra't en els canvis de l'API; descarta les desviacions de depuració",
+  "dialog.compact.submit": "Compacta",
   "dialog.directory.search.placeholder": "Cerca carpetes",
   "dialog.directory.empty": "No s'han trobat carpetes",
   "dialog.directory.action.selectFile": "Seleccioneu el fitxer",

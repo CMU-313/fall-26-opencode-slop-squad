@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "გამორთულია",
   "mcp.auth.clickToAuthenticate": "დააწკაპუნეთ ავთენტიფიკაციისთვის",
   "dialog.fork.empty": "განშტოებისთვის შეტყობინებები არ არის",
+
+  "dialog.compact.title": "სესიის შეკუმშვა",
+  "dialog.compact.instructions": "ინსტრუქციები (არასავალდებულო)",
+  "dialog.compact.instructions.placeholder": "ფოკუსირდი API ცვლილებებზე; გამოტოვე გამართვის გადახვევები",
+  "dialog.compact.submit": "შეკუმშვა",
   "dialog.directory.search.placeholder": "საქაღალდეების ძიება",
   "dialog.directory.empty": "საქაღალდეები არ მოიძებნა",
   "dialog.directory.action.selectFile": "აირჩიეთ ფაილი",

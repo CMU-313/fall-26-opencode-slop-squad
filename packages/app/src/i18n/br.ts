@@ -407,6 +407,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "Clique para autenticar",
   "mcp.status.disabled": "desabilitado",
   "dialog.fork.empty": "Nenhuma mensagem para bifurcar",
+
+  "dialog.compact.title": "Compactar sessão",
+  "dialog.compact.instructions": "Instruções (opcional)",
+  "dialog.compact.instructions.placeholder": "Foque nas mudanças da API; descarte os desvios de depuração",
+  "dialog.compact.submit": "Compactar",
   "dialog.directory.search.placeholder": "Buscar pastas",
   "dialog.directory.empty": "Nenhuma pasta encontrada",
   "dialog.directory.action.selectFile": "Selecionar arquivo",

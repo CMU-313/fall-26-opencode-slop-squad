@@ -403,6 +403,11 @@ export const dict = {
   "mcp.status.disabled": "deaktiv",
   "mcp.auth.clickToAuthenticate": "Autentifikasiya üçün klikləyin",
   "dialog.fork.empty": "Yeni sessiyaya ayırmaq üçün mesaj yoxdur",
+
+  "dialog.compact.title": "Sessiyanı sıxlaşdır",
+  "dialog.compact.instructions": "Təlimatlar (istəyə bağlı)",
+  "dialog.compact.instructions.placeholder": "API dəyişikliklərinə diqqət et; sazlama sapmalarını at",
+  "dialog.compact.submit": "Sıxlaşdır",
   "dialog.directory.search.placeholder": "Qovluqları axtar",
   "dialog.directory.empty": "Qovluq tapılmadı",
   "dialog.directory.action.selectFile": "Fayl seçin",

@@ -409,6 +409,11 @@ export const dict = {
   "mcp.status.disabled": "غیر فعال",
   "mcp.auth.clickToAuthenticate": "تصدیق کرنے کے لیے کلک کریں۔",
   "dialog.fork.empty": "کوئی پیغامات نہیں ہیں جن سے فورک کیا جائے۔",
+
+  "dialog.compact.title": "سیشن مختصر کریں",
+  "dialog.compact.instructions": "ہدایات (اختیاری)",
+  "dialog.compact.instructions.placeholder": "API تبدیلیوں پر توجہ دیں؛ ڈیبگنگ کے بھٹکاؤ ہٹا دیں",
+  "dialog.compact.submit": "مختصر کریں",
   "dialog.directory.search.placeholder": "فولڈرز تلاش کریں۔",
   "dialog.directory.empty": "کوئی فولڈر نہیں ملا",
   "dialog.directory.action.selectFile": "فائل منتخب کریں۔",

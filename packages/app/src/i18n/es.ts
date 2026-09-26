@@ -434,6 +434,11 @@ export const dict = {
 
   "dialog.fork.empty": "No hay mensajes desde donde bifurcar",
 
+  "dialog.compact.title": "Compactar sesión",
+  "dialog.compact.instructions": "Instrucciones (opcional)",
+  "dialog.compact.instructions.placeholder": "Céntrate en los cambios de la API; descarta los desvíos de depuración",
+  "dialog.compact.submit": "Compactar",
+
   "dialog.directory.search.placeholder": "Buscar carpetas",
   "dialog.directory.empty": "No se encontraron carpetas",
   "dialog.directory.action.selectFile": "Seleccionar archivo",

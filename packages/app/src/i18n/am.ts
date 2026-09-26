@@ -396,6 +396,11 @@ export const dict = {
   "mcp.status.disabled": "የተሰናከለ",
   "mcp.auth.clickToAuthenticate": "ለማረጋገጥ ጠቅ ያድርጉ",
   "dialog.fork.empty": "አዲስ ቅርንጫፍ ለመፍጠር መልዕክት የለም",
+
+  "dialog.compact.title": "ክፍለ ጊዜን አጥብብ",
+  "dialog.compact.instructions": "መመሪያዎች (አማራጭ)",
+  "dialog.compact.instructions.placeholder": "በAPI ለውጦች ላይ አተኩር፤ የማረም ሂደቶችን ተው",
+  "dialog.compact.submit": "አጥብብ",
   "dialog.directory.search.placeholder": "የአቃፊዎችን ፍለጋ",
   "dialog.directory.empty": "ምንም አቃፊዎች አልተገኙም",
   "dialog.directory.action.selectFile": "ፋይል ምረጥ",

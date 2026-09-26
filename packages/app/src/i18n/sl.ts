@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "onemogočen",
   "mcp.auth.clickToAuthenticate": "Kliknite za preverjanje pristnosti",
   "dialog.fork.empty": "Ni sporočil za odcepitev",
+
+  "dialog.compact.title": "Strni sejo",
+  "dialog.compact.instructions": "Navodila (neobvezno)",
+  "dialog.compact.instructions.placeholder": "Osredotoči se na spremembe API-ja; izpusti ovinke pri razhroščevanju",
+  "dialog.compact.submit": "Strni",
   "dialog.directory.search.placeholder": "Iskanje map",
   "dialog.directory.empty": "Ni najdenih map",
   "dialog.directory.action.selectFile": "Izberite datoteko",
