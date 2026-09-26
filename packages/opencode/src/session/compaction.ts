@@ -330,7 +330,6 @@ const layer = Layer.effect(
       sessionID: SessionID
       auto: boolean
       overflow?: boolean
-      // Accepted but not yet used; the prompt is unchanged until instructions are wired in.
       instructions?: string
     }) {
       const parent = input.messages.findLast((m) => m.info.id === input.parentID)
@@ -379,13 +378,15 @@ const layer = Layer.effect(
         cfg,
         model,
       })
-      // Allow plugins to inject context or replace compaction prompt.
+      // A plugin prompt remains a full override; user instructions only compose with the default prompt.
       const compacting = yield* plugin.trigger(
         "experimental.session.compacting",
         { sessionID: input.sessionID },
         { context: [], prompt: undefined },
       )
-      const nextPrompt = compacting.prompt ?? buildPrompt({ previousSummary, context: compacting.context })
+      const nextPrompt =
+        compacting.prompt ??
+        buildPrompt({ previousSummary, instructions: input.instructions, context: compacting.context })
       const msgs = structuredClone(selected.head)
       yield* plugin.trigger("experimental.chat.messages.transform", {}, { messages: msgs })
       const conversation = msgs.map(serialize).filter(Boolean).join("\n\n")
