@@ -1,6 +1,6 @@
 import { parseCommentNote, readCommentMetadata } from "@/utils/comment-note"
 import type { SessionMessageInfo } from "@opencode-ai/client/promise"
-import { AssistantMessage, Part, SessionStatus, UserMessage } from "@opencode-ai/sdk/v2"
+import { AssistantMessage, CompactionPart, Part, SessionStatus, UserMessage } from "@opencode-ai/sdk/v2"
 import { groupParts, renderable, type PartGroup } from "@opencode-ai/session-ui/message-part"
 import { TimelineRow, type SummaryDiff } from "./timeline-row"
 import { uniqueSummaryDiffs } from "./summary-diffs"
@@ -20,6 +20,7 @@ export type TimelineRowMap = {
   TurnDivider: {
     userMessageID: string
     label: "compaction" | "interrupted"
+    instructions?: string
   }
   AssistantPart: {
     userMessageID: string
@@ -114,7 +115,7 @@ export namespace Timeline {
     const previousUserMessage = index > 0
     const userParts = getMessageParts(userMessage.id)
     const comments = userParts.flatMap((p) => MessageComment.fromPart(p) ?? [])
-    const compaction = userParts.some((p) => p.type === "compaction")
+    const compaction = userParts.find((p): p is CompactionPart => p.type === "compaction")
     const interruptedMessageIndex = assistantMessages.findIndex((m) => m.error?.name === "MessageAbortedError")
     const interrupted = interruptedMessageIndex !== -1
     const latestError = assistantMessages.at(-1)?.error
@@ -164,6 +165,7 @@ export namespace Timeline {
         new TimelineRow.TurnDivider({
           userMessageID: userMessage.id,
           label: "compaction",
+          instructions: compaction.instructions,
         }),
       )
     }

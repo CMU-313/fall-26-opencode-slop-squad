@@ -1,5 +1,6 @@
 import { describe, expect, mock, test } from "bun:test"
 import type { SessionMessageInfo } from "@opencode-ai/client/promise"
+import type { UserMessage } from "@opencode-ai/sdk/v2"
 import { normalizeSessionMessages } from "@/utils/session-message"
 
 mock.module("@opencode-ai/session-ui/message-part", () => ({
@@ -203,5 +204,32 @@ describe("current session timeline rows", () => {
     )
 
     expect(result.rows.map((row) => row._tag)).toEqual(["UserMessage", "AssistantPart"])
+  })
+
+  test("carries compaction instructions onto the turn divider only when present", () => {
+    const user = {
+      id: "msg_1",
+      sessionID: "ses_1",
+      role: "user",
+      time: { created: 1 },
+      agent: "build",
+      model: { providerID: "provider", modelID: "model" },
+    } satisfies UserMessage
+    const divider = (instructions?: string) =>
+      Timeline.constructMessageRows(
+        user,
+        () => [
+          { id: "prt_1", sessionID: "ses_1", messageID: "msg_1", type: "compaction", auto: false, instructions },
+        ],
+        [],
+        0,
+        true,
+        "idle",
+        true,
+        true,
+      ).find((row) => row._tag === "TurnDivider")
+
+    expect(divider("keep the API notes")).toMatchObject({ label: "compaction", instructions: "keep the API notes" })
+    expect(divider()?.instructions).toBeUndefined()
   })
 })
