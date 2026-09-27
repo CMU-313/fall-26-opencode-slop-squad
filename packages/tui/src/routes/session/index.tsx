@@ -50,6 +50,7 @@ import { TodoItem } from "../../component/todo-item"
 import { DialogMessage } from "./dialog-message"
 import type { PromptInfo } from "../../component/prompt/history"
 import { DialogConfirm } from "../../ui/dialog-confirm"
+import { DialogPrompt } from "../../ui/dialog-prompt"
 import { DialogTimeline } from "./dialog-timeline"
 import { DialogForkFromTimeline } from "./dialog-fork-from-timeline"
 import { DialogSessionRename } from "../../component/dialog-session-rename"
@@ -567,7 +568,7 @@ export function Session() {
         name: "compact",
         aliases: ["summarize"],
       },
-      run: () => {
+      run: async () => {
         const selectedModel = local.model.current()
         if (!selectedModel) {
           toast.show({
@@ -577,10 +578,17 @@ export function Session() {
           })
           return
         }
+
+        const instructions = await DialogPrompt.show(dialog, "Compaction instructions", {
+          placeholder: "What should the summary focus on? (optional)",
+        })
+        if (instructions === null) return
+
         void sdk.client.session.summarize({
           sessionID: route.sessionID,
           modelID: selectedModel.modelID,
           providerID: selectedModel.providerID,
+          instructions: instructions.trim() || undefined,
         })
         dialog.clear()
       },
@@ -1455,13 +1463,14 @@ function UserMessage(props: {
         </box>
       </Show>
       <Show when={compaction()}>
-        <box
-          marginTop={1}
-          border={["top"]}
-          title=" Compaction "
-          titleAlignment="center"
-          borderColor={theme.borderActive}
-        />
+        {(part) => (
+          <box marginTop={1} flexDirection="column">
+            <box border={["top"]} title=" Compaction " titleAlignment="center" borderColor={theme.borderActive} />
+            <Show when={part().instructions}>
+              {(instructions) => <text fg={theme.textMuted}>Instructions: {instructions()}</text>}
+            </Show>
+          </box>
+        )}
       </Show>
     </>
   )
