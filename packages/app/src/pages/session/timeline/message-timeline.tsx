@@ -1205,13 +1205,11 @@ export function MessageTimeline(props: {
                   label={language.t(
                     turnDividerRow().label === "compaction" ? "ui.messagePart.compaction" : "ui.message.interrupted",
                   )}
-                  detail={
-                    turnDividerRow().instructions
-                      ? language.t("ui.messagePart.compaction.instructions", {
-                          instructions: turnDividerRow().instructions,
-                        })
-                      : undefined
-                  }
+                  detail={(() => {
+                    const instructions = turnDividerRow().instructions
+                    if (!instructions) return undefined
+                    return language.t("ui.messagePart.compaction.instructions", { instructions })
+                  })()}
                 />
               </div>
             </div>
