@@ -1654,15 +1654,12 @@ export function MessageDivider(props: { label: string; detail?: string }) {
 
 PART_MAPPING["compaction"] = function CompactionPartDisplay(props) {
   const i18n = useI18n()
-  const instructions = () => (props.part as CompactionPart).instructions
-  return (
-    <MessageDivider
-      label={i18n.t("ui.messagePart.compaction")}
-      detail={
-        instructions() ? i18n.t("ui.messagePart.compaction.instructions", { instructions: instructions() }) : undefined
-      }
-    />
-  )
+  const detail = () => {
+    const instructions = (props.part as CompactionPart).instructions
+    if (!instructions) return undefined
+    return i18n.t("ui.messagePart.compaction.instructions", { instructions })
+  }
+  return <MessageDivider label={i18n.t("ui.messagePart.compaction")} detail={detail()} />
 }
 
 PART_MAPPING["text"] = function TextPartDisplay(props) {

@@ -408,7 +408,7 @@ export function SessionTurn(
                     detail={
                       compaction()?.instructions
                         ? i18n.t("ui.messagePart.compaction.instructions", {
-                            instructions: compaction()?.instructions,
+                            instructions: compaction()?.instructions ?? "",
                           })
                         : undefined
                     }
