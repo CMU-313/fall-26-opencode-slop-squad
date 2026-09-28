@@ -423,6 +423,11 @@ export const dict = {
 
   "dialog.fork.empty": "Ingen meldinger å forgrene fra",
 
+  "dialog.compact.title": "Komprimer økt",
+  "dialog.compact.instructions": "Instruksjoner (valgfritt)",
+  "dialog.compact.instructions.placeholder": "Fokuser på API-endringene; dropp feilsøkingsomveiene",
+  "dialog.compact.submit": "Komprimer",
+
   "dialog.directory.search.placeholder": "Søk etter mapper",
   "dialog.directory.empty": "Ingen mapper funnet",
   "dialog.directory.action.selectFile": "Velg fil",

@@ -405,6 +405,11 @@ export const dict: Record<string, string> = {
   "mcp.status.disabled": "དབང༌པོ༌སྐྱོན༌ཅན༌",
   "mcp.auth.clickToAuthenticate": "བདེན་བཤད་འབད་ནི་ལུ་ཨེབ་གཏང་།",
   "dialog.fork.empty": "ལས་ཕོརཀ་འབད་ནི་ལུ་འཕྲིན་དོན་མེད།",
+
+  "dialog.compact.title": "ལཱ་ཡུན་བསྡུ་ནི།",
+  "dialog.compact.instructions": "བཀོད་རྒྱ། (གདམ་ཁ)",
+  "dialog.compact.instructions.placeholder": "API གི་བསྒྱུར་བཅོས་ལུ་དམིགས་གཏད་བྱེད། འཛོལ་བ་སེལ་བའི་ཁ་ཕྱོགས་ཚུ་བཏོན་གཏང་།",
+  "dialog.compact.submit": "བསྡུ།",
   "dialog.directory.search.placeholder": "སྣོད་འཛིན་ཚུ་འཚོལ།",
   "dialog.directory.empty": "སྣོད་འཛིན་འཚོལ་མ་ཐོབ།",
   "dialog.directory.action.selectFile": "ཡིག་སྣོད་སེལ་འཐུ་འབད།",

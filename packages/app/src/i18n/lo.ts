@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "ປິດໃຊ້ງານ",
   "mcp.auth.clickToAuthenticate": "ຄລິກເພື່ອພິສູດຢືນຢັນ",
   "dialog.fork.empty": "ບໍ່ມີຂໍ້ຄວາມທີ່ຈະແຍກອອກຈາກ",
+
+  "dialog.compact.title": "ບີບອັດເຊສຊັນ",
+  "dialog.compact.instructions": "ຄຳແນະນຳ (ບໍ່ບັງຄັບ)",
+  "dialog.compact.instructions.placeholder": "ເນັ້ນໃສ່ການປ່ຽນແປງ API; ຕັດການອອກນອກທາງຂອງການດີບັກອອກ",
+  "dialog.compact.submit": "ບີບອັດ",
   "dialog.directory.search.placeholder": "ຄົ້ນຫາໂຟນເດີ",
   "dialog.directory.empty": "ບໍ່ພົບໂຟນເດີ",
   "dialog.directory.action.selectFile": "ເລືອກໄຟລ໌",

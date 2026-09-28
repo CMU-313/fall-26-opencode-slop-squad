@@ -404,6 +404,11 @@ export const dict = {
   "mcp.status.disabled": "letiltva",
   "mcp.auth.clickToAuthenticate": "Kattintson a hitelesítéshez",
   "dialog.fork.empty": "Nincsenek üzenetek, ahonnan elágazhatna",
+
+  "dialog.compact.title": "Munkamenet tömörítése",
+  "dialog.compact.instructions": "Utasítások (opcionális)",
+  "dialog.compact.instructions.placeholder": "Az API-változásokra összpontosíts; hagyd ki a hibakeresési kitérőket",
+  "dialog.compact.submit": "Tömörítés",
   "dialog.directory.search.placeholder": "Mappák keresése",
   "dialog.directory.empty": "Nem találhatók mappák",
   "dialog.directory.action.selectFile": "Válassza ki a fájlt",

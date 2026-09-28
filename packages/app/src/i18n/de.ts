@@ -312,6 +312,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "Zum Authentifizieren klicken",
   "mcp.status.disabled": "deaktiviert",
   "dialog.fork.empty": "Keine Nachrichten zum Abzweigen vorhanden",
+
+  "dialog.compact.title": "Sitzung komprimieren",
+  "dialog.compact.instructions": "Anweisungen (optional)",
+  "dialog.compact.instructions.placeholder": "Auf die API-Änderungen konzentrieren; Debugging-Umwege weglassen",
+  "dialog.compact.submit": "Komprimieren",
   "dialog.directory.search.placeholder": "Ordner durchsuchen",
   "dialog.directory.empty": "Keine Ordner gefunden",
   "dialog.directory.action.selectFile": "Datei auswählen",

@@ -433,6 +433,11 @@ export const dict = {
 
   "dialog.fork.empty": "Tidak ada pesan yang dapat dicabangkan",
 
+  "dialog.compact.title": "Ringkas sesi",
+  "dialog.compact.instructions": "Instruksi (opsional)",
+  "dialog.compact.instructions.placeholder": "Fokus pada perubahan API; abaikan jalan memutar debugging",
+  "dialog.compact.submit": "Ringkas",
+
   "dialog.directory.search.placeholder": "Cari folder",
   "dialog.directory.empty": "Folder tidak ditemukan",
   "dialog.directory.action.selectFile": "Pilih berkas",

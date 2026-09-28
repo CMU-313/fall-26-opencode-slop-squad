@@ -433,6 +433,11 @@ export const dict = {
 
   "dialog.fork.empty": "Nema poruka za fork",
 
+  "dialog.compact.title": "Sažmi sesiju",
+  "dialog.compact.instructions": "Upute (opcionalno)",
+  "dialog.compact.instructions.placeholder": "Fokusiraj se na promjene API-ja; izostavi skretanja pri otklanjanju grešaka",
+  "dialog.compact.submit": "Sažmi",
+
   "dialog.directory.search.placeholder": "Pretraži fascikle",
   "dialog.directory.empty": "Nema pronađenih fascikli",
   "dialog.directory.action.selectFile": "Odaberi datoteku",

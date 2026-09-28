@@ -403,6 +403,11 @@ export const dict = {
   "mcp.status.disabled": "тахир дутуу болсон",
   "mcp.auth.clickToAuthenticate": "Баталгаажуулахын тулд товшино уу",
   "dialog.fork.empty": "Салаалах зурвас алга",
+
+  "dialog.compact.title": "Сессийг шахах",
+  "dialog.compact.instructions": "Заавар (заавал биш)",
+  "dialog.compact.instructions.placeholder": "API-ийн өөрчлөлтөд анхаар; дибаг хийх үеийн хазайлтыг хас",
+  "dialog.compact.submit": "Шахах",
   "dialog.directory.search.placeholder": "Фолдер хайх",
   "dialog.directory.empty": "Ямар ч фолдер олдсонгүй",
   "dialog.directory.action.selectFile": "Файл сонгоно уу",

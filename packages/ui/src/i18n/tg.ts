@@ -94,6 +94,7 @@ export const dict = {
   "ui.messagePart.review.title": "Ҷавобҳои худро аз назар гузаронед",
   "ui.messagePart.questions.dismissed": "Саволҳо рад карда шуданд",
   "ui.messagePart.compaction": "Сессия фишурда шуд",
+  "ui.messagePart.compaction.instructions": "Дастурҳо: {{instructions}}",
   "ui.messagePart.context.read.one": "{{count}} хонданд",
   "ui.messagePart.context.read.other": "{{count}} мехонад",
   "ui.messagePart.context.search.one": "{{count}} ҷустуҷӯ",

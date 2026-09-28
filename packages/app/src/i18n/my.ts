@@ -404,6 +404,11 @@ export const dict = {
   "mcp.status.disabled": "ပိတ်ထားသည်။",
   "mcp.auth.clickToAuthenticate": "စစ်မှန်ကြောင်းသက်သေပြရန် နှိပ်ပါ။",
   "dialog.fork.empty": "လမ်းခွဲရန် မက်ဆေ့ချ်များ မရှိပါ။",
+
+  "dialog.compact.title": "ဆက်ရှင်ကို ချုံ့ရန်",
+  "dialog.compact.instructions": "ညွှန်ကြားချက်များ (ရွေးချယ်နိုင်)",
+  "dialog.compact.instructions.placeholder": "API ပြောင်းလဲမှုများကို အာရုံစိုက်ပါ၊ အမှားရှာရာတွင် လမ်းလွဲမှုများကို ဖယ်ပါ",
+  "dialog.compact.submit": "ချုံ့ရန်",
   "dialog.directory.search.placeholder": "ဖိုင်တွဲများကို ရှာပါ။",
   "dialog.directory.empty": "ဖိုင်တွဲများကို ရှာမတွေ့ပါ။",
   "dialog.directory.action.selectFile": "ဖိုင်ကို ရွေးပါ။",

@@ -430,6 +430,11 @@ export const dict = {
 
   "dialog.fork.empty": "ไม่มีข้อความให้แตกแขนง",
 
+  "dialog.compact.title": "บีบอัดเซสชัน",
+  "dialog.compact.instructions": "คำแนะนำ (ไม่บังคับ)",
+  "dialog.compact.instructions.placeholder": "เน้นที่การเปลี่ยนแปลง API; ตัดทางอ้อมจากการดีบักออก",
+  "dialog.compact.submit": "บีบอัด",
+
   "dialog.directory.search.placeholder": "ค้นหาโฟลเดอร์",
   "dialog.directory.empty": "ไม่พบโฟลเดอร์",
   "dialog.directory.action.selectFile": "เลือกไฟล์",

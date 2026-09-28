@@ -335,6 +335,11 @@ export const dict = {
 
   "dialog.fork.empty": "No messages to fork from",
 
+  "dialog.compact.title": "Compact session",
+  "dialog.compact.instructions": "Instructions (optional)",
+  "dialog.compact.instructions.placeholder": "Focus on the API changes; drop the debugging detours",
+  "dialog.compact.submit": "Compact",
+
   "dialog.directory.search.placeholder": "Search folders",
   "dialog.directory.empty": "No folders found",
   "dialog.directory.action.selectFile": "Select file",

@@ -5,7 +5,7 @@ import {
   Part as PartType,
 } from "@opencode-ai/sdk/v2/client"
 import type { FileDiffInfo } from "@opencode-ai/client/promise"
-import type { SessionStatus } from "@opencode-ai/sdk/v2"
+import type { CompactionPart, SessionStatus } from "@opencode-ai/sdk/v2"
 import { useData } from "../context"
 import { useFileComponent } from "@opencode-ai/ui/context/file"
 
@@ -237,7 +237,7 @@ export function SessionTurn(
     return list(data.store.part?.[msg.id], emptyParts)
   })
 
-  const compaction = createMemo(() => parts().find((part) => part.type === "compaction"))
+  const compaction = createMemo(() => parts().find((part): part is CompactionPart => part.type === "compaction"))
 
   const diffs = createMemo(() => {
     const files = message()?.summary?.diffs
@@ -403,7 +403,16 @@ export function SessionTurn(
               </div>
               <Show when={divider()}>
                 <div data-slot="session-turn-compaction">
-                  <MessageDivider label={divider()} />
+                  <MessageDivider
+                    label={divider()}
+                    detail={
+                      compaction()?.instructions
+                        ? i18n.t("ui.messagePart.compaction.instructions", {
+                            instructions: compaction()?.instructions ?? "",
+                          })
+                        : undefined
+                    }
+                  />
                 </div>
               </Show>
               <Show when={assistantMessages().length > 0}>

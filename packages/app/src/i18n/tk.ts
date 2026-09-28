@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "maýyp",
   "mcp.auth.clickToAuthenticate": "Hakyky tassyklamak üçin basyň",
   "dialog.fork.empty": "Şahalandyrmaly habar ýok",
+
+  "dialog.compact.title": "Sessiýany gysylt",
+  "dialog.compact.instructions": "Görkezmeler (hökmany däl)",
+  "dialog.compact.instructions.placeholder": "API üýtgeşmelerine üns ber; näsazlyk düzetmekdäki sowulmalary aýyr",
+  "dialog.compact.submit": "Gysylt",
   "dialog.directory.search.placeholder": "Papkalary gözläň",
   "dialog.directory.empty": "Papka tapylmady",
   "dialog.directory.action.selectFile": "Faýly saýlaň",

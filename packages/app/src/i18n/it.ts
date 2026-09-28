@@ -309,6 +309,11 @@ export const dict = {
   "mcp.status.disabled": "disabilitato",
   "mcp.auth.clickToAuthenticate": "Fai clic per autenticarti",
   "dialog.fork.empty": "Nessun messaggio da cui effettuare il fork",
+
+  "dialog.compact.title": "Compatta sessione",
+  "dialog.compact.instructions": "Istruzioni (facoltative)",
+  "dialog.compact.instructions.placeholder": "Concentrati sulle modifiche all'API; tralascia le deviazioni di debug",
+  "dialog.compact.submit": "Compatta",
   "dialog.directory.search.placeholder": "Cerca cartelle",
   "dialog.directory.empty": "Nessuna cartella trovata",
   "dialog.directory.action.selectFile": "Seleziona file",

@@ -401,6 +401,11 @@ export const dict = {
   "mcp.status.disabled": "оневозможено",
   "mcp.auth.clickToAuthenticate": "Кликнете за автентикација",
   "dialog.fork.empty": "Нема пораки од кои може да се префрлите",
+
+  "dialog.compact.title": "Збиј ја сесијата",
+  "dialog.compact.instructions": "Упатства (по избор)",
+  "dialog.compact.instructions.placeholder": "Фокусирај се на промените во API; изостави ги отстапувањата при дебагирање",
+  "dialog.compact.submit": "Збиј",
   "dialog.directory.search.placeholder": "Пребарајте папки",
   "dialog.directory.empty": "Не се пронајдени папки",
   "dialog.directory.action.selectFile": "Изберете датотека",

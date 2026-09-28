@@ -25,7 +25,9 @@ type CompatibleSessionApi = Omit<
   prompt: (input: SessionPromptInput & LegacyPrompt) => Promise<SessionPromptOutput>
   command: (input: SessionCommandInput) => Promise<SessionCommandOutput>
   shell: (input: SessionShellInput & LegacyPrompt) => Promise<SessionShellOutput>
-  compact: (input: SessionCompactInput & { model?: LegacyPrompt["model"] }) => Promise<SessionCompactOutput>
+  compact: (
+    input: SessionCompactInput & { model?: LegacyPrompt["model"]; instructions?: string },
+  ) => Promise<SessionCompactOutput>
   rename: (input: Parameters<SessionApi["rename"]>[0] & LegacyLocation) => ReturnType<SessionApi["rename"]>
   // archive: (input: Parameters<SessionApi["archive"]>[0] & LegacyLocation) => ReturnType<SessionApi["archive"]>
   remove: (input: Parameters<SessionApi["remove"]>[0] & LegacyLocation) => ReturnType<SessionApi["remove"]>
@@ -272,12 +274,13 @@ function createV1Api(input: CompatibleInput): CompatibleApi {
           model: value.model,
         })
       },
-      compact: async (value: SessionCompactInput & { model?: LegacyPrompt["model"] }) => {
+      compact: async (value: SessionCompactInput & { model?: LegacyPrompt["model"]; instructions?: string }) => {
         if (!value.model) throw new Error("A model is required to compact a V1 session")
         await legacy().session.summarize({
           sessionID: value.sessionID,
           providerID: value.model.providerID,
           modelID: value.model.modelID,
+          instructions: value.instructions,
         })
         return {
           admittedSeq: 0,

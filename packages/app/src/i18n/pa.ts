@@ -407,6 +407,11 @@ export const dict = {
   "mcp.status.disabled": "بند",
   "mcp.auth.clickToAuthenticate": "تصدیق کرن لئی کلک کرو",
   "dialog.fork.empty": "فورک کرن لئی کوئی پیغام نئیں",
+
+  "dialog.compact.title": "ਸੈਸ਼ਨ ਸੰਖੇਪ ਕਰੋ",
+  "dialog.compact.instructions": "ਹਦਾਇਤਾਂ (ਵਿਕਲਪਿਕ)",
+  "dialog.compact.instructions.placeholder": "API ਤਬਦੀਲੀਆਂ 'ਤੇ ਧਿਆਨ ਦਿਓ; ਡੀਬੱਗਿੰਗ ਦੇ ਭਟਕਾਅ ਹਟਾਓ",
+  "dialog.compact.submit": "ਸੰਖੇਪ ਕਰੋ",
   "dialog.directory.search.placeholder": "فولڈراں نوں لبھو",
   "dialog.directory.empty": "کوئی فولڈر نئیں لبیا",
   "dialog.directory.action.selectFile": "فائل چنو",

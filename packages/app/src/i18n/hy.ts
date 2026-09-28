@@ -402,6 +402,11 @@ export const dict = {
   "mcp.status.disabled": "անջատված",
   "mcp.auth.clickToAuthenticate": "Սեղմեք՝ նույնականացնելու համար",
   "dialog.fork.empty": "Չկան պատառաքաղված հաղորդագրություններ",
+
+  "dialog.compact.title": "Սեղմել սեսիան",
+  "dialog.compact.instructions": "Հրահանգներ (ըստ ցանկության)",
+  "dialog.compact.instructions.placeholder": "Կենտրոնացիր API փոփոխությունների վրա, բաց թող վրիպազերծման շեղումները",
+  "dialog.compact.submit": "Սեղմել",
   "dialog.directory.search.placeholder": "Որոնել թղթապանակներ",
   "dialog.directory.empty": "Պանակներ չեն գտնվել",
   "dialog.directory.action.selectFile": "Ընտրել ֆայլը",

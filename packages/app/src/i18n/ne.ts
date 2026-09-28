@@ -401,6 +401,11 @@ export const dict: Record<string, string> = {
   "mcp.status.disabled": "असक्षम",
   "mcp.auth.clickToAuthenticate": "प्रमाणीकरण गर्न क्लिक गर्नुहोस्",
   "dialog.fork.empty": "बाट फोर्क गर्न कुनै सन्देश छैन",
+
+  "dialog.compact.title": "सत्र संक्षिप्त गर्नुहोस्",
+  "dialog.compact.instructions": "निर्देशनहरू (वैकल्पिक)",
+  "dialog.compact.instructions.placeholder": "API परिवर्तनहरूमा ध्यान दिनुहोस्; डिबगिङका भड्काइहरू हटाउनुहोस्",
+  "dialog.compact.submit": "संक्षिप्त गर्नुहोस्",
   "dialog.directory.search.placeholder": "फोल्डरहरू खोज्नुहोस्",
   "dialog.directory.empty": "कुनै फोल्डरहरू फेला परेनन्",
   "dialog.directory.action.selectFile": "फाइल चयन गर्नुहोस्",

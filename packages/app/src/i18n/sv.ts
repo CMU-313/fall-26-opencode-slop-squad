@@ -401,6 +401,11 @@ export const dict = {
   "mcp.status.disabled": "inaktiverad",
   "mcp.auth.clickToAuthenticate": "Klicka för att autentisera",
   "dialog.fork.empty": "Inga meddelanden att förgrena från",
+
+  "dialog.compact.title": "Komprimera session",
+  "dialog.compact.instructions": "Instruktioner (valfritt)",
+  "dialog.compact.instructions.placeholder": "Fokusera på API-ändringarna; skippa felsökningsomvägarna",
+  "dialog.compact.submit": "Komprimera",
   "dialog.directory.search.placeholder": "Sök i mappar",
   "dialog.directory.empty": "Inga mappar hittades",
   "dialog.directory.action.selectFile": "Välj fil",

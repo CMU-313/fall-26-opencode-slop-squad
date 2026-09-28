@@ -71,6 +71,7 @@ export const dict = {
 
   "ui.messagePart.questions.dismissed": "질문 무시됨",
   "ui.messagePart.compaction": "세션 압축됨",
+  "ui.messagePart.compaction.instructions": "지침: {{instructions}}",
   "ui.messagePart.context.read.one": "{{count}}개 읽음",
   "ui.messagePart.context.read.other": "{{count}}개 읽음",
   "ui.messagePart.context.search.one": "{{count}}개 검색",

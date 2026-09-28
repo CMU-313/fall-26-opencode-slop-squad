@@ -434,6 +434,11 @@ export const dict = {
 
   "dialog.fork.empty": "Немає повідомлень для відгалуження",
 
+  "dialog.compact.title": "Стиснути сесію",
+  "dialog.compact.instructions": "Інструкції (необов'язково)",
+  "dialog.compact.instructions.placeholder": "Зосередься на змінах API; пропусти відступи під час налагодження",
+  "dialog.compact.submit": "Стиснути",
+
   "dialog.directory.search.placeholder": "Пошук папок",
   "dialog.directory.empty": "Папок не знайдено",
   "dialog.directory.action.selectFile": "Вибрати файл",

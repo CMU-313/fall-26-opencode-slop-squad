@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "از کار افتاده است",
   "mcp.auth.clickToAuthenticate": "برای احراز هویت کلیک کنید",
   "dialog.fork.empty": "هیچ پیامی برای فورک وجود ندارد",
+
+  "dialog.compact.title": "فشرده‌سازی نشست",
+  "dialog.compact.instructions": "دستورالعمل‌ها (اختیاری)",
+  "dialog.compact.instructions.placeholder": "روی تغییرات API تمرکز کن؛ انحراف‌های اشکال‌زدایی را کنار بگذار",
+  "dialog.compact.submit": "فشرده‌سازی",
   "dialog.directory.search.placeholder": "جستجو در پوشه ها",
   "dialog.directory.empty": "پوشه ای پیدا نشد",
   "dialog.directory.action.selectFile": "فایل را انتخاب کنید",

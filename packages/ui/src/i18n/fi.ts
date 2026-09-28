@@ -93,6 +93,7 @@ export const dict: Record<string, string> = {
   "ui.messagePart.review.title": "Tarkista vastauksesi",
   "ui.messagePart.questions.dismissed": "Kysymykset hylätty",
   "ui.messagePart.compaction": "Istunto tiivistetty",
+  "ui.messagePart.compaction.instructions": "Ohjeet: {{instructions}}",
   "ui.messagePart.context.read.one": "{{count}} lukukerta",
   "ui.messagePart.context.read.other": "{{count}} lukukertaa",
   "ui.messagePart.context.search.one": "{{count}} haku",

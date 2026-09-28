@@ -19,6 +19,7 @@ import { Dynamic } from "solid-js/web"
 import {
   AgentPart,
   AssistantMessage,
+  CompactionPart,
   FilePart,
   Message as MessageType,
   Part as PartType,
@@ -1632,7 +1633,7 @@ PART_MAPPING["tool"] = function ToolPartDisplay(props) {
   )
 }
 
-export function MessageDivider(props: { label: string }) {
+export function MessageDivider(props: { label: string; detail?: string }) {
   return (
     <div data-component="compaction-part">
       <div data-slot="compaction-part-divider">
@@ -1642,13 +1643,23 @@ export function MessageDivider(props: { label: string }) {
         </span>
         <span data-slot="compaction-part-line" />
       </div>
+      <Show when={props.detail}>
+        <div data-slot="compaction-part-instructions" class="text-12-regular text-text-weak">
+          {props.detail}
+        </div>
+      </Show>
     </div>
   )
 }
 
-PART_MAPPING["compaction"] = function CompactionPartDisplay() {
+PART_MAPPING["compaction"] = function CompactionPartDisplay(props) {
   const i18n = useI18n()
-  return <MessageDivider label={i18n.t("ui.messagePart.compaction")} />
+  const detail = () => {
+    const instructions = (props.part as CompactionPart).instructions
+    if (!instructions) return undefined
+    return i18n.t("ui.messagePart.compaction.instructions", { instructions })
+  }
+  return <MessageDivider label={i18n.t("ui.messagePart.compaction")} detail={detail()} />
 }
 
 PART_MAPPING["text"] = function TextPartDisplay(props) {

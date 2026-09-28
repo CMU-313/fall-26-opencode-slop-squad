@@ -399,6 +399,11 @@ export const dict: Record<string, string> = {
   "mcp.status.disabled": "ආබාධිතයි",
   "mcp.auth.clickToAuthenticate": "සත්‍යාපනය කිරීමට ක්ලික් කරන්න",
   "dialog.fork.empty": "ෆෝක් කිරීමට පණිවිඩ නැත",
+
+  "dialog.compact.title": "සැසිය සංක්ෂිප්ත කරන්න",
+  "dialog.compact.instructions": "උපදෙස් (විකල්ප)",
+  "dialog.compact.instructions.placeholder": "API වෙනස්කම් කෙරෙහි අවධානය යොමු කරන්න; දෝෂ නිරාකරණ අතුරු මාර්ග ඉවත් කරන්න",
+  "dialog.compact.submit": "සංක්ෂිප්ත කරන්න",
   "dialog.directory.search.placeholder": "ෆෝල්ඩර සොයන්න",
   "dialog.directory.empty": "ෆෝල්ඩර හමු නොවීය",
   "dialog.directory.action.selectFile": "ගොනුව තෝරන්න",

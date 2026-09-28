@@ -399,6 +399,11 @@ export const dict = {
   "mcp.status.disabled": "puudega",
   "mcp.auth.clickToAuthenticate": "Klõpsake autentimiseks",
   "dialog.fork.empty": "Ühtegi sõnumit pole",
+
+  "dialog.compact.title": "Tihenda seanss",
+  "dialog.compact.instructions": "Juhised (valikuline)",
+  "dialog.compact.instructions.placeholder": "Keskendu API muudatustele; jäta silumise kõrvalepõiked välja",
+  "dialog.compact.submit": "Tihenda",
   "dialog.directory.search.placeholder": "Otsi kaustadest",
   "dialog.directory.empty": "Ühtegi kausta ei leitud",
   "dialog.directory.action.selectFile": "Valige fail",

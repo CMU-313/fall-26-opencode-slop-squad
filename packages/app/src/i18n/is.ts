@@ -404,6 +404,11 @@ export const dict = {
   "mcp.status.disabled": "fatlaður",
   "mcp.auth.clickToAuthenticate": "Smelltu til að auðkenna",
   "dialog.fork.empty": "Engin skilaboð til að punga frá",
+
+  "dialog.compact.title": "Þjappa lotu",
+  "dialog.compact.instructions": "Leiðbeiningar (valfrjálst)",
+  "dialog.compact.instructions.placeholder": "Einbeittu þér að API-breytingunum; slepptu villuleitarkrókunum",
+  "dialog.compact.submit": "Þjappa",
   "dialog.directory.search.placeholder": "Leita í möppum",
   "dialog.directory.empty": "Engar möppur fundust",
   "dialog.directory.action.selectFile": "Veldu skrá",

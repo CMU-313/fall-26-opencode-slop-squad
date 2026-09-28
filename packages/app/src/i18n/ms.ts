@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "dilumpuhkan",
   "mcp.auth.clickToAuthenticate": "Klik untuk pengesahan",
   "dialog.fork.empty": "Tiada mesej untuk dicabang",
+
+  "dialog.compact.title": "Padatkan sesi",
+  "dialog.compact.instructions": "Arahan (pilihan)",
+  "dialog.compact.instructions.placeholder": "Fokus pada perubahan API; buang lencongan penyahpepijatan",
+  "dialog.compact.submit": "Padatkan",
   "dialog.directory.search.placeholder": "Cari folder",
   "dialog.directory.empty": "Tiada folder ditemui",
   "dialog.directory.action.selectFile": "Pilih fail",

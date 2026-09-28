@@ -400,6 +400,11 @@ export const dict = {
   "mcp.status.disabled": "zakázáno",
   "mcp.auth.clickToAuthenticate": "Klikněte pro ověření",
   "dialog.fork.empty": "Žádné zprávy k rozvětvení",
+
+  "dialog.compact.title": "Zhustit relaci",
+  "dialog.compact.instructions": "Pokyny (volitelné)",
+  "dialog.compact.instructions.placeholder": "Zaměř se na změny API; vynech odbočky při ladění",
+  "dialog.compact.submit": "Zhustit",
   "dialog.directory.search.placeholder": "Hledat složky",
   "dialog.directory.empty": "Nebyly nalezeny žádné složky",
   "dialog.directory.action.selectFile": "Vyberte soubor",

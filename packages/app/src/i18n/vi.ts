@@ -407,6 +407,11 @@ export const dict = {
   "mcp.status.disabled": "đã tắt",
   "mcp.auth.clickToAuthenticate": "Bấm để xác thực",
   "dialog.fork.empty": "Không có tin nhắn nào để phân nhánh",
+
+  "dialog.compact.title": "Nén phiên",
+  "dialog.compact.instructions": "Hướng dẫn (tùy chọn)",
+  "dialog.compact.instructions.placeholder": "Tập trung vào các thay đổi API; bỏ qua những đoạn gỡ lỗi lan man",
+  "dialog.compact.submit": "Nén",
   "dialog.directory.search.placeholder": "Tìm kiếm thư mục",
   "dialog.directory.empty": "Không tìm thấy thư mục nào",
   "dialog.directory.action.selectFile": "Chọn tệp",
