@@ -51,6 +51,7 @@ import { DialogMessage } from "./dialog-message"
 import type { PromptInfo } from "../../component/prompt/history"
 import { DialogConfirm } from "../../ui/dialog-confirm"
 import { DialogPrompt } from "../../ui/dialog-prompt"
+import { createCompactionRequest } from "../../util/compaction"
 import { DialogTimeline } from "./dialog-timeline"
 import { DialogForkFromTimeline } from "./dialog-fork-from-timeline"
 import { DialogSessionRename } from "../../component/dialog-session-rename"
@@ -582,15 +583,26 @@ export function Session() {
         const instructions = await DialogPrompt.show(dialog, "Compaction instructions", {
           placeholder: "What should the summary focus on? (optional)",
         })
-        if (instructions === null) return
+        const request = createCompactionRequest(route.sessionID, selectedModel, instructions)
+        if (!request) return
 
-        void sdk.client.session.summarize({
-          sessionID: route.sessionID,
-          modelID: selectedModel.modelID,
-          providerID: selectedModel.providerID,
-          instructions: instructions.trim() || undefined,
-        })
         dialog.clear()
+        try {
+          const result = await sdk.client.session.summarize(request)
+          if (result.error) {
+            toast.show({
+              variant: "error",
+              message: "Failed to summarize session",
+              duration: 5000,
+            })
+          }
+        } catch {
+          toast.show({
+            variant: "error",
+            message: "Failed to summarize session",
+            duration: 5000,
+          })
+        }
       },
     },
     {
