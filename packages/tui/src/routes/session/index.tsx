@@ -52,6 +52,7 @@ import type { PromptInfo } from "../../component/prompt/history"
 import { DialogConfirm } from "../../ui/dialog-confirm"
 import { DialogPrompt } from "../../ui/dialog-prompt"
 import { createCompactionRequest, createCompactionRunner } from "../../util/compaction"
+import { findCompactionMarker, compactionMarkerInstructions } from "../../util/compaction-marker"
 import { DialogTimeline } from "./dialog-timeline"
 import { DialogForkFromTimeline } from "./dialog-fork-from-timeline"
 import { DialogSessionRename } from "../../component/dialog-session-rename"
@@ -1408,7 +1409,7 @@ function UserMessage(props: {
   const queuedFg = createMemo(() => selectedForeground(theme, color()))
   const metadataVisible = createMemo(() => queued() || ctx.showTimestamps())
 
-  const compaction = createMemo(() => props.parts.find((x) => x.type === "compaction"))
+  const compaction = createMemo(() => findCompactionMarker(props.parts))
 
   return (
     <>
@@ -1476,7 +1477,7 @@ function UserMessage(props: {
         {(part) => (
           <box marginTop={1} flexDirection="column">
             <box border={["top"]} title=" Compaction " titleAlignment="center" borderColor={theme.borderActive} />
-            <Show when={part().instructions}>
+            <Show when={compactionMarkerInstructions(part())}>
               {(instructions) => <text fg={theme.textMuted}>Instructions: {instructions()}</text>}
             </Show>
           </box>
