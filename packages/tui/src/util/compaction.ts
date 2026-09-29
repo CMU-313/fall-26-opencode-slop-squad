@@ -31,3 +31,34 @@ export function createCompactionRequest(
     instructions: instructions.trim() || undefined,
   }
 }
+
+/**
+ * Runs compaction and prevents overlapping requests.
+ *
+ * Each runner maintains its own in-flight state.
+ * Returns false for duplicate requests or failed requests.
+ */
+export function createCompactionRunner(
+  summarize: (request: CompactionRequest) => Promise<{ error?: unknown }>,
+) {
+  let running = false
+
+  return {
+    isRunning: () => running,
+
+    async run(request: CompactionRequest): Promise<boolean> {
+      if (running) return false
+
+      running = true
+
+      try {
+        const result = await summarize(request)
+        return !result.error
+      } catch {
+        return false
+      } finally {
+        running = false
+      }
+    },
+  }
+}

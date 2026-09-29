@@ -51,7 +51,7 @@ import { DialogMessage } from "./dialog-message"
 import type { PromptInfo } from "../../component/prompt/history"
 import { DialogConfirm } from "../../ui/dialog-confirm"
 import { DialogPrompt } from "../../ui/dialog-prompt"
-import { createCompactionRequest } from "../../util/compaction"
+import { createCompactionRequest, createCompactionRunner } from "../../util/compaction"
 import { DialogTimeline } from "./dialog-timeline"
 import { DialogForkFromTimeline } from "./dialog-fork-from-timeline"
 import { DialogSessionRename } from "../../component/dialog-session-rename"
@@ -284,6 +284,7 @@ export function Session() {
   const scrollAcceleration = createMemo(() => getScrollAcceleration(tuiConfig))
   const toast = useToast()
   const sdk = useSDK()
+  const compactionRunner = createCompactionRunner((request) => sdk.client.session.summarize(request))
   const editor = useEditorContext()
 
   createEffect(() => {
@@ -570,6 +571,10 @@ export function Session() {
         aliases: ["summarize"],
       },
       run: async () => {
+        if (compactionRunner.isRunning()) {
+          toast.show({ variant: "warning", message: "Session compaction is already running", duration: 3000 })
+          return
+        }
         const selectedModel = local.model.current()
         if (!selectedModel) {
           toast.show({
@@ -586,22 +591,15 @@ export function Session() {
         const request = createCompactionRequest(route.sessionID, selectedModel, instructions)
         if (!request) return
 
+        if (compactionRunner.isRunning()) {
+          toast.show({ variant: "warning", message: "Session compaction is already running", duration: 3000 })
+          return
+        }
+
         dialog.clear()
-        try {
-          const result = await sdk.client.session.summarize(request)
-          if (result.error) {
-            toast.show({
-              variant: "error",
-              message: "Failed to summarize session",
-              duration: 5000,
-            })
-          }
-        } catch {
-          toast.show({
-            variant: "error",
-            message: "Failed to summarize session",
-            duration: 5000,
-          })
+        const success = await compactionRunner.run(request)
+        if (!success) {
+          toast.show({ variant: "error", message: "Failed to summarize session", duration: 5000 })
         }
       },
     },
