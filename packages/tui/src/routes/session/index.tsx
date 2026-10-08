@@ -51,6 +51,8 @@ import { DialogMessage } from "./dialog-message"
 import type { PromptInfo } from "../../component/prompt/history"
 import { DialogConfirm } from "../../ui/dialog-confirm"
 import { DialogPrompt } from "../../ui/dialog-prompt"
+import { createCompactionRequest, createCompactionRunner } from "../../util/compaction"
+import { findCompactionMarker, compactionMarkerInstructions } from "../../util/compaction-marker"
 import { DialogTimeline } from "./dialog-timeline"
 import { DialogForkFromTimeline } from "./dialog-fork-from-timeline"
 import { DialogSessionRename } from "../../component/dialog-session-rename"
@@ -283,6 +285,7 @@ export function Session() {
   const scrollAcceleration = createMemo(() => getScrollAcceleration(tuiConfig))
   const toast = useToast()
   const sdk = useSDK()
+  const compactionRunner = createCompactionRunner((request) => sdk.client.session.summarize(request))
   const editor = useEditorContext()
 
   createEffect(() => {
@@ -569,6 +572,10 @@ export function Session() {
         aliases: ["summarize"],
       },
       run: async () => {
+        if (compactionRunner.isRunning()) {
+          toast.show({ variant: "warning", message: "Session compaction is already running", duration: 3000 })
+          return
+        }
         const selectedModel = local.model.current()
         if (!selectedModel) {
           toast.show({
@@ -582,15 +589,19 @@ export function Session() {
         const instructions = await DialogPrompt.show(dialog, "Compaction instructions", {
           placeholder: "What should the summary focus on? (optional)",
         })
-        if (instructions === null) return
+        const request = createCompactionRequest(route.sessionID, selectedModel, instructions)
+        if (!request) return
 
-        void sdk.client.session.summarize({
-          sessionID: route.sessionID,
-          modelID: selectedModel.modelID,
-          providerID: selectedModel.providerID,
-          instructions: instructions.trim() || undefined,
-        })
+        if (compactionRunner.isRunning()) {
+          toast.show({ variant: "warning", message: "Session compaction is already running", duration: 3000 })
+          return
+        }
+
         dialog.clear()
+        const success = await compactionRunner.run(request)
+        if (!success) {
+          toast.show({ variant: "error", message: "Failed to summarize session", duration: 5000 })
+        }
       },
     },
     {
@@ -1398,7 +1409,7 @@ function UserMessage(props: {
   const queuedFg = createMemo(() => selectedForeground(theme, color()))
   const metadataVisible = createMemo(() => queued() || ctx.showTimestamps())
 
-  const compaction = createMemo(() => props.parts.find((x) => x.type === "compaction"))
+  const compaction = createMemo(() => findCompactionMarker(props.parts))
 
   return (
     <>
@@ -1466,7 +1477,7 @@ function UserMessage(props: {
         {(part) => (
           <box marginTop={1} flexDirection="column">
             <box border={["top"]} title=" Compaction " titleAlignment="center" borderColor={theme.borderActive} />
-            <Show when={part().instructions}>
+            <Show when={compactionMarkerInstructions(part())}>
               {(instructions) => <text fg={theme.textMuted}>Instructions: {instructions()}</text>}
             </Show>
           </box>
