@@ -624,6 +624,8 @@ export const dict = {
   "toast.session.export.success.description": "បានរក្សាទុកសម័យទៅ {{filename}}",
   "toast.session.export.failed.title": "បរាជ័យក្នុងការនាំចេញសម័យ",
   "toast.session.export.failed.description": "កំហុសបានកើតឡើងខណៈពេលនាំចេញសម័យ",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "បានបរាជ័យក្នុងការផ្ទុកសម័យសម្រាប់ {{project}}",
   "toast.project.reloadFailed.title": "បានបរាជ័យក្នុងការផ្ទុក {{project}} ឡើងវិញ",
   "toast.update.title": "មានបច្ចុប្បន្នភាព",

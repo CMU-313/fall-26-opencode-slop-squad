@@ -630,6 +630,8 @@ export const dict = {
   "toast.session.export.success.description": "A munkamenet elmentve ide: {{filename}}",
   "toast.session.export.failed.title": "Nem sikerült exportálni a munkamenetet",
   "toast.session.export.failed.description": "Hiba történt a munkamenet exportálása közben",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Nem sikerült betölteni a {{project}} munkameneteit",
   "toast.project.reloadFailed.title": "A {{project}} újratöltése nem sikerült",
   "toast.update.title": "Frissítés elérhető",

@@ -628,6 +628,8 @@ export const dict = {
   "toast.session.export.success.description": "Сеанс ба {{filename}} захира карда шуд",
   "toast.session.export.failed.title": "Сеанс содир карда нашуд",
   "toast.session.export.failed.description": "Ҳангоми содироти сессия хатогӣ рӯй дод",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Сеансҳо барои {{project}} бор карда нашуд",
   "toast.project.reloadFailed.title": "Аз нав бор кардан муяссар нашуд {{project}}",
   "toast.update.title": "Навсозии дастрас",

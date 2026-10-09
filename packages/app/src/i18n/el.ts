@@ -629,6 +629,8 @@ export const dict = {
   "toast.session.export.success.description": "Η συνεδρία αποθηκεύτηκε στο {{filename}}",
   "toast.session.export.failed.title": "Αποτυχία εξαγωγής συνεδρίας",
   "toast.session.export.failed.description": "Παρουσιάστηκε σφάλμα κατά την εξαγωγή της συνεδρίας",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Αποτυχία φόρτωσης συνεδριών για {{project}}",
   "toast.project.reloadFailed.title": "Αποτυχία επαναφόρτωσης του {{project}}",
   "toast.update.title": "Διαθέσιμη ενημέρωση",

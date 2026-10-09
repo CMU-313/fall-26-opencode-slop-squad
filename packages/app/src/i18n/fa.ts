@@ -625,6 +625,8 @@ export const dict = {
   "toast.session.export.success.description": "جلسه در {{filename}} ذخیره شد",
   "toast.session.export.failed.title": "جلسه صادر نشد",
   "toast.session.export.failed.description": "هنگام صادر کردن جلسه خطایی روی داد",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "جلسات برای {{project}} بارگیری نشد",
   "toast.project.reloadFailed.title": "بارگیری مجدد {{project}} انجام نشد",
   "toast.update.title": "به روز رسانی موجود است",

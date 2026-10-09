@@ -622,6 +622,8 @@ export const dict = {
   "toast.session.export.success.description": "Seanss salvestatud asukohta {{filename}}",
   "toast.session.export.failed.title": "Seansi eksportimine ebaõnnestus",
   "toast.session.export.failed.description": "Seansi eksportimisel ilmnes viga",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "{{project}} seansside laadimine ebaõnnestus",
   "toast.project.reloadFailed.title": "{{project}} uuesti laadimine ebaõnnestus",
   "toast.update.title": "Värskendus saadaval",

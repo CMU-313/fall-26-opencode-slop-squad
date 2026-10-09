@@ -633,6 +633,8 @@ export const dict = {
   "toast.session.export.success.description": "ސެޝަން ސޭވްކޮށްފައިވަނީ {{filename}} އަށެވެ",
   "toast.session.export.failed.title": "އެކްސްޕޯޓް ސެޝަން ނާކާމިޔާބުވެއްޖެ",
   "toast.session.export.failed.description": "ސެޝަން އެކްސްޕޯޓް ކުރަމުން ދިޔައިރު ގޯހެއް ދިމާވިއެވެ",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "{{project}} އަށް ސެޝަންތައް ލޯޑް ނުކުރެވިއްޖެއެވެ",
   "toast.project.reloadFailed.title": "{{project}} ރީލޯޑް ނުކުރެވިއްޖެއެވެ",
   "toast.update.title": "އަޕްޑޭޓް ލިބެން ހުރެއެވެ",

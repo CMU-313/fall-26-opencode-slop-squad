@@ -575,6 +575,8 @@ export const dict = {
   "toast.session.export.success.description": "Sesjonen ble lagret i {{filename}}",
   "toast.session.export.failed.title": "Kunne ikke eksportere sesjon",
   "toast.session.export.failed.description": "Det oppstod en feil under eksport av sesjonen",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Kunne ikke laste sesjoner for {{project}}",
 

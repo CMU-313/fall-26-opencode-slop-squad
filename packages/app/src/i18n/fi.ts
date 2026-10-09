@@ -521,6 +521,8 @@ export const dict = {
   "toast.session.export.success.description": "Istunto tallennettu tiedostoon {{filename}}",
   "toast.session.export.failed.title": "Istunnon vieminen epäonnistui",
   "toast.session.export.failed.description": "Istuntoa vietäessä tapahtui virhe",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Projektin {{project}} istuntojen lataaminen epäonnistui",
   "toast.project.reloadFailed.title": "Projektin {{project}} lataaminen uudelleen epäonnistui",

@@ -671,6 +671,8 @@ export const dict = {
   "toast.session.export.success.description": "Sesija je sačuvana kao {{filename}}",
   "toast.session.export.failed.title": "Izvoz sesije nije uspio",
   "toast.session.export.failed.description": "Došlo je do greške prilikom izvoza sesije",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Neuspjelo učitavanje sesija za {{project}}",
 

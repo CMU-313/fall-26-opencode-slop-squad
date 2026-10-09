@@ -625,6 +625,8 @@ export const dict = {
   "toast.session.export.success.description": "Sesija saglabāta kā {{filename}}",
   "toast.session.export.failed.title": "Neizdevās eksportēt sesiju",
   "toast.session.export.failed.description": "Radās kļūda, eksportējot sesiju",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Neizdevās ielādēt sesijas projektam {{project}}",
   "toast.project.reloadFailed.title": "Neizdevās pārlādēt {{project}}",
   "toast.update.title": "Pieejams atjauninājums",

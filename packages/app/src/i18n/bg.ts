@@ -630,6 +630,8 @@ export const dict = {
   "toast.session.export.success.description": "Запазена сесия в {{filename}}",
   "toast.session.export.failed.title": "Неуспешно експортиране на сесия",
   "toast.session.export.failed.description": "Възникна грешка при експортиране на сесията",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Неуспешно зареждане на сесии за {{project}}",
   "toast.project.reloadFailed.title": "Неуспешно презареждане на {{project}}",
   "toast.update.title": "Налична актуализация",

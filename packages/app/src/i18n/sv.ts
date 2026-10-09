@@ -630,6 +630,8 @@ export const dict = {
   "toast.session.export.success.description": "Sessionen sparades i {{filename}}",
   "toast.session.export.failed.title": "Det gick inte att exportera sessionen",
   "toast.session.export.failed.description": "Ett fel uppstod när sessionen exporterades",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Det gick inte att läsa in sessioner för {{project}}",
   "toast.project.reloadFailed.title": "Det gick inte att ladda om {{project}}",

@@ -624,6 +624,8 @@ export const dict = {
   "toast.session.export.success.description": "Relácia uložená do {{filename}}",
   "toast.session.export.failed.title": "Export relácie zlyhal",
   "toast.session.export.failed.description": "Pri exporte relácie došlo k chybe",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Nepodarilo sa načítať relácie pre {{project}}",
   "toast.project.reloadFailed.title": "Nepodarilo sa znovu načítať {{project}}",
   "toast.update.title": "Dostupná aktualizácia",

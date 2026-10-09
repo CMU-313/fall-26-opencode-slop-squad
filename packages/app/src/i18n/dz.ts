@@ -634,6 +634,8 @@ export const dict: Record<string, string> = {
   "toast.session.export.success.description": "{{filename}} ལུ་སྲུང་བཞག་འབད་ཡོད་པའི་ལཱ་ཡུན་འདི་ཨིན།",
   "toast.session.export.failed.title": "ལཱ་ཡུན་ཕྱིར་འདྲེན་འབད་ནི་ལུ་འཐུས་ཤོར་འབྱུང་ཡོདཔ།",
   "toast.session.export.failed.description": "ལཱ་ཡུན་ཕྱིར་འདྲེན་འབད་བའི་སྐབས་འཛོལ་བ་བྱུང་ཡོདཔ།",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "{{project}}གི་དོན་ལུ་ལཱ་ཡུན་ཚུ་མངོན་གསལ་འབད་ནི་ལུ་འཐུས་ཤོར་འབྱུང་ཡོདཔ།",
   "toast.project.reloadFailed.title": "{{project}}ཡང་བསྐྱར་མངོན་གསལ་འབད་ནི་ལུ་འཐུས་ཤོར་འབྱུང་ཡོདཔ།",
   "toast.update.title": "དུས་མཐུན་བཟོ་ཚུགས།",

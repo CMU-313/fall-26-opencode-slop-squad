@@ -631,6 +631,8 @@ export const dict = {
   "toast.session.export.success.description": "စက်ရှင်ကို {{filename}} သို့ သိမ်းထားသည်။",
   "toast.session.export.failed.title": "စက်ရှင်ကို ထုတ်ယူ၍မရပါ။",
   "toast.session.export.failed.description": "စက်ရှင်ကို ထုတ်ယူနေစဉ် အမှားအယွင်းတစ်ခု ဖြစ်ပွားခဲ့သည်။",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "{{project}} အတွက် ဆက်ရှင်များကို တင်ရန် မအောင်မြင်ပါ။",
   "toast.project.reloadFailed.title": "{{project}} ကို ပြန်လည်စတင်ရန် မအောင်မြင်ပါ။",
   "toast.update.title": "အပ်ဒိတ် ရနိုင်ပါသည်။",

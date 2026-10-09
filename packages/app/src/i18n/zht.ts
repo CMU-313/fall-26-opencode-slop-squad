@@ -662,6 +662,8 @@ export const dict = {
   "toast.session.export.success.description": "已將工作階段儲存至 {{filename}}",
   "toast.session.export.failed.title": "匯出工作階段失敗",
   "toast.session.export.failed.description": "匯出工作階段時發生錯誤",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "無法載入 {{project}} 的工作階段",
 

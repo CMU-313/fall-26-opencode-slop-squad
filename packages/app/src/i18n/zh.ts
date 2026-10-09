@@ -670,6 +670,8 @@ export const dict = {
   "toast.session.export.success.description": "已将会话保存到 {{filename}}",
   "toast.session.export.failed.title": "导出会话失败",
   "toast.session.export.failed.description": "导出会话时发生错误",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "无法加载 {{project}} 的会话",
   "toast.update.title": "有可用更新",

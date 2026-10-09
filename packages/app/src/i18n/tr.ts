@@ -674,6 +674,8 @@ export const dict = {
   "toast.session.export.success.description": "Oturum {{filename}} dosyasına kaydedildi",
   "toast.session.export.failed.title": "Oturum dışa aktarılamadı",
   "toast.session.export.failed.description": "Oturum dışa aktarılırken bir hata oluştu",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}} için oturumlar yüklenemedi",
 

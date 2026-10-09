@@ -637,6 +637,8 @@ export const dict = {
   "toast.session.export.success.description": "سیشن کو \u2068{{filename}}\u2069 میں محفوظ کر دیا گیا",
   "toast.session.export.failed.title": "سیشن برآمد کرنے میں ناکام",
   "toast.session.export.failed.description": "سیشن برآمد کرتے وقت ایک خرابی پیش آ گئی",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}} کے لیے سیشن لوڈ کرنے میں ناکام",
   "toast.project.reloadFailed.title": "{{project}} کو دوبارہ لوڈ کرنے میں ناکام",

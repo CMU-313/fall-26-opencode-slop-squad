@@ -192,6 +192,20 @@ test("compacts a session with instructions and shows them on the compaction divi
   await expect(dividers.last().locator('[data-slot="compaction-part-label"]')).toBeVisible()
   await expect(dividers.last().locator('[data-slot="compaction-part-instructions"]')).toHaveCount(0)
   await expect(dividers.first().locator('[data-slot="compaction-part-instructions"]')).toContainText(instructions)
+
+  // A failing summarize request is surfaced as an error toast instead of being swallowed.
+  await page.route(new RegExp(`/session/${sessionID}/summarize(\\?|$)`), (route) =>
+    route.fulfill({
+      status: 500,
+      contentType: "application/json",
+      headers: { "access-control-allow-origin": "*" },
+      body: JSON.stringify({ name: "UnknownError", data: { message: "summarize exploded" } }),
+    }),
+  )
+  await openCompactDialog(page)
+  await page.locator('[data-action="compact-submit"]').click()
+  await expect(dialog).toHaveCount(0)
+  await expect(page.locator(".toast-v2--error", { hasText: "Failed to compact session" })).toBeVisible()
 })
 
 async function openCompactDialog(page: Page) {

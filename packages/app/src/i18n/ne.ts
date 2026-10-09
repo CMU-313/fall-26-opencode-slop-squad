@@ -626,6 +626,8 @@ export const dict: Record<string, string> = {
   "toast.session.export.success.description": "सत्र {{filename}} मा सुरक्षित गरियो",
   "toast.session.export.failed.title": "सत्र निर्यात गर्न असफल भयो",
   "toast.session.export.failed.description": "सत्र निर्यात गर्दा त्रुटि भयो",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "{{project}} का लागि सत्रहरू लोड गर्न असफल भयो",
   "toast.project.reloadFailed.title": "{{project}} पुन: लोड गर्न असफल भयो",
   "toast.update.title": "अपडेट उपलब्ध छ",

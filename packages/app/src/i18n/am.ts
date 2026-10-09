@@ -616,6 +616,8 @@ export const dict = {
   "toast.session.export.success.description": "የተቀመጠው ክፍለ ጊዜ ወደ {{filename}}",
   "toast.session.export.failed.title": "ክፍለ-ጊዜን ወደ ውጭ መላክ አልተሳካም",
   "toast.session.export.failed.description": "ክፍለ-ጊዜውን ወደ ውጭ በመላክ ላይ ስህተት ተፈጥሯል",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "ለ{{project}}] ክፍለ-ጊዜዎችን መጫን አልተሳካም",
   "toast.project.reloadFailed.title": "{{project}}ን እንደገና መጫን አልተሳካም",
   "toast.update.title": "ዝማኔ አለ",

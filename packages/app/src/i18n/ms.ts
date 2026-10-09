@@ -625,6 +625,8 @@ export const dict = {
   "toast.session.export.success.description": "Sesi disimpan ke {{filename}}",
   "toast.session.export.failed.title": "Gagal mengeksport sesi",
   "toast.session.export.failed.description": "Ralat berlaku semasa mengeksport sesi",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Gagal memuatkan sesi untuk {{project}}",
   "toast.project.reloadFailed.title": "Gagal memuat semula {{project}}",
   "toast.update.title": "Kemas kini tersedia",

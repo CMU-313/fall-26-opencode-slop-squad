@@ -624,6 +624,8 @@ export const dict: Record<string, string> = {
   "toast.session.export.success.description": "සැසිය {{filename}} වෙත සුරකින ලදී",
   "toast.session.export.failed.title": "සැසිය අපනයනය කිරීමට අසමත් විය",
   "toast.session.export.failed.description": "සැසිය නිර්යාත කිරීමේදී දෝෂයක් ඇති විය",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "{{project}} සඳහා සැසි පූරණය කිරීමට අසමත් විය",
   "toast.project.reloadFailed.title": "{{project}} නැවත පූරණය කිරීමට අසමත් විය",
   "toast.update.title": "යාවත්කාලීන ලබා ගත හැක",

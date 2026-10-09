@@ -622,6 +622,8 @@ export const dict = {
   "toast.session.export.success.description": "ບັນທຶກເຊດຊັນໃສ່ {{filename}}",
   "toast.session.export.failed.title": "ລົ້ມເຫລວໃນການສົ່ງອອກເຊດຊັນ",
   "toast.session.export.failed.description": "ມີຂໍ້ຜິດພາດເກີດຂຶ້ນໃນຂະນະທີ່ສົ່ງອອກເຊດຊັນ",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "ລົ້ມເຫລວໃນການໂຫລດເຊດຊັນສໍາລັບ {{project}}",
   "toast.project.reloadFailed.title": "ໂຫຼດ {{project}} ຄືນໃໝ່ບໍ່ສຳເລັດ",
   "toast.update.title": "ມີອັບເດດ",

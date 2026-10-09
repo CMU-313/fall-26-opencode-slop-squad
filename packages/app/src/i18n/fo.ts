@@ -625,6 +625,8 @@ export const dict = {
   "toast.session.export.success.description": "Goymd seta til {{filename}}",
   "toast.session.export.failed.title": "Tað eydnaðist ikki at útflyta setu",
   "toast.session.export.failed.description": "Ein feilur hendi, meðan setan varð útflutt.",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
   "toast.session.listFailed.title": "Tað eydnaðist ikki at heinta setur fyri {{project}}",
   "toast.project.reloadFailed.title": "Tað eydnaðist ikki at endurlesa {{project}}",
   "toast.update.title": "Dagføring er tøk",

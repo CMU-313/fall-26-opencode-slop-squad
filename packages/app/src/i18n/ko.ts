@@ -426,6 +426,8 @@ export const dict = {
   "toast.session.export.success.description": "세션 저장 위치: {{filename}}",
   "toast.session.export.failed.title": "세션 내보내기 실패",
   "toast.session.export.failed.description": "세션을 내보내는 동안 오류가 발생했습니다",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}}에 대한 세션을 로드하지 못했습니다",
   "toast.update.title": "업데이트 가능",
