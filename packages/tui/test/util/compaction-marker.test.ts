@@ -1,9 +1,5 @@
-
 import { describe, expect, test } from "bun:test"
-import {
-  findCompactionMarker,
-  compactionMarkerInstructions,
-} from "../../src/util/compaction-marker"
+import { findCompactionMarker, compactionMarkerInstructions } from "../../src/util/compaction-marker"
 
 describe("TUI compaction marker", () => {
   test("finds a compaction marker", () => {
@@ -33,9 +29,7 @@ describe("TUI compaction marker", () => {
       instructions: "Focus on authentication",
     }
 
-    expect(compactionMarkerInstructions(part)).toBe(
-      "Focus on authentication",
-    )
+    expect(compactionMarkerInstructions(part)).toBe("Focus on authentication")
   })
 
   test("omits instructions when none are provided", () => {
@@ -51,5 +45,35 @@ describe("TUI compaction marker", () => {
     }
 
     expect(compactionMarkerInstructions(part)).toBeUndefined()
+  })
+
+  // Sprint 2: Additional marker verification
+
+  test("finds compaction marker among multiple message parts", () => {
+    const parts = [
+      { type: "text", text: "Before compaction" },
+      { type: "tool", name: "bash" },
+      {
+        type: "compaction",
+        instructions: "Preserve implementation details",
+      },
+      { type: "text", text: "After compaction" },
+    ]
+
+    const marker = findCompactionMarker(parts)
+
+    expect(marker?.type).toBe("compaction")
+    expect(compactionMarkerInstructions(marker)).toBe("Preserve implementation details")
+  })
+
+  test("preserves multiline instructions in marker", () => {
+    const instructions = "Keep decisions\nKeep file paths\nOmit debugging"
+
+    expect(
+      compactionMarkerInstructions({
+        type: "compaction",
+        instructions,
+      }),
+    ).toBe(instructions)
   })
 })

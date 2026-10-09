@@ -1,10 +1,5 @@
-
 import { describe, expect, test } from "bun:test"
-import {
-  createCompactionRequest,
-  createCompactionRunner,
-  type CompactionRequest,
-} from "../../src/util/compaction"
+import { createCompactionRequest, createCompactionRunner, type CompactionRequest } from "../../src/util/compaction"
 
 describe("TUI compaction instructions", () => {
   const model = {
@@ -13,11 +8,7 @@ describe("TUI compaction instructions", () => {
   }
 
   test("includes custom instructions in the request", () => {
-    const result = createCompactionRequest(
-      "test-session",
-      model,
-      "Focus on technical decisions",
-    )
+    const result = createCompactionRequest("test-session", model, "Focus on technical decisions")
 
     expect(result).toEqual({
       sessionID: "test-session",
@@ -28,11 +19,7 @@ describe("TUI compaction instructions", () => {
   })
 
   test("trims whitespace from instructions", () => {
-    const result = createCompactionRequest(
-      "test-session",
-      model,
-      "  Focus on authentication  ",
-    )
+    const result = createCompactionRequest("test-session", model, "  Focus on authentication  ")
 
     expect(result?.instructions).toBe("Focus on authentication")
   })
@@ -55,6 +42,27 @@ describe("TUI compaction instructions", () => {
     const result = createCompactionRequest("test-session", model, null)
 
     expect(result).toBeUndefined()
+  })
+
+  // Sprint 2: Additional input verification
+
+  test("preserves multiline instructions and special characters", () => {
+    const instructions = "Focus on API changes:\n- Preserve /session/{id}\n- Include errors & retries"
+
+    const result = createCompactionRequest("test-session", model, instructions)
+
+    expect(result?.instructions).toBe(instructions)
+  })
+
+  test("preserves original request fields without instructions", () => {
+    const result = createCompactionRequest("test-session", model, "")
+
+    expect(result).toEqual({
+      sessionID: "test-session",
+      modelID: "test-model",
+      providerID: "test-provider",
+      instructions: undefined,
+    })
   })
 })
 
@@ -131,5 +139,75 @@ describe("TUI compaction reliability", () => {
     expect(await runner.run(request)).toBe(true)
     expect(await runner.run(request)).toBe(true)
     expect(calls).toBe(2)
+  })
+
+  // Sprint 2: Additional reliability verification
+
+  test("allows retry after a failed API response", async () => {
+    let calls = 0
+
+    const runner = createCompactionRunner(async () => {
+      calls++
+
+      if (calls === 1) {
+        return { error: { message: "Temporary failure" } }
+      }
+
+      return {}
+    })
+
+    expect(await runner.run(request)).toBe(false)
+    expect(runner.isRunning()).toBe(false)
+
+    expect(await runner.run(request)).toBe(true)
+    expect(calls).toBe(2)
+  })
+
+  test("allows retry after a rejected request", async () => {
+    let calls = 0
+
+    const runner = createCompactionRunner(async () => {
+      calls++
+
+      if (calls === 1) {
+        throw new Error("Network failure")
+      }
+
+      return {}
+    })
+
+    expect(await runner.run(request)).toBe(false)
+    expect(runner.isRunning()).toBe(false)
+
+    expect(await runner.run(request)).toBe(true)
+    expect(calls).toBe(2)
+  })
+
+  test("keeps duplicate requests blocked until the first finishes", async () => {
+    let finish!: (value: { error?: unknown }) => void
+    let calls = 0
+
+    const runner = createCompactionRunner(async () => {
+      calls++
+
+      return new Promise<{ error?: unknown }>((resolve) => {
+        finish = resolve
+      })
+    })
+
+    const first = runner.run(request)
+
+    expect(runner.isRunning()).toBe(true)
+
+    for (let i = 0; i < 5; i++) {
+      expect(await runner.run(request)).toBe(false)
+    }
+
+    expect(calls).toBe(1)
+
+    finish({})
+
+    expect(await first).toBe(true)
+    expect(runner.isRunning()).toBe(false)
   })
 })
