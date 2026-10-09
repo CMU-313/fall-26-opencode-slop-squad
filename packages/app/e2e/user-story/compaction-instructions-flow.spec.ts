@@ -160,6 +160,38 @@ test("compacts a session with instructions and shows them on the compaction divi
   )
   await page.locator('[data-action="compact-submit"]').click()
   expect((await emptySummarize).postDataJSON()).toEqual(model)
+  await expect(dialog).toHaveCount(0)
+
+  // The server records the empty-input compaction without instructions: the divider renders with no instructions line.
+  const plainCompaction = {
+    info: {
+      id: "msg_0004_compaction",
+      sessionID,
+      role: "user",
+      time: { created: 1_700_000_004_000 },
+      agent: "build",
+      model,
+    },
+    parts: [
+      {
+        id: "prt_0004_compaction",
+        sessionID,
+        messageID: "msg_0004_compaction",
+        type: "compaction",
+        auto: false,
+      },
+    ],
+  }
+  messages.push(plainCompaction)
+  events.push(
+    { directory, payload: { type: "message.updated", properties: { info: plainCompaction.info } } },
+    { directory, payload: { type: "message.part.updated", properties: { part: plainCompaction.parts[0] } } },
+  )
+  const dividers = page.locator('[data-component="compaction-part"]')
+  await expect(dividers).toHaveCount(2, { timeout: 10_000 })
+  await expect(dividers.last().locator('[data-slot="compaction-part-label"]')).toBeVisible()
+  await expect(dividers.last().locator('[data-slot="compaction-part-instructions"]')).toHaveCount(0)
+  await expect(dividers.first().locator('[data-slot="compaction-part-instructions"]')).toContainText(instructions)
 })
 
 async function openCompactDialog(page: Page) {
