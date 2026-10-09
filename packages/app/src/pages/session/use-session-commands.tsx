@@ -393,7 +393,7 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
     })
   }
 
-  const compact = async () => {
+  const compact = () => {
     const sessionID = params.id
     if (!sessionID) return
 
@@ -406,10 +406,30 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
       return
     }
 
-    await sdk().api.session.compact({
-      sessionID,
-      model: { providerID: model.provider.id, modelID: model.id },
-    })
+    void openDialog(
+      () => import("@/components/dialog-compact"),
+      (x) =>
+        dialog.show(() => (
+          <x.DialogCompact
+            onSubmit={(instructions) =>
+              void sdk()
+                .api.session.compact({
+                  sessionID,
+                  model: { providerID: model.provider.id, modelID: model.id },
+                  instructions,
+                })
+                .catch((err: unknown) =>
+                  showToast({
+                    variant: "error",
+                    title: language.t("toast.session.compact.failed.title"),
+                    description:
+                      err instanceof Error ? err.message : language.t("toast.session.compact.failed.description"),
+                  }),
+                )
+            }
+          />
+        )),
+    )
   }
 
   const fork = () => {

@@ -335,6 +335,11 @@ export const dict = {
 
   "dialog.fork.empty": "No messages to fork from",
 
+  "dialog.compact.title": "Compact session",
+  "dialog.compact.instructions": "Instructions (optional)",
+  "dialog.compact.instructions.placeholder": "Focus on the API changes; drop the debugging detours",
+  "dialog.compact.submit": "Compact",
+
   "dialog.directory.search.placeholder": "Search folders",
   "dialog.directory.empty": "No folders found",
   "dialog.directory.action.selectFile": "Select file",
@@ -576,6 +581,8 @@ export const dict = {
   "toast.session.export.success.description": "Saved session to {{filename}}",
   "toast.session.export.failed.title": "Failed to export session",
   "toast.session.export.failed.description": "An error occurred while exporting the session",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Failed to load sessions for {{project}}",
   "toast.project.reloadFailed.title": "Failed to reload {{project}}",

@@ -411,6 +411,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "Cliquez pour vous authentifier",
   "mcp.status.disabled": "désactivé",
   "dialog.fork.empty": "Aucun message à partir duquel bifurquer",
+
+  "dialog.compact.title": "Compacter la session",
+  "dialog.compact.instructions": "Instructions (facultatif)",
+  "dialog.compact.instructions.placeholder": "Concentre-toi sur les changements d'API ; ignore les détours de débogage",
+  "dialog.compact.submit": "Compacter",
   "dialog.directory.search.placeholder": "Rechercher des dossiers",
   "dialog.directory.empty": "Aucun dossier trouvé",
   "dialog.directory.action.selectFile": "Sélectionner le fichier",
@@ -628,6 +633,8 @@ export const dict = {
   "toast.session.export.success.description": "Session enregistrée dans {{filename}}",
   "toast.session.export.failed.title": "Échec de l’exportation de la session",
   "toast.session.export.failed.description": "Une erreur s’est produite lors de l’exportation de la session",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Échec du chargement des sessions pour {{project}}",
   "toast.update.title": "Mise à jour disponible",

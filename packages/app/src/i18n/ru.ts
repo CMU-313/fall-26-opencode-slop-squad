@@ -431,6 +431,11 @@ export const dict = {
 
   "dialog.fork.empty": "Нет сообщений для ответвления",
 
+  "dialog.compact.title": "Сжать сессию",
+  "dialog.compact.instructions": "Инструкции (необязательно)",
+  "dialog.compact.instructions.placeholder": "Сосредоточься на изменениях API; опусти отступления при отладке",
+  "dialog.compact.submit": "Сжать",
+
   "dialog.directory.search.placeholder": "Поиск папок",
   "dialog.directory.empty": "Папки не найдены",
   "dialog.directory.action.selectFile": "Выбрать файл",
@@ -664,6 +669,8 @@ export const dict = {
   "toast.session.export.success.description": "Сессия сохранена в файл {{filename}}",
   "toast.session.export.failed.title": "Не удалось экспортировать сессию",
   "toast.session.export.failed.description": "Произошла ошибка при экспорте сессии",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Не удалось загрузить сессии для {{project}}",
 

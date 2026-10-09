@@ -430,6 +430,11 @@ export const dict = {
 
   "dialog.fork.empty": "ไม่มีข้อความให้แตกแขนง",
 
+  "dialog.compact.title": "บีบอัดเซสชัน",
+  "dialog.compact.instructions": "คำแนะนำ (ไม่บังคับ)",
+  "dialog.compact.instructions.placeholder": "เน้นที่การเปลี่ยนแปลง API; ตัดทางอ้อมจากการดีบักออก",
+  "dialog.compact.submit": "บีบอัด",
+
   "dialog.directory.search.placeholder": "ค้นหาโฟลเดอร์",
   "dialog.directory.empty": "ไม่พบโฟลเดอร์",
   "dialog.directory.action.selectFile": "เลือกไฟล์",
@@ -661,6 +666,8 @@ export const dict = {
   "toast.session.export.success.description": "บันทึกเซสชันไปยัง {{filename}} แล้ว",
   "toast.session.export.failed.title": "ไม่สามารถส่งออกเซสชัน",
   "toast.session.export.failed.description": "เกิดข้อผิดพลาดขณะส่งออกเซสชัน",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "ไม่สามารถโหลดเซสชันสำหรับ {{project}}",
 

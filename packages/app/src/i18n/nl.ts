@@ -401,6 +401,11 @@ export const dict = {
   "mcp.status.disabled": "uitgeschakeld",
   "mcp.auth.clickToAuthenticate": "Klik om te authenticeren",
   "dialog.fork.empty": "Geen berichten om van af te splitsen",
+
+  "dialog.compact.title": "Sessie comprimeren",
+  "dialog.compact.instructions": "Instructies (optioneel)",
+  "dialog.compact.instructions.placeholder": "Focus op de API-wijzigingen; laat de debug-omwegen weg",
+  "dialog.compact.submit": "Comprimeren",
   "dialog.directory.search.placeholder": "Zoek in mappen",
   "dialog.directory.empty": "Geen mappen gevonden",
   "dialog.directory.action.selectFile": "Selecteer bestand",
@@ -627,6 +632,8 @@ export const dict = {
   "toast.session.export.success.description": "Sessie opgeslagen in {{filename}}",
   "toast.session.export.failed.title": "Kan sessie niet exporteren",
   "toast.session.export.failed.description": "Er is een fout opgetreden tijdens het exporteren van de sessie",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Kan sessies voor {{project}} niet laden",
   "toast.project.reloadFailed.title": "Kan {{project}} niet opnieuw laden",

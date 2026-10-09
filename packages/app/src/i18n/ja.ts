@@ -404,6 +404,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "クリックして認証",
   "mcp.status.disabled": "無効",
   "dialog.fork.empty": "フォーク元のメッセージがありません",
+
+  "dialog.compact.title": "セッションを圧縮",
+  "dialog.compact.instructions": "指示（任意）",
+  "dialog.compact.instructions.placeholder": "API の変更に焦点を当て、デバッグの寄り道は省く",
+  "dialog.compact.submit": "圧縮",
   "dialog.directory.search.placeholder": "フォルダを検索",
   "dialog.directory.empty": "フォルダが見つかりません",
   "dialog.directory.action.selectFile": "ファイルを選択",
@@ -619,6 +624,8 @@ export const dict = {
   "toast.session.export.success.description": "セッションを {{filename}} に保存しました",
   "toast.session.export.failed.title": "セッションのエクスポートに失敗しました",
   "toast.session.export.failed.description": "セッションのエクスポート中にエラーが発生しました",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}}のセッション読み込みに失敗しました",
   "toast.update.title": "アップデートが利用可能です",

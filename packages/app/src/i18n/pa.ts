@@ -407,6 +407,11 @@ export const dict = {
   "mcp.status.disabled": "بند",
   "mcp.auth.clickToAuthenticate": "تصدیق کرن لئی کلک کرو",
   "dialog.fork.empty": "فورک کرن لئی کوئی پیغام نئیں",
+
+  "dialog.compact.title": "ਸੈਸ਼ਨ ਸੰਖੇਪ ਕਰੋ",
+  "dialog.compact.instructions": "ਹਦਾਇਤਾਂ (ਵਿਕਲਪਿਕ)",
+  "dialog.compact.instructions.placeholder": "API ਤਬਦੀਲੀਆਂ 'ਤੇ ਧਿਆਨ ਦਿਓ; ਡੀਬੱਗਿੰਗ ਦੇ ਭਟਕਾਅ ਹਟਾਓ",
+  "dialog.compact.submit": "ਸੰਖੇਪ ਕਰੋ",
   "dialog.directory.search.placeholder": "فولڈراں نوں لبھو",
   "dialog.directory.empty": "کوئی فولڈر نئیں لبیا",
   "dialog.directory.action.selectFile": "فائل چنو",
@@ -630,6 +635,8 @@ export const dict = {
   "toast.session.export.success.description": "سیشن نوں \u2068{{filename}}\u2069 وچ محفوظ کر دتا گیا",
   "toast.session.export.failed.title": "سیشن برآمد کرن چ ناکامی ہوئی",
   "toast.session.export.failed.description": "سیشن برآمد کردے ویلے اک غلطی ہو گئی",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}} لئی سیشن لوڈ کرن چ ناکام رہیا",
   "toast.project.reloadFailed.title": "{{project}} دوبارہ لوڈ نئیں ہو سکیا",

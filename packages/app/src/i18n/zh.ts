@@ -450,6 +450,11 @@ export const dict = {
 
   "dialog.fork.empty": "没有可用于创建新会话的消息",
 
+  "dialog.compact.title": "压缩会话",
+  "dialog.compact.instructions": "说明（可选）",
+  "dialog.compact.instructions.placeholder": "重点关注 API 变更；省略调试过程中的弯路",
+  "dialog.compact.submit": "压缩",
+
   "dialog.directory.search.placeholder": "搜索文件夹",
   "dialog.directory.empty": "未找到文件夹",
   "dialog.directory.action.selectFile": "选择文件",
@@ -665,6 +670,8 @@ export const dict = {
   "toast.session.export.success.description": "已将会话保存到 {{filename}}",
   "toast.session.export.failed.title": "导出会话失败",
   "toast.session.export.failed.description": "导出会话时发生错误",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "无法加载 {{project}} 的会话",
   "toast.update.title": "有可用更新",

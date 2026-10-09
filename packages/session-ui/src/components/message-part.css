@@ -288,6 +288,13 @@
     white-space: nowrap;
     text-align: center;
   }
+
+  [data-slot="compaction-part-instructions"] {
+    padding-bottom: 10px;
+    text-align: center;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
 }
 
 [data-component="reasoning-part"] {

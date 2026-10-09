@@ -434,6 +434,11 @@ export const dict = {
 
   "dialog.fork.empty": "No hay mensajes desde donde bifurcar",
 
+  "dialog.compact.title": "Compactar sesión",
+  "dialog.compact.instructions": "Instrucciones (opcional)",
+  "dialog.compact.instructions.placeholder": "Céntrate en los cambios de la API; descarta los desvíos de depuración",
+  "dialog.compact.submit": "Compactar",
+
   "dialog.directory.search.placeholder": "Buscar carpetas",
   "dialog.directory.empty": "No se encontraron carpetas",
   "dialog.directory.action.selectFile": "Seleccionar archivo",
@@ -668,6 +673,8 @@ export const dict = {
   "toast.session.export.success.description": "Sesión guardada en {{filename}}",
   "toast.session.export.failed.title": "No se pudo exportar la sesión",
   "toast.session.export.failed.description": "Se produjo un error al exportar la sesión",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Fallo al cargar sesiones para {{project}}",
 

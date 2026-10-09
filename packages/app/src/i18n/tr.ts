@@ -437,6 +437,11 @@ export const dict = {
 
   "dialog.fork.empty": "Dallandırılacak mesaj yok",
 
+  "dialog.compact.title": "Oturumu sıkıştır",
+  "dialog.compact.instructions": "Talimatlar (isteğe bağlı)",
+  "dialog.compact.instructions.placeholder": "API değişikliklerine odaklan; hata ayıklama sapmalarını çıkar",
+  "dialog.compact.submit": "Sıkıştır",
+
   "dialog.directory.search.placeholder": "Klasör ara",
   "dialog.directory.empty": "Klasör bulunamadı",
   "dialog.directory.action.selectFile": "Dosya seç",
@@ -669,6 +674,8 @@ export const dict = {
   "toast.session.export.success.description": "Oturum {{filename}} dosyasına kaydedildi",
   "toast.session.export.failed.title": "Oturum dışa aktarılamadı",
   "toast.session.export.failed.description": "Oturum dışa aktarılırken bir hata oluştu",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}} için oturumlar yüklenemedi",
 

@@ -403,6 +403,11 @@ export const dict = {
   "mcp.status.disabled": "deaktiv",
   "mcp.auth.clickToAuthenticate": "Autentifikasiya üçün klikləyin",
   "dialog.fork.empty": "Yeni sessiyaya ayırmaq üçün mesaj yoxdur",
+
+  "dialog.compact.title": "Sessiyanı sıxlaşdır",
+  "dialog.compact.instructions": "Təlimatlar (istəyə bağlı)",
+  "dialog.compact.instructions.placeholder": "API dəyişikliklərinə diqqət et; sazlama sapmalarını at",
+  "dialog.compact.submit": "Sıxlaşdır",
   "dialog.directory.search.placeholder": "Qovluqları axtar",
   "dialog.directory.empty": "Qovluq tapılmadı",
   "dialog.directory.action.selectFile": "Fayl seçin",
@@ -627,6 +632,8 @@ export const dict = {
   "toast.session.export.success.description": "Sessiya {{filename}} faylına saxlanıldı",
   "toast.session.export.failed.title": "Sessiya ixrac edilə bilmədi",
   "toast.session.export.failed.description": "Sessiyanı ixrac edərkən xəta baş verdi",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "{{project}} üçün sessiyalar yüklənə bilmədi",
   "toast.project.reloadFailed.title": "{{project}} yenidən yüklənə bilmədi",

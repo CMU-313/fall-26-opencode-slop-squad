@@ -430,6 +430,11 @@ export const dict = {
 
   "dialog.fork.empty": "沒有可用於分支的訊息",
 
+  "dialog.compact.title": "壓縮工作階段",
+  "dialog.compact.instructions": "說明（選填）",
+  "dialog.compact.instructions.placeholder": "著重於 API 變更；省略除錯過程中的彎路",
+  "dialog.compact.submit": "壓縮",
+
   "dialog.directory.search.placeholder": "搜尋資料夾",
   "dialog.directory.empty": "找不到資料夾",
   "dialog.directory.action.selectFile": "選擇檔案",
@@ -657,6 +662,8 @@ export const dict = {
   "toast.session.export.success.description": "已將工作階段儲存至 {{filename}}",
   "toast.session.export.failed.title": "匯出工作階段失敗",
   "toast.session.export.failed.description": "匯出工作階段時發生錯誤",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "無法載入 {{project}} 的工作階段",
 

@@ -405,6 +405,11 @@ export const dict = {
   "mcp.auth.clickToAuthenticate": "انقر للمصادقة",
   "mcp.status.disabled": "معطل",
   "dialog.fork.empty": "لا توجد رسائل للتفرع منها",
+
+  "dialog.compact.title": "ضغط الجلسة",
+  "dialog.compact.instructions": "التعليمات (اختياري)",
+  "dialog.compact.instructions.placeholder": "ركّز على تغييرات API؛ تجاهل مسارات تصحيح الأخطاء الجانبية",
+  "dialog.compact.submit": "ضغط",
   "dialog.directory.search.placeholder": "البحث في المجلدات",
   "dialog.directory.empty": "لم يتم العثور على مجلدات",
   "dialog.directory.action.selectFile": "اختيار ملف",
@@ -617,6 +622,8 @@ export const dict = {
   "toast.session.export.success.description": "تم حفظ الجلسة في \u2068{{filename}}\u2069",
   "toast.session.export.failed.title": "فشل تصدير الجلسة",
   "toast.session.export.failed.description": "حدث خطأ أثناء تصدير الجلسة",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "فشل تحميل الجلسات لـ {{project}}",
   "toast.update.title": "تحديث متاح",

@@ -233,4 +233,28 @@ describe("createCompatibleApi", () => {
     expect(requests[1]!.headers.get("x-opencode-directory")).toBe("%2Frepo")
     expect(requests[2]!.headers.get("x-opencode-directory")).toBeNull()
   })
+
+  test("forwards compaction instructions to the V1 summarize request", async () => {
+    const { api, requests } = setup("v1")
+    await api.session.compact({
+      sessionID: "ses_1",
+      model: { providerID: "provider", modelID: "model" },
+      instructions: "Keep it short",
+    })
+
+    expect(new URL(requests[0]!.url).pathname).toBe("/session/ses_1/summarize")
+    expect(await requests[0]!.json()).toEqual({
+      providerID: "provider",
+      modelID: "model",
+      instructions: "Keep it short",
+    })
+  })
+
+  test("omits compaction instructions from the V1 summarize request when none are given", async () => {
+    const { api, requests } = setup("v1")
+    await api.session.compact({ sessionID: "ses_1", model: { providerID: "provider", modelID: "model" } })
+
+    expect(new URL(requests[0]!.url).pathname).toBe("/session/ses_1/summarize")
+    expect(await requests[0]!.json()).toEqual({ providerID: "provider", modelID: "model" })
+  })
 })

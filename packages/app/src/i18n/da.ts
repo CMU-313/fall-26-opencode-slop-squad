@@ -330,6 +330,11 @@ export const dict = {
 
   "dialog.fork.empty": "Ingen beskeder at forgrene fra",
 
+  "dialog.compact.title": "Komprimer session",
+  "dialog.compact.instructions": "Instruktioner (valgfrit)",
+  "dialog.compact.instructions.placeholder": "Fokuser på API-ændringerne; drop fejlfindingsomvejene",
+  "dialog.compact.submit": "Komprimer",
+
   "dialog.directory.search.placeholder": "Søg mapper",
   "dialog.directory.empty": "Ingen mapper fundet",
   "dialog.directory.action.selectFile": "Vælg fil",
@@ -546,6 +551,8 @@ export const dict = {
   "toast.session.export.success.description": "Sessionen blev gemt i {{filename}}",
   "toast.session.export.failed.title": "Kunne ikke eksportere session",
   "toast.session.export.failed.description": "Der opstod en fejl under eksport af sessionen",
+  "toast.session.compact.failed.title": "Failed to compact session",
+  "toast.session.compact.failed.description": "An error occurred while compacting the session",
 
   "toast.session.listFailed.title": "Kunne ikke indlæse sessioner for {{project}}",
 
