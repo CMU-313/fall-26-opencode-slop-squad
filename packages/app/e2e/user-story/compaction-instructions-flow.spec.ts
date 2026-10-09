@@ -146,6 +146,15 @@ test("compacts a session with instructions and shows them on the compaction divi
   })
 
   await openCompactDialog(page)
+  await page.locator('[data-input="compact-instructions"]').fill("   ")
+  const whitespaceSummarize = page.waitForRequest(
+    (request) => request.method() === "POST" && request.url().includes(`/session/${sessionID}/summarize`),
+  )
+  await page.locator('[data-action="compact-submit"]').click()
+  expect((await whitespaceSummarize).postDataJSON()).toEqual(model)
+  await expect(dialog).toHaveCount(0)
+
+  await openCompactDialog(page)
   const emptySummarize = page.waitForRequest(
     (request) => request.method() === "POST" && request.url().includes(`/session/${sessionID}/summarize`),
   )
