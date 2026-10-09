@@ -143,3 +143,36 @@ bun test ./test/util/compaction.test.ts ./test/util/compaction-marker.test.ts
 bun test
 bun run typecheck
 ```
+
+## Desktop/Web Compaction with Custom Instructions
+
+### Overview
+
+In the desktop/web app, compacting a session opens a dialog with an optional instructions box. Instructions are sent with the compaction request and shown on the "Session compacted" divider afterwards. Leaving the box empty keeps the original behavior.
+
+### How to Use
+
+1. Open a session in the web app with a configured model.
+2. Run `/compact`, or choose "Compact session" from the command palette.
+3. In the dialog, optionally enter instructions, such as "Focus on API changes."
+4. Submit to compact, or Cancel to close the dialog without doing anything.
+5. If instructions were given, the "Session compacted" divider shows "Instructions: …" underneath.
+
+### Manual Testing
+
+1. **Cancel:** open the dialog and Cancel. Verify no compaction starts.
+2. **With instructions:** enter "Focus on API changes." and submit. Verify the divider shows the instructions.
+3. **Empty:** leave the box blank and submit. Verify compaction works as before and the divider shows no instructions.
+
+### Automated Tests
+
+- `packages/app/e2e/user-story/compaction-instructions-flow.spec.ts` covers cancel (no request sent), submitting instructions (request body and divider), and empty input (no `instructions` field sent).
+- `src/pages/session/timeline/rows-current.test.ts` checks that the timeline divider row carries instructions only when they exist.
+
+Run them from `packages/app`:
+
+```sh
+bunx playwright test e2e/user-story/compaction-instructions-flow.spec.ts
+bun test --conditions=solid --preload ./happydom.ts ./src/pages/session/timeline/rows-current.test.ts
+bun run typecheck
+```
