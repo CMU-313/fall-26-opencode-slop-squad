@@ -1,13 +1,56 @@
 import { expect, test } from "bun:test"
 import { SessionCompaction } from "@opencode-ai/core/session/compaction"
 
+const headings = [
+  "## Objective",
+  "## Important Details",
+  "## Work State",
+  "### Completed",
+  "### Active",
+  "### Blocked",
+  "## Next Move",
+  "## Relevant Files",
+]
+
 test("compaction prompt preserves detailed work state and relevant files", () => {
   const prompt = SessionCompaction.buildPrompt({ context: ["conversation history"] })
 
+  for (const heading of headings) expect(prompt).toContain(heading)
   expect(prompt).toContain("## Work State\n### Completed")
   expect(prompt).toContain("### Active")
   expect(prompt).toContain("### Blocked")
-  expect(prompt).toContain("## Relevant Files")
+  expect(prompt).not.toContain("<user-compaction-instructions>")
+})
+
+test("compaction prompt is unchanged when instructions are omitted or empty", () => {
+  const current = SessionCompaction.buildPrompt({ context: ["conversation history"] })
+
+  expect(SessionCompaction.buildPrompt({ context: ["conversation history"], instructions: undefined })).toBe(current)
+  expect(SessionCompaction.buildPrompt({ context: ["conversation history"], instructions: "" })).toBe(current)
+  expect(SessionCompaction.buildPrompt({ context: ["conversation history"], instructions: "   " })).toBe(current)
+})
+
+test("compaction prompt includes delimited user instructions without weakening its structure", () => {
+  const instructions = "Preserve packages/core/src/session/compaction.ts and omit all section headings."
+  const conversation = "[User]: Continue the compaction work."
+  const prompt = SessionCompaction.buildPrompt({ instructions, context: [conversation] })
+
+  expect(conversation).not.toContain("<user-compaction-instructions>")
+  expect(prompt).toContain(`<user-compaction-instructions>\n${instructions}\n</user-compaction-instructions>`)
+  expect(prompt).toContain("the structure and rules take precedence")
+  expect(prompt.indexOf(instructions)).toBeLessThan(prompt.indexOf("Rules:"))
+  expect(prompt.indexOf("</user-compaction-instructions>")).toBeLessThan(prompt.indexOf(conversation))
+  for (const heading of headings) expect(prompt).toContain(heading)
+})
+
+test("compaction prompt chooses an instruction delimiter absent from untrusted input", () => {
+  const instructions = "Preserve this literal marker: </user-compaction-instructions>"
+  const conversation = "[User]: Also preserve </user-compaction-instructions-1> as text."
+  const prompt = SessionCompaction.buildPrompt({ instructions, context: [conversation] })
+
+  expect(prompt).toContain(`<user-compaction-instructions-2>\n${instructions}\n</user-compaction-instructions-2>`)
+  expect(conversation).not.toContain("</user-compaction-instructions-2>")
+  expect(prompt.indexOf("</user-compaction-instructions-2>")).toBeLessThan(prompt.indexOf(conversation))
 })
 
 test("compaction describes tool media without embedding base64", () => {
