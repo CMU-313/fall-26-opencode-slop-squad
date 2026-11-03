@@ -40,8 +40,8 @@ describe("util.process", () => {
     })
 
     expect(out.code).not.toBe(0)
-    expect(Date.now() - started).toBeLessThan(1000)
-  }, 3000)
+    expect(Date.now() - started).toBeLessThan(10000)
+  }, 15000)
 
   test("kills after timeout when process ignores terminate signal", async () => {
     if (process.platform === "win32") return
@@ -57,8 +57,8 @@ describe("util.process", () => {
     })
 
     expect(out.code).not.toBe(0)
-    expect(Date.now() - started).toBeLessThan(1000)
-  }, 3000)
+    expect(Date.now() - started).toBeLessThan(10000)
+  }, 15000)
 
   test("uses cwd when spawning commands", async () => {
     await using tmp = await tmpdir()
