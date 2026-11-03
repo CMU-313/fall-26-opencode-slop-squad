@@ -1023,13 +1023,78 @@ describe("session HttpApi", () => {
       Effect.gen(function* () {
         const test = yield* TestInstance
         const session = yield* createSession({ title: "summarize instructions" })
-        const response = yield* request(pathFor(SessionPaths.summarize, { sessionID: session.id }), {
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+
+        for (const instructions of [42, true, ["keep the plan"], { keep: "the plan" }]) {
+          const response = yield* request(pathFor(SessionPaths.summarize, { sessionID: session.id }), {
+            method: "POST",
+            headers,
+            body: JSON.stringify({ providerID: "test", modelID: "test", instructions }),
+          })
+
+          expect(response.status).toBe(400)
+        }
+      }),
+    { git: true, config: { formatter: false, lsp: false } },
+  )
+
+  it.instance(
+    "accepts a string summarize instructions payload",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        // Pointed at a session that does not exist. Payload decoding runs before the
+        // handler, so a 404 from requireSession proves the instructions string cleared
+        // validation — and gets there without a model to run the compaction loop.
+        const missingSession = SessionID.descending()
+        const response = yield* request(pathFor(SessionPaths.summarize, { sessionID: missingSession }), {
           method: "POST",
           headers: { "x-opencode-directory": test.directory, "content-type": "application/json" },
-          body: JSON.stringify({ providerID: "test", modelID: "test", instructions: 42 }),
+          body: JSON.stringify({
+            providerID: "test",
+            modelID: "test",
+            instructions: "Keep the migration plan and the rollback steps",
+          }),
         })
 
-        expect(response.status).toBe(400)
+        expect(response.status).toBe(404)
+        expect(yield* responseJson(response)).toEqual({
+          name: "NotFoundError",
+          data: { message: `Session not found: ${missingSession}` },
+        })
+      }),
+    { git: true, config: { formatter: false, lsp: false } },
+  )
+
+  it.instance(
+    "treats omitted and null summarize instructions the same way",
+    () =>
+      Effect.gen(function* () {
+        const test = yield* TestInstance
+        const headers = { "x-opencode-directory": test.directory, "content-type": "application/json" }
+        const missingSession = SessionID.descending()
+        const notFound = {
+          name: "NotFoundError",
+          data: { message: `Session not found: ${missingSession}` },
+        }
+
+        // Schema.optional(Schema.String) decodes string | null | undefined in this
+        // version of effect, so an explicit null is accepted rather than rejected.
+        // Both spellings have to clear validation identically and mean "no
+        // instructions" — the part they produce carries no instructions key.
+        for (const body of [
+          { providerID: "test", modelID: "test" },
+          { providerID: "test", modelID: "test", instructions: null },
+        ]) {
+          const response = yield* request(pathFor(SessionPaths.summarize, { sessionID: missingSession }), {
+            method: "POST",
+            headers,
+            body: JSON.stringify(body),
+          })
+
+          expect(response.status).toBe(404)
+          expect(yield* responseJson(response)).toEqual(notFound)
+        }
       }),
     { git: true, config: { formatter: false, lsp: false } },
   )

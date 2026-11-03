@@ -176,3 +176,122 @@ bunx playwright test e2e/user-story/compaction-instructions-flow.spec.ts
 bun test --conditions=solid --preload ./happydom.ts ./src/pages/session/timeline/rows-current.test.ts
 bun run typecheck
 ```
+
+## Compaction Instructions over the HTTP API
+
+### Overview
+
+The three sections above cover the places a person types compaction instructions (the TUI dialog, the desktop/web dialog) and what the summary prompt does with them. This section covers the layer underneath: the `instructions` field on the summarize API, which is how those instructions reach the compaction processor, and how any other client — the SDK, a script, an editor plugin — can supply them.
+
+The field is optional and additive. `POST /session/{sessionID}/summarize` accepts an `instructions` string, stores it on the session's compaction part, and the prompt loop hands it to the compaction processor when the summary is built. A request that omits the field behaves exactly as it did before the field existed.
+
+### How to Use
+
+Start a headless server from a checkout:
+
+```sh
+bun run --cwd packages/opencode --conditions=browser src/index.ts serve --port 4096
+```
+
+The server prints the address it bound to. Every request below needs an `x-opencode-directory` header naming the project directory to operate on.
+
+Send instructions along with the provider and model you want the summary generated with:
+
+```sh
+curl -X POST http://127.0.0.1:4096/session/$SESSION_ID/summarize \
+  -H 'content-type: application/json' \
+  -H "x-opencode-directory: $PROJECT_DIR" \
+  -d '{
+        "providerID": "anthropic",
+        "modelID": "claude-sonnet-4-20250514",
+        "instructions": "Keep the migration plan and the rollback steps"
+      }'
+```
+
+From the TypeScript SDK the field sits on the same request body:
+
+```ts
+await client.session.summarize({
+  path: { sessionID },
+  body: {
+    providerID: "anthropic",
+    modelID: "claude-sonnet-4-20250514",
+    instructions: "Keep the migration plan and the rollback steps",
+  },
+})
+```
+
+### Expected Behavior
+
+| `instructions` in the request       | Result                                                                                                                                                                 |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A string                            | Accepted. Stored verbatim on the compaction part — newlines and punctuation included — and passed to the compaction processor.                                         |
+| Omitted                             | Accepted. The compaction part carries no `instructions` key, which is the behavior from before the field was added.                                                    |
+| `null`                              | Accepted, and identical to omitting it. The decoded payload type is `string \| null \| undefined`, and a null is dropped rather than stored.                           |
+| An empty string                     | Accepted and stored as an empty string. This layer does not normalize; the prompt builder ignores blank instructions, and the TUI and web dialogs trim before sending. |
+| A number, boolean, array, or object | Rejected with `400` and a `BadRequest` body naming the `instructions` field. No compaction part is created.                                                            |
+
+### Manual Testing
+
+These steps need a configured model provider for compaction to finish. Steps 1–4 exercise this layer on its own and work without credentials, because the compaction part is written before the model is called.
+
+1. Start the server as shown above and export `SESSION_ID` and `PROJECT_DIR` for the session you want to compact. To create a throwaway session:
+
+   ```sh
+   curl -s -X POST http://127.0.0.1:4096/session \
+     -H 'content-type: application/json' \
+     -H "x-opencode-directory: $PROJECT_DIR" \
+     -d '{"title": "compaction instructions demo"}'
+   ```
+
+2. Post a summarize request carrying an `instructions` string, as in the `curl` above.
+3. Read the session's messages back and find the compaction part:
+
+   ```sh
+   curl -s "http://127.0.0.1:4096/session/$SESSION_ID/message" \
+     -H "x-opencode-directory: $PROJECT_DIR"
+   ```
+
+   The part of `"type": "compaction"` should carry your string under `"instructions"`.
+
+4. Repeat step 2 with `"instructions": 42`. The response should be `400` with a `BadRequest` body pointing at `instructions`, and no new compaction part should appear.
+5. Repeat step 2 with the field omitted. Compaction should run as it always has, and the new compaction part should have no `instructions` key at all.
+6. With a provider configured, mention a recognizable file and constraint earlier in the session, then compact with instructions naming them, and confirm the generated summary preserves them. This crosses into the prompt behavior documented in the first section of this guide.
+
+### Automated Tests
+
+Nine tests cover this layer, split by the boundary they pin down.
+
+The request contract, in [`packages/opencode/test/server/httpapi-session.test.ts`](packages/opencode/test/server/httpapi-session.test.ts):
+
+- `rejects non-string summarize instructions` — a number, boolean, array, and object each return `400`.
+- `accepts a string summarize instructions payload` — a valid string clears payload validation and reaches the handler.
+- `treats omitted and null summarize instructions the same way` — both spellings produce the same result, which is what makes `null` safe rather than a crash.
+
+The last two aim at a session ID that does not exist, so a `404` from the handler proves the payload was accepted without needing a model to run the compaction loop.
+
+Storage and handoff, in [`packages/opencode/test/session/compaction.test.ts`](packages/opencode/test/session/compaction.test.ts):
+
+- `persists instructions on the compaction part` — the value supplied to `create()` is readable off the session's messages.
+- `omits instructions when none are supplied` — the key is absent, not present-and-undefined, so anything reading parts written before this field existed sees the shape it always did.
+- `reads instructions back off the stored part rather than the in-memory write` — re-reads through `getPart`, which selects straight out of the part table, so it fails if the value only ever lived on the object handed to `updatePart`.
+- `stores instructions verbatim, including newlines and punctuation` — guards the storage round-trip against mangling.
+- `stores an empty instructions string without substituting a default` — pins this layer as pass-through.
+- `surfaces stored instructions as the compaction task the prompt loop reads` — asserts the derived task carries the instructions, which is the hop `prompt.ts` relies on when it forwards `task.instructions` into `compaction.process`.
+
+Run them from `packages/opencode`:
+
+```sh
+bun test --timeout 30000 test/session/compaction.test.ts test/server/httpapi-session.test.ts
+bun run typecheck
+```
+
+Both files also run in CI, through the `opencode#test` and `typecheck` tasks.
+
+#### Why this is sufficient
+
+The change is a conduit with four hops — request payload, `compaction.create`, the stored part, and the task the prompt loop reads — and each hop has a test that fails if the field stops travelling across it. The tests assert on what came back out of the part table rather than on the object that was written, so a field that was accepted but never persisted would be caught.
+
+Both halves of the contract are covered, not just the new one: the absent case is asserted directly on the stored shape rather than inferred from the rest of the suite still passing, which is what "unchanged when omitted" actually requires.
+
+Two things are deliberately out of scope here and covered elsewhere in this guide: what the summary prompt does with the instructions, tested in `packages/core/test/session-compaction.test.ts`, and the TUI and web dialogs that collect them, tested in their own packages. The one hop not driven end-to-end is the prompt loop calling the compaction processor with a live model; `prompt.ts` passes `task.instructions` through verbatim, so the test on the derived task covers it without standing up a provider.

@@ -607,6 +607,147 @@ describe("session.compaction.create", () => {
     ),
   )
 
+  it.live(
+    "omits instructions when none are supplied",
+    provideTmpdirInstance(() =>
+      Effect.gen(function* () {
+        const compact = yield* SessionCompaction.Service
+        const ssn = yield* SessionNs.Service
+
+        const info = yield* ssn.create({})
+
+        yield* compact.create({
+          sessionID: info.id,
+          agent: "build",
+          model: ref,
+          auto: false,
+        })
+
+        const msgs = yield* ssn.messages({ sessionID: info.id })
+        expect(msgs[0].parts[0]).toMatchObject({ type: "compaction", auto: false })
+        // The field has to be absent, not present-and-undefined: anything reading a
+        // part written before this field existed must see the same shape it always did.
+        expect(msgs[0].parts[0]).not.toHaveProperty("instructions")
+      }),
+    ),
+  )
+
+  it.live(
+    "reads instructions back off the stored part rather than the in-memory write",
+    provideTmpdirInstance(() =>
+      Effect.gen(function* () {
+        const compact = yield* SessionCompaction.Service
+        const ssn = yield* SessionNs.Service
+
+        const info = yield* ssn.create({})
+
+        yield* compact.create({
+          sessionID: info.id,
+          agent: "build",
+          model: ref,
+          auto: false,
+          instructions: "Keep the migration plan and the rollback steps",
+        })
+
+        const msgs = yield* ssn.messages({ sessionID: info.id })
+        const created = msgs[0].parts[0]
+        // getPart selects straight out of the part table, so this fails if the field
+        // only ever lived on the object create() passed to updatePart.
+        const stored = yield* ssn.getPart({
+          sessionID: info.id,
+          messageID: msgs[0].info.id,
+          partID: created.id,
+        })
+
+        expect(stored).toMatchObject({
+          type: "compaction",
+          instructions: "Keep the migration plan and the rollback steps",
+        })
+      }),
+    ),
+  )
+
+  it.live(
+    "stores instructions verbatim, including newlines and punctuation",
+    provideTmpdirInstance(() =>
+      Effect.gen(function* () {
+        const compact = yield* SessionCompaction.Service
+        const ssn = yield* SessionNs.Service
+
+        const info = yield* ssn.create({})
+        const instructions = 'Keep "auth.ts" & the 50% rollout note\nDrop: everything else <done>'
+
+        yield* compact.create({
+          sessionID: info.id,
+          agent: "build",
+          model: ref,
+          auto: false,
+          instructions,
+        })
+
+        const msgs = yield* ssn.messages({ sessionID: info.id })
+        expect(msgs[0].parts[0]).toMatchObject({ type: "compaction", instructions })
+      }),
+    ),
+  )
+
+  it.live(
+    "stores an empty instructions string without substituting a default",
+    provideTmpdirInstance(() =>
+      Effect.gen(function* () {
+        const compact = yield* SessionCompaction.Service
+        const ssn = yield* SessionNs.Service
+
+        const info = yield* ssn.create({})
+
+        yield* compact.create({
+          sessionID: info.id,
+          agent: "build",
+          model: ref,
+          auto: false,
+          instructions: "",
+        })
+
+        // This layer is pass-through on purpose. Callers that want a blank box to mean
+        // "no instructions" trim before calling, and the prompt builder ignores blanks.
+        const msgs = yield* ssn.messages({ sessionID: info.id })
+        expect(msgs[0].parts[0]).toMatchObject({ type: "compaction", instructions: "" })
+      }),
+    ),
+  )
+
+  it.live(
+    "surfaces stored instructions as the compaction task the prompt loop reads",
+    provideTmpdirInstance(() =>
+      Effect.gen(function* () {
+        const compact = yield* SessionCompaction.Service
+        const ssn = yield* SessionNs.Service
+
+        const info = yield* ssn.create({})
+
+        yield* compact.create({
+          sessionID: info.id,
+          agent: "build",
+          model: ref,
+          auto: false,
+          instructions: "Focus on the auth refactor",
+        })
+
+        // prompt.ts builds its compaction task from MessageV2.latest(msgs).tasks and
+        // forwards task.instructions into compaction.process. Asserting on the derived
+        // task covers that hop without standing up a model to run the loop.
+        const msgs = yield* ssn.messages({ sessionID: info.id })
+        const { tasks } = MessageV2.latest(msgs)
+
+        expect(tasks).toHaveLength(1)
+        expect(tasks[0]).toMatchObject({
+          type: "compaction",
+          instructions: "Focus on the auth refactor",
+        })
+      }),
+    ),
+  )
+
   it.live.skip(
     "projects a compaction message to v2 (v2 projector disabled)",
     provideTmpdirInstance(() =>
