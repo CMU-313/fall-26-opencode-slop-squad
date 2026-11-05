@@ -175,8 +175,11 @@ describe("compaction timeline row properties", () => {
   // or without instructions (non-blank instructions may be shown in it), and
   // the rows are identical after reload.
   // Kind: invariant
-  // Generators: `history` (1–8 turns, compaction on any turn, aborted/failed
-  // replies, idle/busy/retry, reasoning on/off) — see the comments above.
+  // Generators: `history` puts the compaction on any of 1–8 turns (first,
+  // middle, last), mixes in aborted and failed replies (the `interrupted &&
+  // !compaction` branch that adds a competing divider), and varies
+  // idle/busy/retry, showReasoning, comments and diffs, which add or remove
+  // rows around the divider and so could shift its position.
   test("R6/P3: exactly one compaction divider, right after its user message", () => {
     fc.assert(
       fc.property(history, (h) => {

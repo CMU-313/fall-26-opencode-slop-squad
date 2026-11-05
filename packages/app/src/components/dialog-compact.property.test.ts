@@ -50,7 +50,9 @@ describe("compact instructions properties", () => {
   // Generators: padded = blank + core + blank, where blank mixes ASCII and
   // Unicode whitespace (incl. "") and core has non-whitespace ends, so the
   // expected output is exactly core. Blank-only input is the empty/spaces case
-  // interviewees asked about (C-9, O-6).
+  // interviewees asked about (C-9, O-6). A third check uses any grapheme
+  // string (emoji, combining marks) so inputs the generators above don't
+  // build still give a trimmed, idempotent result.
   test("R2/P1: sent instructions are the trimmed input or undefined", () => {
     fc.assert(
       fc.property(blank, (input) => {

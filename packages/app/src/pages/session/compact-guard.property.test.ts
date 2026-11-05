@@ -69,6 +69,11 @@ describe("compact guard properties", () => {
   // R7: While the assistant is working, Compact is disabled for that session,
   // so it never interrupts a reply. It is enabled again once the session is idle.
   // Kind: model / oracle
+  // Generators: `events` = up to 40 events over three sessions, weighted
+  // toward "submit" so double-clicks (C-5, S-5), submits while working (S-1),
+  // and cross-session interleavings are common; stray "finished"/"idle" events
+  // check that one session's events never unblock or block another. The oracle
+  // is checked after every event, not just at the end.
   test("R4+R7/P7: sends and Compact enabled state match a per-session model", () => {
     fc.assert(
       fc.property(events, (trace) => {
