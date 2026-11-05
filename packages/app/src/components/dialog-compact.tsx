@@ -4,6 +4,7 @@ import { Dialog } from "@opencode-ai/ui/dialog"
 import { TextField } from "@opencode-ai/ui/text-field"
 import { createSignal } from "solid-js"
 import { useLanguage } from "@/context/language"
+import { compactInstructions } from "./dialog-compact-instructions"
 
 export function DialogCompact(props: { onSubmit: (instructions: string | undefined) => void }) {
   const dialog = useDialog()
@@ -13,8 +14,7 @@ export function DialogCompact(props: { onSubmit: (instructions: string | undefin
   const submit = (event: SubmitEvent) => {
     event.preventDefault()
     dialog.close()
-    // Blank input compacts exactly as before instructions existed.
-    props.onSubmit(instructions().trim() || undefined)
+    props.onSubmit(compactInstructions(instructions()))
   }
 
   return (
