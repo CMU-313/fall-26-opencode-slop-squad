@@ -150,6 +150,10 @@ test("R1: whitespace-only instructions produce the same prompt as no instruction
     }),
     { numRuns: 200 },
   )
+  // Printed only after fc.assert returns, so it never appears for a failed property.
+  // This package's test script runs with --only-failures, which suppresses the
+  // per-test (pass) lines, so these logs are what name the properties in the CI log.
+  console.info("P4 ajean: R1 metamorphic passed (200 generated cases)")
 })
 
 // ---------------------------------------------------------------------------
@@ -184,6 +188,7 @@ test("R2: instruction text appears only inside its delimited block", () => {
     }),
     { numRuns: 200 },
   )
+  console.info("P4 ajean: R2 invariant passed (200 generated cases)")
 })
 
 // ---------------------------------------------------------------------------
@@ -213,6 +218,7 @@ test("R4: instructions survive the round trip into the prompt verbatim", () => {
     }),
     { numRuns: 300 },
   )
+  console.info("P4 ajean: R4 round-trip passed (300 generated cases)")
 })
 
 // ---------------------------------------------------------------------------
@@ -252,4 +258,5 @@ test("R5: the chosen delimiter cannot be forged from any input", () => {
     ),
     { numRuns: 300 },
   )
+  console.info("P4 ajean: R5 invariant passed (300 generated cases)")
 })
