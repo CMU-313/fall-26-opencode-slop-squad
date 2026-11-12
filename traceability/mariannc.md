@@ -10,17 +10,17 @@ Main source files:
 
 ## Requirements
 
-| ID | Interview evidence | Requirement | Acceptance Criteria | Changed in P4? | Property (kind) | Test |
-|---|---|---|---|---|---|---|
-| R1 | O-5 wanted no instructions omitted; S-5 wanted strict requirements preserved. | Submit nonblank instructions after trimming leading/trailing whitespace, preserving internal content and line order. | For generated single-line or multiline text, the request's instructions equal `text.trim()` or are absent if blank. | Yes | Request agrees with independent expected request (model/oracle) | `packages/tui/test/util/compaction.property.test.ts` |
-| R2 | C-7, S-6, O-6 expected cancellation to leave the conversation unchanged. | Canceling the compaction dialog must not initiate a request or modify the conversation. | For generated draft text, passing the cancellation sentinel `null` produces no request. The TUI must return before calling the runner. | No | Cancellation produces no request (invariant) | `packages/tui/test/util/compaction.property.test.ts` |
-| R3 | S-7, O-7 wanted canceled drafts retained; C-8 preferred clearing. | Preserve draft instructions when canceling and reopening within the same session. | Cancel and reopen should restore the draft in the same session. | No | Not selected; requires dialog-level state testing and resolution of conflicting preferences. | Not selected |
-| R4 | O-9 wanted failure feedback and retry without retyping. | When a request fails, the TUI must show an error and allow retry; the request runner must reset after failure so the same instructions can be retried. | For arbitrary requests and simulated returned/throwing errors, first attempt fails, runner resets, and second attempt sends the same request successfully. The error toast is checked separately in TUI integration tests. | Yes | Failure does not block retry (invariant) | `packages/tui/test/util/compaction.property.test.ts` |
-| R5 | C-6, C-10, S-9, O-10 wanted to inspect submitted instructions and the summary. | Following compaction, submitted custom instructions remain available in the compaction marker for review; the resulting summary remains accessible through the conversation UI. | For arbitrary nonblank instructions in a compaction marker, retrieving the marker returns the same instructions. | Yes | Store/retrieve marker instructions (round-trip) | `packages/tui/test/util/compaction.property.test.ts` |
-| R6 | S-4 wanted compaction never to modify source code. | Running compaction must not directly modify, create, or delete project source files. | Source-file contents and checksums remain unchanged by compaction. | No | Not selected; would need integration testing of project files. | Not selected |
-| R7 | C-4, S-2, S-3, O-3, O-4 wanted files, decisions, and unresolved bugs retained. | Include user-specified project context in the summarization request. | For generated first and second instructions, adding the second preserves the first and forwards both in order in the request. | No | Adding context retains previous context (metamorphic) | `packages/tui/test/util/compaction.property.test.ts` |
+| ID | Interview evidence | Requirement | Acceptance Criteria | Changed in P4? | Property (kind) | Test | Mutants it kills |
+|---|---|---|---|---|---|---|---|
+| R1 | O-5 wanted no instructions omitted; S-5 wanted strict requirements preserved. | Submit nonblank instructions after trimming leading/trailing whitespace, preserving internal content and line order. | For generated single-line or multiline text, the request's instructions equal `text.trim()` or are absent if blank. | Yes | Request agrees with independent expected request (model/oracle) | `packages/tui/test/util/compaction.property.test.ts` | H1, H5 |
+| R2 | C-7, S-6, O-6 expected cancellation to leave the conversation unchanged. | Canceling the compaction dialog must not initiate a request or modify the conversation. | For generated draft text, passing the cancellation sentinel `null` produces no request. The TUI must return before calling the runner. | No | Cancellation produces no request (invariant) | `packages/tui/test/util/compaction.property.test.ts` | H2 |
+| R3 | S-7, O-7 wanted canceled drafts retained; C-8 preferred clearing. | Preserve draft instructions when canceling and reopening within the same session. | Cancel and reopen should restore the draft in the same session. | No | Not selected; requires dialog-level state testing and resolution of conflicting preferences. | Not selected | None |
+| R4 | O-9 wanted failure feedback and retry without retyping. | When a request fails, the TUI must show an error and allow retry; the request runner must reset after failure so the same instructions can be retried. | For arbitrary requests and simulated returned/throwing errors, first attempt fails, runner resets, and second attempt sends the same request successfully. The error toast is checked separately in TUI integration tests. | Yes | Failure does not block retry (invariant) | `packages/tui/test/util/compaction.property.test.ts` | H3 |
+| R5 | C-6, C-10, S-9, O-10 wanted to inspect submitted instructions and the summary. | Following compaction, submitted custom instructions remain available in the compaction marker for review; the resulting summary remains accessible through the conversation UI. | For arbitrary nonblank instructions in a compaction marker, retrieving the marker returns the same instructions. | Yes | Store/retrieve marker instructions (round-trip) | `packages/tui/test/util/compaction.property.test.ts` | H4 |
+| R6 | S-4 wanted compaction never to modify source code. | Running compaction must not directly modify, create, or delete project source files. | Source-file contents and checksums remain unchanged by compaction. | No | Not selected; would need integration testing of project files. | Not selected | None |
+| R7 | C-4, S-2, S-3, O-3, O-4 wanted files, decisions, and unresolved bugs retained. | Include user-specified project context in the summarization request. | For generated first and second instructions, adding the second preserves the first and forwards both in order in the request. | No | Adding context retains previous context (metamorphic) | `packages/tui/test/util/compaction.property.test.ts` | H5 |
 
-Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, R7 (ChatGPT generated initial implementations; student must review, run, and validate them).
+Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, R7 (ChatGPT generated initial implementations; student reviewed and validated them through property-based testing and hand-written mutation testing).
 
 ## Requirement changes
 
@@ -32,20 +32,189 @@ Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, 
 
 ## Validation status
 
-These are prepared properties, not verified test results. Run them with `bun test test/util/compaction.property.test.ts` from `packages/tui`.
+Verified on November 12, 2026:
 
-Ensure `fast-check` is available to the TUI package and the lockfile is updated.
+- Command: `bun test test/util/compaction.property.test.ts`
+- Working directory: `packages/tui`
+- Property tests passed: 5
+- Property tests failed: 0
+- Assertions executed: 2,100
 
-Confirm that the PR's GitHub Actions `test` workflow runs `packages/tui` tests. Record and fix any failures before submission.
+All five properties passed before mutation testing.
+
+The five hand-written mutants were tested separately. Each mutant caused at least one property to fail, and each patch was reversed after testing.
+
+A fixed fast-check seed of 42 is being added for reproducible Stryker runs. The seeded baseline must be rerun before automated mutation testing.
+
+GitHub Actions CI status must be verified before final submission.
 
 ## Project 5: Hand-written mutants
 
-Predictions recorded before applying or running the mutants.
+Predictions were recorded in commit `d50afb0` before applying or running the mutants.
+
+All five mutants were applied individually, tested, and reversed.
 
 | ID | Requirement targeted | Change | Predicted killer | Actual result |
 |---|---|---|---|---|
-| H1 | R1 | Remove boundary whitespace trimming from `createCompactionRequest`. | R1, because the property expects trimmed instructions. | Pending |
-| H2 | R2 | Allow a canceled dialog to create a compaction request. | R2, because cancellation must return `undefined`. | Pending |
-| H3 | R4 | Leave the runner marked as running after an API failure. | R4, because the property checks that retrying is possible. | Pending |
-| H4 | R5 | Search for a summary marker instead of a compaction marker. | R5, because the property expects the original compaction instructions. | Pending |
-| H5 | R7 | Forward only the first line of the user's instructions. | R7 and potentially R1, because both require preservation of additional context. | Pending |
+| H1 | R1 | Remove boundary whitespace trimming from `createCompactionRequest`. | R1, because the property expects trimmed instructions. | Killed by R1. Failed after 123 generated cases. Minimal counterexample: `" "`. |
+| H2 | R2 | Allow a canceled dialog to create a compaction request. | R2, because cancellation must return `undefined`. | Killed by R2. Failed after 1 generated case. Counterexample: `["", ""]`. |
+| H3 | R4 | Leave the runner marked as running after an API failure. | R4, because the property checks that retrying is possible. | Killed by R4. Failed after 1 generated case because `runner.isRunning()` returned `true` instead of `false`. |
+| H4 | R5 | Search for a summary marker instead of a compaction marker. | R5, because the property expects the original compaction instructions. | Killed by R5. Failed after 1 generated case. Minimal counterexample: `"!"`. |
+| H5 | R7 | Forward only the first line of the user's instructions. | R7 and potentially R1, because both require preservation of additional context. | Killed by R1 and R7. Both properties failed after 1 generated case. Counterexamples included `"!\n!"` and `["!", "!"]`. |
+
+### Hand-written mutation results
+
+Total hand-written mutants: 5
+
+Killed mutants: 5
+
+Surviving mutants: 0
+
+Hand-written mutation score: 100%
+
+Each mutation was tested using:
+
+`bun test test/util/compaction.property.test.ts`
+
+The following patch files contain the hand-written mutants:
+
+- `mutants/mariannc/H1.patch`
+- `mutants/mariannc/H2.patch`
+- `mutants/mariannc/H3.patch`
+- `mutants/mariannc/H4.patch`
+- `mutants/mariannc/H5.patch`
+
+The hand-written score does not represent the automated Stryker mutation score.
+
+## Project 5: Automated mutation testing with Stryker
+
+Configuration file:
+
+`packages/tui/stryker.mariannc.config.json`
+
+Test file:
+
+`packages/tui/test/util/compaction.property.test.ts`
+
+Mutation targets:
+
+- `packages/tui/src/util/compaction.ts`
+- `packages/tui/src/util/compaction-marker.ts`
+
+Test runner: Bun through Stryker's command runner.
+
+Coverage analysis: Off.
+
+Fixed fast-check seed: 42.
+
+### Initial Stryker results
+
+Initial mutation score: Pending Stryker execution.
+
+Killed mutants: Pending.
+
+Surviving mutants: Pending.
+
+Timed-out mutants: Pending.
+
+Equivalent mutants: Pending review.
+
+### Comparison of hand-written and automated mutants
+
+Hand-written mutants that Stryker did not generate:
+
+Pending inspection of the Stryker report.
+
+Explanation of why Stryker did not generate them:
+
+Pending.
+
+Unexpected surviving Stryker mutants:
+
+Pending.
+
+Whether surviving mutants represent realistic developer mistakes:
+
+Pending.
+
+Differences in the bugs detected by hand-written mutants and Stryker:
+
+Pending.
+
+### Strengthening the property suite
+
+Surviving mutants selected for improvement:
+
+Pending.
+
+Properties strengthened:
+
+Pending.
+
+Evidence of newly killed mutants:
+
+Pending.
+
+### Equivalent mutants
+
+Pending inspection of surviving mutants.
+
+Equivalent mutants will be documented individually with explanations of why the mutated implementation is behaviorally indistinguishable from the original for the relevant observable behavior.
+
+### Final Stryker scores
+
+Raw mutation score: Pending.
+
+Equivalence-adjusted mutation score: Pending.
+
+HTML report location:
+
+`mutants/mariannc/mutation.html`
+
+## Project 5: Agent failure case
+
+A genuine opencode-generated property and an actual mutant that it failed to kill are required for this section.
+
+### Agent transcript
+
+Prompt: Pending actual opencode interaction.
+
+Agent response: Pending actual opencode interaction.
+
+Transcript or share link: Pending.
+
+### Surviving mutant
+
+Mutant ID: Pending.
+
+Requirement targeted: Pending.
+
+Observed behavior: Pending.
+
+### Explanation of the failure
+
+Why the agent-generated property was too weak:
+
+Pending actual evidence.
+
+### Strengthened property
+
+Property changes:
+
+Pending.
+
+### Evidence of improvement
+
+Baseline test result:
+
+Pending.
+
+Mutant test result:
+
+Pending.
+
+## Project 5: Red team
+
+Optional extra credit.
+
+No results recorded.
