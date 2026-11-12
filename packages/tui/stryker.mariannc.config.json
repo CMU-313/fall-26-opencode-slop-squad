@@ -1,0 +1,17 @@
+
+{
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "bun test test/util/compaction.property.test.ts"
+  },
+  "mutate": [
+    "src/util/compaction.ts",
+    "src/util/compaction-marker.ts"
+  ],
+  "coverageAnalysis": "off",
+  "reporters": [
+    "html",
+    "clear-text",
+    "progress"
+  ]
+}
