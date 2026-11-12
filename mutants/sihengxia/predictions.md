@@ -1,0 +1,13 @@
+# Hand-written mutant predictions
+
+These predictions were recorded before applying any mutant or running Stryker for P5. The baseline is `d5b7326` (the personal P4 branch merged with team main on November 12). All mutations are temporary; only their patches and results will be committed.
+
+| ID | Requirement | Intended change | Predicted killer and reason |
+|---|---|---|---|
+| H1 | R2 | In `createCompactionRequest`, store `instructions` instead of `instructions.trim()`. | R2 outer-whitespace metamorphic property, and R1 normalized delivery: generated padding must disappear from the request. |
+| H2 | R1 | On a delimiter collision, return the colliding candidate instead of searching for a fresh tag. | R1 delimiter invariant: generated literal closing tags would prematurely close the instruction block. |
+| H3 | R5 | Rename the required `Next Move` template heading to `Next Steps`, representing a template edit that overlooked the contract. | R5 fixed-template invariant: the eight expected headings must remain in the documented order. |
+| H4 | R4 | Leave the runner busy in its `finally` block after a completed request. | R4 sequential resubmission: the second admission should succeed after the first request finishes. |
+| H5 | R7 | Return success even when the API returns an error result. | Expected to survive the five P4 properties: R4's callback always returns success; none of the selected P4 properties exercises an error response. A new generated R7 failure/retry property should kill it. |
+
+P4 AI assistance was Codex, not OpenCode. Any OpenCode-generated property used for the P5 agent case will be recorded separately with its actual prompt, response, and test evidence.

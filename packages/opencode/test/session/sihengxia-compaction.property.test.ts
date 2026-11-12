@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import fc from "fast-check"
-import { SessionCompaction } from "@opencode-ai/core/session/compaction"
+import { SessionCompaction } from "../../../core/src/session/compaction"
 import {
   createCompactionRequest,
   createCompactionRunner,
@@ -10,7 +10,10 @@ import {
 // P4 integration properties for sihengxia. Exercise the production TUI request
 // builder and core prompt builder from opencode, where fast-check and CI exist.
 // No live model is called: prompt delivery does not establish summary quality.
-const options = { numRuns: 250 }
+// A fixed seed makes pre/post-strengthening mutation results reproducible.
+// Relative source imports ensure Stryker loads the sandbox's mutated copies,
+// rather than workspace-package links pointing back to the unmutated checkout.
+const options = { numRuns: 250, seed: 3132026 }
 const headings = [
   "## Objective",
   "## Important Details",
