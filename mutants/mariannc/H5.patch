@@ -1,0 +1,11 @@
+--- a/packages/tui/src/util/compaction.ts
++++ b/packages/tui/src/util/compaction.ts
+@@ -28,7 +28,7 @@
+     sessionID,
+     modelID: model.modelID,
+     providerID: model.providerID,
+-    instructions: instructions.trim() || undefined,
++    instructions: instructions.trim().split("\n")[0] || undefined,
+   }
+ }
+ 
