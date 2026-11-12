@@ -4,6 +4,8 @@ import type { SessionMessageInfo } from "@opencode-ai/client/promise"
 import type { AssistantMessage, Part, SessionStatus, UserMessage } from "@opencode-ai/sdk/v2"
 import type { TimelineRow as Row } from "./timeline-row"
 
+fc.configureGlobal({ seed: 42 })
+
 // Same stub as rows-current.test.ts: every part is renderable and becomes its
 // own group, so row structure depends only on rows.ts, not on the UI package.
 mock.module("@opencode-ai/session-ui/message-part", () => ({

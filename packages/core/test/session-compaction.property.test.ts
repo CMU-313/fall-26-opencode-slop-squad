@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test"
 import fc from "fast-check"
 import { SessionCompaction } from "@opencode-ai/core/session/compaction"
 
+fc.configureGlobal({ seed: 42 })
+
 // Property tests for the compaction prompt (R2).
 // See traceability/afeies.md and docs/p4-properties.md.
 

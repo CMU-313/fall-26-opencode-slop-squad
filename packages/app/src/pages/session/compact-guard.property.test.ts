@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test"
 import fc from "fast-check"
 import { beginCompact, canCompact, emptyCompactPending, finishCompact, type CompactPending } from "./compact-guard"
 
+fc.configureGlobal({ seed: 42 })
+
 // Property tests for the per-session compact guard (R4, R7).
 // See traceability/afeies.md and docs/p4-properties.md.
 

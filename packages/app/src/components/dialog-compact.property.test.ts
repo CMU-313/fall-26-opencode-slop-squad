@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test"
 import fc from "fast-check"
 import { compactInstructions } from "./dialog-compact-instructions"
 
+fc.configureGlobal({ seed: 42 })
+
 // Property tests for compact instruction normalization (R2, R8).
 // See traceability/afeies.md and docs/p4-properties.md.
 
