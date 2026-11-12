@@ -22,6 +22,8 @@ Main source files:
 
 Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, R7. ChatGPT generated the initial implementations and suggested the two Project 5 strengthening properties. The student reviewed and tested the properties.
 
+OpenCode separately generated the retry property documented in the Project 5 agent-failure case.
+
 ## Requirement changes
 
 | ID | Original requirement (P3) | Revised requirement | Why it changed |
@@ -46,6 +48,12 @@ The original five properties passed before mutation testing. Two additional prop
 The five hand-written mutants were applied individually, tested, and reversed. All five were killed.
 
 The final Stryker run killed all 35 generated mutants.
+
+The OpenCode-generated property also passed after the original implementation was restored:
+
+- Tests passed: 1
+- Tests failed: 0
+- Assertions executed: 1,552
 
 GitHub Actions CI status must still be checked before final submission.
 
@@ -218,39 +226,145 @@ A copy was saved to:
 
 ## Project 5: Agent failure case
 
-This section requires a genuine opencode-generated property and evidence that it failed to kill a mutant.
+I used OpenCode (Big Pickle, OpenCode Zen) to generate a fast-check property for `createCompactionRunner`. The goal was to test whether failed compaction requests could be retried.
 
-The initial properties were generated with ChatGPT, so they cannot be presented as an opencode transcript.
+The agent generated a useful property for sequential retries, but it did not test overlapping requests. I demonstrated this weakness by applying a concurrency mutant and comparing the agent-generated property with my strengthened R4 property.
 
 ### Agent transcript
 
-Prompt: Pending actual opencode interaction.
+Agent: OpenCode (Big Pickle, OpenCode Zen)
 
-Agent response: Pending actual opencode interaction.
+Prompt:
 
-Transcript or share link: Pending.
+"Generate a fast-check property-based test for createCompactionRunner in packages/tui/src/util/compaction.ts that verifies failed compaction requests can be retried.
+
+Do not modify any files. Show the complete suggested test and explain what behavior it checks."
+
+Agent response:
+
+OpenCode generated a property that creates arbitrary compaction requests and sequences of up to five failures.
+
+The failure generator includes:
+- Returned API errors.
+- Thrown exceptions.
+
+The property verifies that:
+- Every failed attempt returns `false`.
+- `isRunning()` becomes `false` after each failure.
+- A subsequent attempt succeeds.
+- The same request is forwarded for every attempt.
+
+The original agent-generated property is preserved in:
+
+`packages/tui/test/util/compaction.agent.test.ts`
+
+The experiment is documented in:
+
+`mutants/mariannc/agent-case/README.md`
+
+The initial five properties were generated with ChatGPT, not OpenCode. This separate OpenCode interaction is the genuine agent-generated property used for the Project 5 failure case.
 
 ### Surviving mutant
 
-Mutant ID: Pending.
+Mutant ID: S2 (initial Stryker run).
 
-Requirement targeted: Pending.
+Requirement targeted: R4, compaction reliability and prevention of overlapping requests.
 
-Observed test result: Pending.
+Source file:
+
+`packages/tui/src/util/compaction.ts`
+
+Original code:
+
+    if (running) return false
+
+Mutated code:
+
+    if (false) return false
+
+This mutation disables the concurrency guard. Instead of rejecting a second request while another request is running, the runner attempts to process both.
+
+I temporarily applied this mutation and ran the agent-generated property by itself.
+
+Observed result:
+
+- Tests passed: 1
+- Tests failed: 0
+- Assertions executed: 1,552
+
+The mutant survived the OpenCode-generated property.
 
 ### Why the agent-generated property was weak
 
-Pending actual evidence.
+The agent focused on sequential retry behavior.
+
+Its property awaited every compaction attempt before starting another one. This meant that the runner was never tested while a request was still active.
+
+Consequently, disabling the concurrency guard did not change any behavior observed by the agent-generated property.
+
+The property was valid for its intended retry behavior, but it did not exercise the overlapping-request invariant.
+
+This illustrates how AI-generated tests can cover the obvious success and failure paths while missing important state-dependent behavior.
 
 ### Strengthened property
 
-Pending actual changes.
+I used the strengthened R4 property in:
+
+`packages/tui/test/util/compaction.property.test.ts`
+
+The property deliberately keeps the first request pending before attempting another request.
+
+It checks that:
+
+1. The runner reports `isRunning()` as `true`.
+2. A second request is rejected while the first is active.
+3. The summarize function is called only once.
+4. The original request completes successfully.
+5. The runner resets to its idle state afterward.
+
+This tests the concurrency behavior missing from the agent-generated property.
 
 ### Evidence of improvement
 
-Baseline result: Pending.
+I tested both properties against the same concurrency mutant.
 
-Mutant result: Pending.
+**Agent-generated property with mutant active:**
+
+- 1 test passed.
+- 0 tests failed.
+- 1,552 assertions executed.
+- Mutant survived.
+
+**Strengthened property suite with mutant active:**
+
+- 6 tests passed.
+- 1 test failed.
+- The R4 overlapping-request property timed out after 5,000 milliseconds.
+- Mutant detected.
+
+The timeout occurred because the second request was allowed to proceed instead of being rejected immediately. The test awaited that second request while its underlying promise remained pending.
+
+After restoring the original source implementation:
+
+**Custom property suite:**
+- 7 tests passed.
+- 0 tests failed.
+- 3,000 assertions executed.
+
+**OpenCode-generated property:**
+- 1 test passed.
+- 0 tests failed.
+- 1,552 assertions executed.
+
+The final Stryker run also killed all 35 mutants, achieving a 100% mutation score.
+
+### Conclusion
+
+OpenCode generated a valid property for sequential retry behavior, but it missed the concurrency guard because its test never overlapped two requests.
+
+By testing the agent-generated property against a mutant and comparing it with a strengthened property, I demonstrated a concrete limitation of AI-generated testing.
+
+Mutation testing helped identify the missing behavior and verify that the strengthened property detected the defect.
 
 ## Project 5: Red team
 
