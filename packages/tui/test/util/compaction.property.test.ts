@@ -11,6 +11,9 @@ import {
   findCompactionMarker,
 } from "../../src/util/compaction-marker"
 
+// Fixed seed for reproducible Project 5 mutation testing.
+fc.configureGlobal({ seed: 42 })
+
 const model = {
   modelID: "test-model",
   providerID: "test-provider",
@@ -225,6 +228,82 @@ describe("Project 4: custom compaction properties", () => {
         }
       ),
       { numRuns: 200 }
+    )
+  })
+
+  // R5 strengthened for Project 5:
+  // Missing compaction markers must be handled safely.
+  // Targets Stryker's OptionalChaining mutant.
+  // Kind: invariant.
+
+  test("R5: missing compaction markers never expose instructions", () => {
+    fc.assert(
+      fc.property(
+        fc.array(
+          fc.record({
+            type: fc.constantFrom(
+              "text",
+              "tool",
+              "summary"
+            ),
+            instructions: fc.string(),
+          })
+        ),
+        (parts) => {
+          const marker = findCompactionMarker(parts)
+
+          expect(marker).toBeUndefined()
+          expect(
+            compactionMarkerInstructions(marker)
+          ).toBeUndefined()
+        }
+      ),
+      { numRuns: 200 }
+    )
+  })
+
+  // R4 strengthened for Project 5:
+  // A compaction runner must reject overlapping requests,
+  // report its active state, and reset after completion.
+  // Targets three surviving Stryker mutants.
+  // Kind: invariant.
+
+  test("R4: runner rejects overlapping requests and resets afterward", async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        requestArb,
+        async (request) => {
+          let release!: () => void
+          let calls = 0
+
+          const pending = new Promise<void>((resolve) => {
+            release = resolve
+          })
+
+          const runner = createCompactionRunner(
+            async () => {
+              calls++
+              await pending
+              return {}
+            }
+          )
+
+          const first = runner.run(request)
+
+          expect(runner.isRunning()).toBe(true)
+
+          const second = await runner.run(request)
+
+          expect(second).toBe(false)
+          expect(calls).toBe(1)
+
+          release()
+
+          expect(await first).toBe(true)
+          expect(runner.isRunning()).toBe(false)
+        }
+      ),
+      { numRuns: 100 }
     )
   })
 })

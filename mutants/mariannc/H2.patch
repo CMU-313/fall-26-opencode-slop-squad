@@ -1,0 +1,11 @@
+--- a/packages/tui/src/util/compaction.ts
++++ b/packages/tui/src/util/compaction.ts
+@@ -22,7 +22,7 @@
+   model: CompactionModel,
+   instructions: string | null,
+ ): CompactionRequest | undefined {
+-  if (instructions === null) return undefined
++  if (instructions === null) return { sessionID, modelID: model.modelID, providerID: model.providerID }
+ 
+   return {
+     sessionID,

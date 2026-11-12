@@ -1,0 +1,11 @@
+--- a/packages/tui/src/util/compaction-marker.ts
++++ b/packages/tui/src/util/compaction-marker.ts
+@@ -11,7 +11,7 @@
+ export function findCompactionMarker<T extends CompactionMarkerPart>(
+   parts: readonly T[],
+ ): T | undefined {
+-  return parts.find((part) => part.type === "compaction")
++  return parts.find((part) => part.type === "summary")
+ }
+ 
+ /**

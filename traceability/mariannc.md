@@ -15,12 +15,12 @@ Main source files:
 | R1 | O-5 wanted no instructions omitted; S-5 wanted strict requirements preserved. | Submit nonblank instructions after trimming leading/trailing whitespace, preserving internal content and line order. | For generated single-line or multiline text, the request's instructions equal `text.trim()` or are absent if blank. | Yes | Request agrees with independent expected request (model/oracle) | `packages/tui/test/util/compaction.property.test.ts` | H1, H5 |
 | R2 | C-7, S-6, O-6 expected cancellation to leave the conversation unchanged. | Canceling the compaction dialog must not initiate a request or modify the conversation. | For generated draft text, passing the cancellation sentinel `null` produces no request. The TUI must return before calling the runner. | No | Cancellation produces no request (invariant) | `packages/tui/test/util/compaction.property.test.ts` | H2 |
 | R3 | S-7, O-7 wanted canceled drafts retained; C-8 preferred clearing. | Preserve draft instructions when canceling and reopening within the same session. | Cancel and reopen should restore the draft in the same session. | No | Not selected; requires dialog-level state testing and resolution of conflicting preferences. | Not selected | None |
-| R4 | O-9 wanted failure feedback and retry without retyping. | When a request fails, the TUI must show an error and allow retry; the request runner must reset after failure so the same instructions can be retried. | For arbitrary requests and simulated returned/throwing errors, first attempt fails, runner resets, and second attempt sends the same request successfully. The error toast is checked separately in TUI integration tests. | Yes | Failure does not block retry (invariant) | `packages/tui/test/util/compaction.property.test.ts` | H3 |
-| R5 | C-6, C-10, S-9, O-10 wanted to inspect submitted instructions and the summary. | Following compaction, submitted custom instructions remain available in the compaction marker for review; the resulting summary remains accessible through the conversation UI. | For arbitrary nonblank instructions in a compaction marker, retrieving the marker returns the same instructions. | Yes | Store/retrieve marker instructions (round-trip) | `packages/tui/test/util/compaction.property.test.ts` | H4 |
+| R4 | O-9 wanted failure feedback and retry without retyping. | When a request fails, the TUI must show an error and allow retry; the request runner must reset after failure so the same instructions can be retried. | For arbitrary requests and simulated returned/throwing errors, first attempt fails, runner resets, and second attempt sends the same request successfully. The error toast is checked separately in TUI integration tests. | Yes | Failure does not block retry (invariant) | `packages/tui/test/util/compaction.property.test.ts` | H3; Stryker S2, S3, S4 |
+| R5 | C-6, C-10, S-9, O-10 wanted to inspect submitted instructions and the summary. | Following compaction, submitted custom instructions remain available in the compaction marker for review; the resulting summary remains accessible through the conversation UI. | For arbitrary nonblank instructions in a compaction marker, retrieving the marker returns the same instructions. | Yes | Store/retrieve marker instructions (round-trip), safe missing-marker handling (invariant) | `packages/tui/test/util/compaction.property.test.ts` | H4; Stryker S1 |
 | R6 | S-4 wanted compaction never to modify source code. | Running compaction must not directly modify, create, or delete project source files. | Source-file contents and checksums remain unchanged by compaction. | No | Not selected; would need integration testing of project files. | Not selected | None |
 | R7 | C-4, S-2, S-3, O-3, O-4 wanted files, decisions, and unresolved bugs retained. | Include user-specified project context in the summarization request. | For generated first and second instructions, adding the second preserves the first and forwards both in order in the request. | No | Adding context retains previous context (metamorphic) | `packages/tui/test/util/compaction.property.test.ts` | H5 |
 
-Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, R7 (ChatGPT generated initial implementations; student reviewed and validated them through property-based testing and hand-written mutation testing).
+Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, R7. ChatGPT generated the initial implementations and suggested the two Project 5 strengthening properties. The student reviewed and tested the properties.
 
 ## Requirement changes
 
@@ -32,21 +32,22 @@ Properties written or suggested by opencode or another AI tool: R1, R2, R4, R5, 
 
 ## Validation status
 
-Verified on November 12, 2026:
+Final property test run on November 12, 2026:
 
 - Command: `bun test test/util/compaction.property.test.ts`
 - Working directory: `packages/tui`
-- Property tests passed: 5
+- Property tests passed: 7
 - Property tests failed: 0
-- Assertions executed: 2,100
+- Assertions executed: 3,000
+- Fast-check seed: 42
 
-All five properties passed before mutation testing.
+The original five properties passed before mutation testing. Two additional properties were added after examining the surviving Stryker mutants. All seven passed in the final baseline run.
 
-The five hand-written mutants were tested separately. Each mutant caused at least one property to fail, and each patch was reversed after testing.
+The five hand-written mutants were applied individually, tested, and reversed. All five were killed.
 
-A fixed fast-check seed of 42 is being added for reproducible Stryker runs. The seeded baseline must be rerun before automated mutation testing.
+The final Stryker run killed all 35 generated mutants.
 
-GitHub Actions CI status must be verified before final submission.
+GitHub Actions CI status must still be checked before final submission.
 
 ## Project 5: Hand-written mutants
 
@@ -64,19 +65,16 @@ All five mutants were applied individually, tested, and reversed.
 
 ### Hand-written mutation results
 
-Total hand-written mutants: 5
+- Total hand-written mutants: 5
+- Killed mutants: 5
+- Surviving mutants: 0
+- Hand-written mutation score: 100%
 
-Killed mutants: 5
-
-Surviving mutants: 0
-
-Hand-written mutation score: 100%
-
-Each mutation was tested using:
+Each mutant was tested using:
 
 `bun test test/util/compaction.property.test.ts`
 
-The following patch files contain the hand-written mutants:
+Patch files:
 
 - `mutants/mariannc/H1.patch`
 - `mutants/mariannc/H2.patch`
@@ -84,7 +82,7 @@ The following patch files contain the hand-written mutants:
 - `mutants/mariannc/H4.patch`
 - `mutants/mariannc/H5.patch`
 
-The hand-written score does not represent the automated Stryker mutation score.
+The hand-written mutation score is separate from the automated Stryker score.
 
 ## Project 5: Automated mutation testing with Stryker
 
@@ -92,7 +90,7 @@ Configuration file:
 
 `packages/tui/stryker.mariannc.config.json`
 
-Test file:
+Property test file:
 
 `packages/tui/test/util/compaction.property.test.ts`
 
@@ -105,75 +103,124 @@ Test runner: Bun through Stryker's command runner.
 
 Coverage analysis: Off.
 
-Fixed fast-check seed: 42.
+Fast-check seed: 42.
+
+Stryker version: 10.1.1.
 
 ### Initial Stryker results
 
-Initial mutation score: Pending Stryker execution.
+The initial Stryker run completed successfully with the original five properties.
 
-Killed mutants: Pending.
+- Total mutants: 35
+- Killed mutants: 31
+- Surviving mutants: 4
+- Timed-out mutants: 0
+- Initial mutation score: 88.57%
 
-Surviving mutants: Pending.
+Results by file:
 
-Timed-out mutants: Pending.
+| File | Killed | Survived | Mutation score |
+|---|---|---|---|
+| `compaction.ts` | 21 | 3 | 87.50% |
+| `compaction-marker.ts` | 10 | 1 | 90.91% |
+| Total | 31 | 4 | 88.57% |
 
-Equivalent mutants: Pending review.
+### Initial surviving mutants
 
-### Comparison of hand-written and automated mutants
+| ID | File | Stryker mutation | Reason it survived |
+|---|---|---|---|
+| S1 | `compaction-marker.ts` | Replace `part?.instructions` with `part.instructions`. | R5 always supplied a valid compaction marker, so the original property did not exercise the missing-marker case. |
+| S2 | `compaction.ts` | Replace `if (running)` with `if (false)`. | R4 tested sequential requests but not overlapping compaction requests. |
+| S3 | `compaction.ts` | Replace `if (running) return false` with `if (running) return true`. | The original suite did not check the result of a second request while the runner was busy. |
+| S4 | `compaction.ts` | Replace `running = true` with `running = false`. | The original suite did not check the runner's active state while summarization was pending. |
 
-Hand-written mutants that Stryker did not generate:
+All four represented observable behavioral changes rather than equivalent mutants.
 
-Pending inspection of the Stryker report.
+### Comparison with hand-written mutants
 
-Explanation of why Stryker did not generate them:
+The five hand-written mutants targeted plausible requirement-level mistakes:
 
-Pending.
+- H1 removed boundary whitespace trimming.
+- H2 created a request despite cancellation.
+- H3 failed to reset the runner after an error.
+- H4 selected the wrong type of marker.
+- H5 dropped additional instruction lines.
 
-Unexpected surviving Stryker mutants:
+The automated Stryker run generated 35 mutants by modifying expressions and statements in the two source files. It revealed four gaps that the hand-written mutants had not exposed: handling missing markers, rejecting overlapping requests, returning the correct result for rejected requests, and reporting the active runner state.
 
-Pending.
+Some hand-written faults, such as forwarding only the first line of instructions, require more specific behavioral changes than Stryker's standard expression-level operators typically produce. A definitive comparison of which exact hand-written patches were not generated would require inspecting every mutant in the HTML report.
 
-Whether surviving mutants represent realistic developer mistakes:
-
-Pending.
-
-Differences in the bugs detected by hand-written mutants and Stryker:
-
-Pending.
+The two approaches complemented each other. Hand-written mutants represented realistic mistakes derived from interview requirements, while Stryker systematically explored code-level changes and revealed previously untested behavior.
 
 ### Strengthening the property suite
 
-Surviving mutants selected for improvement:
+I added two new properties to address the four surviving mutants.
 
-Pending.
+**Strengthened R5: missing compaction markers**
 
-Properties strengthened:
+The new property generates arrays containing text, tool, and summary parts but no compaction marker.
 
-Pending.
+It checks that `findCompactionMarker` returns `undefined` and that `compactionMarkerInstructions` safely returns `undefined` for the absent marker.
 
-Evidence of newly killed mutants:
+This property killed S1, which removed optional chaining.
 
-Pending.
+**Strengthened R4: overlapping requests and runner state**
+
+The new property generates arbitrary compaction requests and uses a pending promise to keep the first request active.
+
+It verifies that:
+
+- The runner reports itself as running while the first request is pending.
+- A second overlapping request returns `false`.
+- The summarization function is called only once.
+- The runner resets after the first request finishes.
+
+This property killed S2, S3, and S4.
+
+### Final Stryker results
+
+After strengthening the suite, I reran Stryker against the same two source files.
+
+- Total mutants: 35
+- Killed mutants: 35
+- Surviving mutants: 0
+- Timed-out mutants: 0
+- Final raw mutation score: 100%
+- Final equivalence-adjusted mutation score: 100%
+
+Final results by file:
+
+| File | Killed | Survived | Mutation score |
+|---|---|---|---|
+| `compaction.ts` | 24 | 0 | 100% |
+| `compaction-marker.ts` | 11 | 0 | 100% |
+| Total | 35 | 0 | 100% |
+
+The mutation score improved from 88.57% to 100%, an increase of 11.43 percentage points.
+
+The final property suite passed all 7 tests with 3,000 assertions.
 
 ### Equivalent mutants
 
-Pending inspection of surviving mutants.
+No mutants survived the final Stryker run. Therefore, no equivalent mutants needed to be excluded from the final score.
 
-Equivalent mutants will be documented individually with explanations of why the mutated implementation is behaviorally indistinguishable from the original for the relevant observable behavior.
+The raw and equivalence-adjusted mutation scores are both 100%.
 
-### Final Stryker scores
+### Mutation report
 
-Raw mutation score: Pending.
+The final HTML report was generated at:
 
-Equivalence-adjusted mutation score: Pending.
+`packages/tui/reports/mutation/mutation.html`
 
-HTML report location:
+A copy was saved to:
 
 `mutants/mariannc/mutation.html`
 
 ## Project 5: Agent failure case
 
-A genuine opencode-generated property and an actual mutant that it failed to kill are required for this section.
+This section requires a genuine opencode-generated property and evidence that it failed to kill a mutant.
+
+The initial properties were generated with ChatGPT, so they cannot be presented as an opencode transcript.
 
 ### Agent transcript
 
@@ -189,29 +236,21 @@ Mutant ID: Pending.
 
 Requirement targeted: Pending.
 
-Observed behavior: Pending.
+Observed test result: Pending.
 
-### Explanation of the failure
-
-Why the agent-generated property was too weak:
+### Why the agent-generated property was weak
 
 Pending actual evidence.
 
 ### Strengthened property
 
-Property changes:
-
-Pending.
+Pending actual changes.
 
 ### Evidence of improvement
 
-Baseline test result:
+Baseline result: Pending.
 
-Pending.
-
-Mutant test result:
-
-Pending.
+Mutant result: Pending.
 
 ## Project 5: Red team
 
