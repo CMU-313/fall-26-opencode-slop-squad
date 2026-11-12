@@ -35,6 +35,7 @@
     "@happy-dom/global-registrator": "20.0.11",
     "@playwright/test": "catalog:",
     "@sentry/vite-plugin": "catalog:",
+    "@stryker-mutator/core": "10.1.1",
     "@tailwindcss/vite": "catalog:",
     "@tsconfig/bun": "1.0.9",
     "@types/bun": "catalog:",
