@@ -37,3 +37,15 @@ These are prepared properties, not verified test results. Run them with `bun tes
 Ensure `fast-check` is available to the TUI package and the lockfile is updated.
 
 Confirm that the PR's GitHub Actions `test` workflow runs `packages/tui` tests. Record and fix any failures before submission.
+
+## Project 5: Hand-written mutants
+
+Predictions recorded before applying or running the mutants.
+
+| ID | Requirement targeted | Change | Predicted killer | Actual result |
+|---|---|---|---|---|
+| H1 | R1 | Remove boundary whitespace trimming from `createCompactionRequest`. | R1, because the property expects trimmed instructions. | Pending |
+| H2 | R2 | Allow a canceled dialog to create a compaction request. | R2, because cancellation must return `undefined`. | Pending |
+| H3 | R4 | Leave the runner marked as running after an API failure. | R4, because the property checks that retrying is possible. | Pending |
+| H4 | R5 | Search for a summary marker instead of a compaction marker. | R5, because the property expects the original compaction instructions. | Pending |
+| H5 | R7 | Forward only the first line of the user's instructions. | R7 and potentially R1, because both require preservation of additional context. | Pending |
