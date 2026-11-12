@@ -1,0 +1,81 @@
+bun test v1.3.14 (0d9b296a)
+P4 sihengxia: R1 invariant passed (250 generated cases)
+P4 sihengxia: R1 delimiter invariant passed (250 generated cases)
+P4 sihengxia: R2 metamorphic passed (250 generated cases)
+P4 sihengxia: R5 invariant passed (250 generated cases)
+P5 sihengxia: R3 model passed (250 generated cases)
+P5 sihengxia: R9 metamorphic passed (250 generated cases)
+
+$ bun test --timeout 30000 --only-failures --timeout "30000" test/session/sihengxia-compaction.property.test.ts --only-failures
+
+test\session\sihengxia-compaction.property.test.ts:
+2464 | 	return defaultReportMessageInternal(out, stringifySecond);
+2465 | }
+2466 | /** @internal */
+2467 | function buildError(errorMessage, out) {
+2468 | 	if (out.runConfiguration.includeErrorInReport) throw new SError(errorMessage);
+2469 | 	const error = new SError(errorMessage, { cause: out.errorInstance });
+                      ^
+error: Property failed after 1 tests
+{ seed: 3132026, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+Counterexample: [{"sessionID":"00000000-0000-1000-8000-000000000000","model":{"providerID":"00000000-0000-1000-8000-000000000000","modelID":"00000000-0000-1000-8000-000000000000"}},"packages/00000000-0000-1000-8000-000000000000/unfinished.test.ts","00000000-0000-1000-8000-000000000000",{"previousSummary":undefined,"context":[]}]
+Shrunk 25 time(s)
+
+Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+      at buildError (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2469:16)
+      at asyncThrowIfFailed (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2481:8)
+
+188 |         if (!request) throw new Error("A non-empty submission must create a request")
+189 |         expect(request.sessionID).toBe(user.sessionID)
+190 |         expect(request.instructions).toContain(first)
+191 |         expect(request.instructions).toContain(second)
+192 |         expect(await runner.run(request)).toBe(true)
+193 |         expect(runner.isRunning()).toBe(false)
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: false
+Received: true
+
+      at <anonymous> (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\packages\opencode\test\session\sihengxia-compaction.property.test.ts:193:36)
+      at async run (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:1217:30)
+      at async asyncPropertyExecution (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2564:29)
+(fail) sihengxia R4 metamorphic: reordering and resubmitting preserve both instructions [9.83ms]
+2464 | 	return defaultReportMessageInternal(out, stringifySecond);
+2465 | }
+2466 | /** @internal */
+2467 | function buildError(errorMessage, out) {
+2468 | 	if (out.runConfiguration.includeErrorInReport) throw new SError(errorMessage);
+2469 | 	const error = new SError(errorMessage, { cause: out.errorInstance });
+                      ^
+error: Property failed after 1 tests
+{ seed: 3132026, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+Counterexample: [{"sessionID":"00000000-0000-1000-8000-000000000000","model":{"providerID":"00000000-0000-1000-8000-000000000000","modelID":"00000000-0000-1000-8000-000000000000"}},"Preserve \"packages/00000000-0000-1000-8000-000000000000/unfinished.test.ts\".\nKeep this note exactly: \nThe timeout tests are unfinished.","success"]
+Shrunk 20 time(s)
+
+Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+      at buildError (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2469:16)
+      at asyncThrowIfFailed (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2481:8)
+
+294 |         const duplicate = await runner.run(request)
+295 |         expect(duplicate).toBe(false)
+296 |         expect(calls).toHaveLength(1)
+297 |         release()
+298 |         expect(await first).toBe(outcome === "success")
+299 |         expect(runner.isRunning()).toBe(false)
+                                         ^
+error: expect(received).toBe(expected)
+
+Expected: false
+Received: true
+
+      at <anonymous> (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\packages\opencode\test\session\sihengxia-compaction.property.test.ts:299:36)
+      at async run (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:1217:30)
+      at async asyncPropertyExecution (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2564:29)
+(fail) sihengxia R7 invariant: pending requests are rejected and every outcome permits retry [4.43ms]
+
+ 6 pass
+ 2 fail
+ 10758 expect() calls
+Ran 8 tests across 1 file. [4.46s]
+error: script "test" exited with code 1

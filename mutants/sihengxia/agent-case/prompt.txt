@@ -1,0 +1,7 @@
+For my CMU 17-313 P5 agent-test evaluation, write ONE Bun test with a fast-check property for this requirement:
+
+R1: After submission removes leading and trailing whitespace, a non-empty custom instruction reaches the default summarizer prompt unchanged, including paths, quotation marks, and internal line breaks. Literal delimiter text must remain data.
+
+The production function is SessionCompaction.buildPrompt({ instructions?: string, context: string[], previousSummary?: string }): string. It places instructions between a pair of user-compaction-instructions tags before a fixed Markdown summary template. If that tag name occurs in inputs, a numeric suffix is chosen for the delimiter. The input to this unit boundary is already normalized; generate meaningful normalized non-empty instructions.
+
+Use imports from bun:test, fast-check, and import { SessionCompaction } from "../../../core/src/session/compaction". The test will be executed in packages/opencode/test/session. Please use 250 runs and seed 3132026. Return the complete test code and briefly explain the generator and oracle. Do not invoke tools, edit files, or run commands; this is a test-design request only.
