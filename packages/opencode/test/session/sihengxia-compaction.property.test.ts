@@ -101,24 +101,40 @@ test("sihengxia R1 invariant: literal delimiter text does not truncate instructi
   // R1: Literal markup in a normalized instruction is preserved unchanged.
   // Kind: invariant. Force collisions with consecutive candidate delimiters in
   // instructions, history, and the previous summary, including the zero case.
+  // P5: paired tags alone missed an OR-to-AND collision-check mutant. Generate
+  // unmatched opening/closing tags and tags split across different input fields.
   fc.assert(
-    fc.property(instruction, context, fc.integer({ min: 0, max: 6 }), (value, history, count) => {
-      const markers = Array.from({ length: count }, (_, index) => {
-        const tag = `user-compaction-instructions${index === 0 ? "" : `-${index}`}`
-        return `<${tag}>literal text</${tag}>`
-      }).join("\n")
-      const input = {
-        instructions: `${value}\nLiteral markers: ${markers}\nKeep every character.`,
-        previousSummary: `${history.previousSummary ?? ""}\n${markers}`,
-        context: [...history.context, markers],
-      }
-      const block = instructionBlock(SessionCompaction.buildPrompt(input))
-      expect(block.text).toBe(input.instructions)
-      for (const source of [input.instructions, input.previousSummary, ...input.context]) {
-        expect(source).not.toContain(`<${block.tag}>`)
-        expect(source).not.toContain(`</${block.tag}>`)
-      }
-    }),
+    fc.property(
+      instruction,
+      context,
+      fc.integer({ min: 0, max: 6 }),
+      fc.constantFrom("paired", "opening", "closing", "split"),
+      (value, history, count, shape) => {
+        const tags = Array.from(
+          { length: count },
+          (_, index) => `user-compaction-instructions${index === 0 ? "" : `-${index}`}`,
+        )
+        // Zero is a legitimate literal suffix too, even though the normal
+        // search starts with the unnumbered tag. Include it as arbitrary data.
+        const candidates = [...tags, "user-compaction-instructions-0"]
+        const opens = candidates.map((tag) => `<${tag}>`).join("\n")
+        const closes = candidates.map((tag) => `</${tag}>`).join("\n")
+        const paired = candidates.map((tag) => `<${tag}>literal text</${tag}>`).join("\n")
+        const markers = shape === "paired" ? paired : shape === "closing" ? closes : opens
+        const historyMarkers = shape === "split" ? closes : markers
+        const input = {
+          instructions: `${value}\nLiteral markers: ${markers}\nKeep every character.`,
+          previousSummary: `${history.previousSummary ?? ""}\n${historyMarkers}`,
+          context: [...history.context, historyMarkers],
+        }
+        const block = instructionBlock(SessionCompaction.buildPrompt(input))
+        expect(block.text).toBe(input.instructions)
+        for (const source of [input.instructions, input.previousSummary, ...input.context]) {
+          expect(source).not.toContain(`<${block.tag}>`)
+          expect(source).not.toContain(`</${block.tag}>`)
+        }
+      },
+    ),
     options,
   )
   console.info("P4 sihengxia: R1 delimiter invariant passed (250 generated cases)")
@@ -219,4 +235,109 @@ test("sihengxia R5 invariant: conflicting instructions retain the fixed summary 
     options,
   )
   console.info("P4 sihengxia: R5 invariant passed (250 generated cases)")
+})
+
+test("sihengxia R3 model: canceled and blank submissions preserve ordinary compaction", () => {
+  // R3: Canceling produces no request; blank submission creates an ordinary
+  // request with no serialized custom instructions. Kind: model/oracle.
+  // The small independent model has two input classes: null and whitespace.
+  // This checks the dialog-result boundary, not a physical Escape key event.
+  fc.assert(
+    fc.property(identity, fc.oneof(fc.constant(null), padding), context, (user, value, history) => {
+      const request = createCompactionRequest(user.sessionID, user.model, value)
+      if (value === null) {
+        expect(request).toBeUndefined()
+        return
+      }
+      expect(request).toEqual({ sessionID: user.sessionID, ...user.model, instructions: undefined })
+      expect(JSON.parse(JSON.stringify(request))).not.toHaveProperty("instructions")
+      const ordinary = SessionCompaction.buildPrompt(history)
+      expect(SessionCompaction.buildPrompt({ ...history, instructions: request?.instructions })).toBe(ordinary)
+      // Direct builder callers must treat whitespace as absent too.
+      expect(SessionCompaction.buildPrompt({ ...history, instructions: value })).toBe(ordinary)
+      expect(ordinary).not.toContain("<user-compaction-instructions>")
+    }),
+    options,
+  )
+  console.info("P5 sihengxia: R3 model passed (250 generated cases)")
+})
+
+test("sihengxia R7 invariant: pending requests are rejected and every outcome permits retry", async () => {
+  // R7: One runner rejects overlapping submissions, reports an API error or
+  // rejection as failure, and allows a subsequent request. Kind: invariant.
+  // Generate all three outcomes and coordinate a pending request with a gate,
+  // rather than relying on sleeps. The runner boundary does not prove UI text
+  // or coordination between multiple runner instances for the same session.
+  await fc.assert(
+    fc.asyncProperty(
+      identity,
+      instruction,
+      fc.constantFrom("success", "error", "throw"),
+      async (user, value, outcome) => {
+        const request = createCompactionRequest(user.sessionID, user.model, value)
+        if (!request) throw new Error("Expected a non-empty request")
+        let release!: () => void
+        const gate = new Promise<void>((resolve) => {
+          release = resolve
+        })
+        const calls: CompactionRequest[] = []
+        const runner = createCompactionRunner(async (input) => {
+          calls.push(input)
+          if (calls.length > 1) return {}
+          await gate
+          if (outcome === "throw") throw new Error("Unavailable model")
+          if (outcome === "error") return { error: { message: "Unavailable model" } }
+          return {}
+        })
+        const first = runner.run(request)
+        expect(runner.isRunning()).toBe(true)
+        const duplicate = await runner.run(request)
+        expect(duplicate).toBe(false)
+        expect(calls).toHaveLength(1)
+        release()
+        expect(await first).toBe(outcome === "success")
+        expect(runner.isRunning()).toBe(false)
+        expect(await runner.run(request)).toBe(true)
+        expect(runner.isRunning()).toBe(false)
+        expect(calls).toEqual([request, request])
+      },
+    ),
+    options,
+  )
+  console.info("P5 sihengxia: R7 invariant passed (250 generated cases)")
+})
+
+test("sihengxia R9 metamorphic: adding context preserves instructions and prior conversation", () => {
+  // R9 (derived in P5): default prompt assembly preserves the previous summary
+  // and ordered conversation paragraphs, with distinct create/update guidance.
+  // Kind: metamorphic. Removing the previous summary survived P4, revealing a
+  // requirement missing from the prompt-delivery-only acceptance criteria.
+  const paragraph = fc.uuid().map((id) => `Conversation paragraph ${id}`)
+  fc.assert(
+    fc.property(
+      instruction,
+      fc.array(paragraph, { minLength: 1, maxLength: 5 }),
+      fc.option(paragraph, { nil: undefined }),
+      (value, paragraphs, previousSummary) => {
+        const without = SessionCompaction.buildPrompt({ instructions: value, context: [], previousSummary })
+        const withContext = SessionCompaction.buildPrompt({ instructions: value, context: paragraphs, previousSummary })
+        expect(instructionBlock(withContext).text).toBe(instructionBlock(without).text)
+        expect(withContext).toBe(`${without}\n\n${paragraphs.join("\n\n")}`)
+        if (previousSummary) {
+          expect(withContext).toStartWith("Update the anchored summary")
+          expect(withContext).toContain(`<previous-summary>\n${previousSummary}\n</previous-summary>`)
+        } else {
+          expect(withContext).toStartWith("Create a new anchored summary from the conversation history.")
+        }
+        // Without custom instructions there should be no extra instruction
+        // section inserted between mode guidance and the fixed template.
+        const ordinary = SessionCompaction.buildPrompt({ context: paragraphs })
+        expect(ordinary.slice(0, ordinary.indexOf("Output exactly the Markdown structure"))).toBe(
+          "Create a new anchored summary from the conversation history.\n\n",
+        )
+      },
+    ),
+    options,
+  )
+  console.info("P5 sihengxia: R9 metamorphic passed (250 generated cases)")
 })
