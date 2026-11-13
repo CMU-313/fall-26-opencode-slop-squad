@@ -10,11 +10,11 @@
 | R3 | C-7, O-4: "Exactly the same as before. Nothing should be sent and no divider should show up." | Closing the compact dialog with Cancel or Escape sends no request and leaves the session unchanged. (Already implemented.) | Open the dialog, type `"keep the file list"`, then click Cancel. Repeat and press Escape. In both cases zero compact requests are sent, and the session's messages and timeline rows are identical to before the dialog opened. | No | None | — | none (no property) |
 | R4 | C-5, S-5: "Double-clicking shouldn't make two summaries." | Each compaction sends exactly one request, and the Compact command is disabled for a session while a compaction for that session is in progress. (New.) | Double-click the Compact submit button: exactly one compact request is sent. While that request is pending, the `session.compact` command (and `/compact`) is disabled. When it finishes, the timeline has exactly one new compaction divider and the command is enabled again. | No | P7: For any interleaving of submit, request-finished, assistant-started, and assistant-idle events across sessions, the requests sent and the Compact enabled/disabled state match a simple per-session model, and no step changes the pending set it was given (model/oracle; no-mutation check added in P5). | P7: `packages/app/src/pages/session/compact-guard.property.test.ts::R4+R7/P7: sends and Compact enabled state match a per-session model` | H3, H4 (P7; H3 shared with R7) |
 | R5 | C-6, O-3: "A clear error message or toast, not just nothing happening. The dialog should stay open so they can try again without retyping." | If the compact request fails, the user sees an error toast with the failure reason, the session's messages are unchanged, and the dialog stays open with the typed instructions so they can retry. (Partly implemented: the toast exists, but the dialog closes before the request finishes.) | The server rejects the compact request with `"provider unavailable"`. An error toast showing `"provider unavailable"` appears, the session has the same messages as before, no divider is added, and the dialog is still open with the instructions text unchanged. | No | None | — | none (no property) |
-| R6 | C-5, C-8, C-10, O-5, O-7: "The compaction divider in the same spot and the summary." | A successful compaction adds exactly one divider, placed right after the last pre-compaction message. Its count and position are the same with or without instructions (non-blank instructions may be shown in it), and the rows are identical after reload. | Compact once with `"keep the file list"` after three user messages: exactly one compaction row appears after the third turn, and the rows are identical after reload. Compacting with blank instructions gives a divider in the same position with no instructions shown. | Yes | P3: For any session history with one compaction, the timeline has exactly one compaction row. It comes right after the user message that carries the compaction, and every row from earlier turns comes before it (invariant). P4: Adding or removing instructions on the compaction does not change the number, order, or position of rows (metamorphic). P5: Rebuilding rows from the same messages after a JSON serialize/parse gives identical rows (round-trip). *In P5 the generator also puts other user parts before and after the compaction part, and P3 checks the compaction divider is the only divider in its turn.* | P3: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P3: exactly one compaction divider, right after its user message`<br>P4: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P4: instructions do not change row count, order, or position`<br>P5: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P5: rows are identical after a JSON round-trip of the history` | H5 (P3, P4), H7 (P4) |
+| R6 | C-5, C-8, C-10, O-5, O-7: "The compaction divider in the same spot and the summary." | A successful compaction adds exactly one divider, placed right after the last pre-compaction message. Its count and position are the same with or without instructions (non-blank instructions may be shown in it), and the rows are identical after reload. | Compact once with `"keep the file list"` after three user messages: exactly one compaction row appears after the third turn, and the rows are identical after reload. Compacting with blank instructions gives a divider in the same position with no instructions shown. | Yes | P3: For any session history with one compaction, the timeline has exactly one compaction row. It comes right after the user message that carries the compaction, and every row from earlier turns comes before it (invariant). P4: Adding or removing instructions on the compaction does not change the number, order, or position of rows (metamorphic). P5: Rebuilding rows from the same messages after a JSON serialize/parse gives identical rows (round-trip). *In P5 the generator also puts other user parts before and after the compaction part, and P3 checks the compaction divider is the only divider in its turn.* | P3: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P3: exactly one compaction divider, right after its user message`<br>P4: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P4: instructions do not change row count, order, or position`<br>P5: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P5: rows are identical after a JSON round-trip of the history`<br>opencode (Agent failure case): `packages/app/src/pages/session/timeline/rows.opencode.property.test.ts::compaction divider count and position (R6) > exactly one compaction divider placed right after user message that carries compaction` (unmodified) and `…> divider count and position, and all other rows, are the same with or without instructions` (strengthened) | H5 (P3, P4), H7 (P4, strengthened opencode property) |
 | R7 | S-1: "You should not be able to hit Compact while the assistant is working. It should let the assistant finish first before compacting." | While the assistant is working, Compact is disabled for that session, so it never interrupts a reply. It is enabled again once the session is idle. (New.) | While `session_working(sessionID)` is true, `/compact` and `session.compact` do nothing, no request is sent, and the reply finishes fully. Once idle, submitting sends exactly one request. | No | P7 (shared with R4; model/oracle). | P7: `packages/app/src/pages/session/compact-guard.property.test.ts::R4+R7/P7: sends and Compact enabled state match a per-session model` | H3 (P7) |
 | R8 | S-6: "Enter should not submit. It should only add a new line, because compaction instructions could be long." | Enter in the instructions box adds a newline; only the Compact button submits, and newlines are sent unchanged. (Already implemented.) | Type `"keep the file list"`, Enter, `"and the schema decision"`: the dialog stays open and nothing is sent. Clicking Compact sends `instructions: "keep the file list\nand the schema decision"`. | No | P6: For any instructions with interior newlines, the sent instructions contain the same lines in the same order, byte-for-byte, apart from leading and trailing whitespace (invariant). | P6: `packages/app/src/components/dialog-compact.property.test.ts::R8/P6: interior newlines are preserved in order` | H1, H6 (P6) |
 
-Properties written or suggested by opencode or another AI tool: Claude Code (Claude Opus 5.5) suggested P1–P7 and P2b (R2, R4, R6, R7, R8) and the R6 revision. In P5 it also wrote P2c and the P3, P7 and generator strengthening.
+Properties written or suggested by opencode or another AI tool: Claude Code (Claude Opus 5.5) suggested P1–P7 and P2b (R2, R4, R6, R7, R8) and the R6 revision. In P5 it also wrote P2c and the P3, P7 and generator strengthening. opencode (North Mini Code) wrote the first R6 test in `rows.opencode.property.test.ts` (see Agent failure case); the second test in that file is my strengthened version.
 
 ## Triage (Step 3)
 
@@ -47,19 +47,23 @@ Predictions were written before applying each mutant, from reading the generator
 
 ## Stryker comparison
 
-**Seed:** `42`, set with `fc.configureGlobal({ seed: 42 })` in all four property files.
+**Seed:** `42`, set with `fc.configureGlobal({ seed: 42 })` in all four property files. **Stryker:** `@stryker-mutator/core` 10.1.1, `command` test runner, `coverageAnalysis: "off"` (so there are no "no coverage" mutants; every mutant runs the full property suite).
+
+**Configs:** `packages/app/stryker.afeies.config.json` mutates `dialog-compact-instructions.ts`, `compact-guard.ts`, and `rows.ts:115-171` (the compaction-row logic P3–P5 exercise). `packages/core/stryker.afeies.config.json` mutates `compaction.ts:161-187` (`instructionTag` and `buildPrompt`). Run with `bunx stryker run stryker.afeies.config.json` in each package.
 
 **Mutation score (raw, before strengthening):** because the feature spans two packages, there are two configs and two reports (`mutants/afeies/mutation-app.html` and `mutants/afeies/mutation-core.html`).
 
-| Package | Mutants | Killed | Timeout | Survived | Score |
-|---|---|---|---|---|---|
-| app | 100 | 44 | 0 | 56 | 44.0% |
-| core | 33 | 4 | 6 | 23 | 30.3% |
-| **Combined** | **133** | **48** | **6** | **79** | **40.6%** |
+| Package | Mutants | Killed | Timeout | Survived | No coverage | Score |
+|---|---|---|---|---|---|---|
+| app | 100 | 44 | 0 | 56 | 0 | 44.0% |
+| core | 33 | 4 | 6 | 23 | 0 | 30.3% |
+| **Combined** | **133** | **48** | **6** | **79** | **0** | **40.6%** |
+
+The spec asks for one `mutation.html`, but Stryker writes one report per package and the feature spans two packages, so both are committed. The reports in `mutants/afeies/` are the **final** runs (after strengthening, see below).
 
 ### Which hand-written mutants did Stryker never generate? Why not?
 
-Stryker never generated any of H1–H6. Its mutators make a single small change, such as swapping an operator, forcing a condition to `true` or `false`, emptying a block or literal, or removing a method call, while each of my mutants rewrites a small piece of code:
+Stryker never generated any of H1–H7. Its mutators make a single small change, such as swapping an operator, forcing a condition to `true` or `false`, emptying a block or literal, or removing a method call, while each of my mutants rewrites a small piece of code:
 
 - **H1** checks the trimmed text but sends the untrimmed text, whereas Stryker can only remove `trim()` entirely.
 - **H2** turns `trim()` into `trimStart()`, and Stryker has no rule for that swap.
@@ -67,6 +71,7 @@ Stryker never generated any of H1–H6. Its mutators make a single small change,
 - **H4** moves the `delete` from the copy onto the input set, a change that spans three statements.
 - **H5** replaces `find` with `at(-1)`, and `find` isn't on Stryker's list of methods to mutate.
 - **H6** adds a `split`/`map`/`join` chain, and Stryker never adds code.
+- **H7** adds a new `|| compaction?.instructions?.trim()` operand to a condition, which is also adding code.
 
 ### Which Stryker survivors would you never have thought of? Are any plausible bugs?
 
@@ -106,6 +111,8 @@ All changes are to properties (no example tests), with the seed still `42`. Same
 | app | 100 | 47 | 53 | 1 | 47.0% | 47 / 99 = 47.5% |
 | core | 33 | 31 | 2 | 2 | 93.9% | 31 / 31 = 100% |
 | **Combined** | **133** | **78** | **55** | **3** | **58.6%** | **78 / 130 = 60.0%** |
+
+Core: 25 killed + 6 timeout. App: 47 killed. These match the reports in `mutants/afeies/`.
 
 All hand-written mutants are now killed. The other 52 app survivors are in `rows.ts:115–159`, in code for turn gaps, comment strips, interrupted dividers on turns without a compaction, and error rows. None of my requirements cover that code.
 
