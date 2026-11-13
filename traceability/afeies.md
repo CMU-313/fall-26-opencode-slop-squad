@@ -43,3 +43,40 @@ Predictions were written before applying each mutant, from reading the generator
 | H4 | R4 | `packages/app/src/pages/session/compact-guard.ts:20-22`: `finishCompact` deletes from `pending` in place and returns the same set (`(pending as Set<string>).delete(sessionID); return pending`) | **Survives** P7 | `stepReal` always reassigns `real.pending` to the result and never keeps an older set. `beginCompact` still copies, and `emptyCompactPending` is never mutated because of the early return. So every value P7 checks is unchanged. In the app it is a real bug: `use-session-commands.tsx:442` passes the same object back to a Solid `setCompactPending`, which skips the update, so Compact stays disabled after the request finishes. P7 checks values, not object identity. | **Survived**, as predicted. All 6 app properties pass. Needs a property that checks `finishCompact` never mutates its input (see Step 6). |
 | H5 | R6 | `packages/app/src/pages/session/timeline/rows.ts:118`: `userParts.find((p) => p.type === "compaction")` → `userParts.at(-1)?.type === "compaction" ? userParts.at(-1) : undefined` (assumes the compaction part is the last part) | **Survives** P3, P4, P5 | `build()` always makes the compaction turn's parts `[text, compaction]`, so the compaction part is always last and `at(-1)` finds the same part `find` does. The generator never puts a part after it. (The opposite assumption, `userParts[0]`, would be killed right away by P3, because the compaction part is never first.) | **Survived**, as predicted. All 6 app properties pass, because the generator never puts a part after the compaction part. |
 | H6 | R8 | `packages/app/src/components/dialog-compact-instructions.ts:2`: trims every line (`text.split("\n").map((l) => l.trim()).join("\n").trim() \|\| undefined`) | **Killed** by R8/P6 (possibly R2/P1) | P6's `innerLine` is whitespace-only half the time (`" "`, `"\t"`, NBSP, so `"  "` becomes `""`), and `line` can have leading or trailing spaces. With the `"\r\n"` separator, every split line ends in `"\r"`, which `trim()` removes. So P6's byte-for-byte check fails. P1 may also fail when a `core` string has a space next to an interior newline, but that is less certain. | **Killed** by R8/P6, as predicted. Counterexample: `lines: ["!", "ᚁ"]` with `newline: "\r\n"`, where the `"\r"` is trimmed from the first line. R2/P1 passed, so the "possibly P1" part did not happen. |
+
+## Stryker comparison
+
+**Seed:** `42`, set with `fc.configureGlobal({ seed: 42 })` in all four property files.
+
+**Mutation score (raw, before strengthening):** because the feature spans two packages, there are two configs and two reports (`mutants/afeies/mutation-app.html` and `mutants/afeies/mutation-core.html`).
+
+| Package | Mutants | Killed | Timeout | Survived | Score |
+|---|---|---|---|---|---|
+| app | 100 | 44 | 0 | 56 | 44.0% |
+| core | 33 | 4 | 6 | 23 | 30.3% |
+| **Combined** | **133** | **48** | **6** | **79** | **40.6%** |
+
+### Which hand-written mutants did Stryker never generate? Why not?
+
+Stryker never generated any of H1–H6. Its mutators make a single small change, such as swapping an operator, forcing a condition to `true` or `false`, emptying a block or literal, or removing a method call, while each of my mutants rewrites a small piece of code:
+
+- **H1** checks the trimmed text but sends the untrimmed text, whereas Stryker can only remove `trim()` entirely.
+- **H2** turns `trim()` into `trimStart()`, and Stryker has no rule for that swap.
+- **H3** deletes one side of an `&&`, but Stryker can only change the operator or force the whole condition.
+- **H4** moves the `delete` from the copy onto the input set, a change that spans three statements.
+- **H5** replaces `find` with `at(-1)`, and `find` isn't on Stryker's list of methods to mutate.
+- **H6** adds a `split`/`map`/`join` chain, and Stryker never adds code.
+
+### Which Stryker survivors would you never have thought of? Are any plausible bugs?
+
+Three groups of survivors are bugs a real developer could plausibly write, and I hadn't thought of any of them:
+
+- **`compaction.ts:179` `instructions && tag` → `false`** drops the instructions from the prompt entirely, yet the core properties still pass. This is the most serious gap: P2 and P2b only compare two prompts with each other, so neither one checks that the instructions actually appear.
+- **The collision check in `compaction.ts:163-174`** survives `some` → `every`, `||` → `&&`, and `instructionTag([])`, all of which are easy slips, because no property checks which tag `instructionTag` picks or whether it avoids a collision.
+- **`rows.ts:130` `!compaction` → `compaction`** adds an "interrupted" divider to the compaction turn, which P3 misses because it only counts dividers labelled `"compaction"`.
+
+The rest, like empty function bodies and `"Stryker was here"` literals, aren't realistic bugs.
+
+### What does each approach find that the other doesn't?
+
+Hand-written mutants start from the requirements, so they find corner cases the generators miss. H4 showed that P7 never checks that `finishCompact` leaves its input unchanged, and H5 showed that the generator always puts the compaction part last. Stryker starts from the code instead, so it finds places where an assertion never checks something, like the instructions missing from the prompt. I didn't write mutants for those cases because I was targeting what each property was meant to check, not what it actually checks.
