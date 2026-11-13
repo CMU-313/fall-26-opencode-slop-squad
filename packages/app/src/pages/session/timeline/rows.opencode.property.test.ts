@@ -209,4 +209,23 @@ describe("compaction divider count and position (R6)", () => {
       }),
     )
   })
+
+  // Added after the agent failure case (see traceability/afeies.md). The test
+  // above varies instructions between runs but never compares a history with
+  // and without them, so "same with or without instructions" was never
+  // checked, and H7 (an extra CommentStrip only when instructions are set)
+  // survived. This builds the same history twice, changing only the
+  // instructions, and compares every row, not just the row after the user
+  // message.
+  test("divider count and position, and all other rows, are the same with or without instructions", () => {
+    fc.assert(
+      fc.property(history, instructions, (h, other) => {
+        const before = rowsFor(h, build(h, { instructions: undefined }))
+        const after = rowsFor(h, build(h, { instructions: other }))
+        expect(after.map(TimelineRow.key)).toEqual(before.map(TimelineRow.key))
+        expect(after.findIndex(isCompactionDivider)).toBe(before.findIndex(isCompactionDivider))
+        expect(after.filter(isCompactionDivider)).toHaveLength(1)
+      }),
+    )
+  })
 })
