@@ -1,0 +1,13 @@
+diff --git a/packages/app/src/pages/session/compact-guard.ts b/packages/app/src/pages/session/compact-guard.ts
+index bd7ba5b..bcb6709 100644
+--- a/packages/app/src/pages/session/compact-guard.ts
++++ b/packages/app/src/pages/session/compact-guard.ts
+@@ -6,7 +6,7 @@ export type CompactPending = ReadonlySet<string>
+ export const emptyCompactPending: CompactPending = new Set()
+ 
+ export function canCompact(pending: CompactPending, sessionID: string, working: boolean) {
+-  return !working && !pending.has(sessionID)
++  return !pending.has(sessionID)
+ }
+ 
+ // Returns the new pending set if a request may be sent, or undefined if it is blocked.

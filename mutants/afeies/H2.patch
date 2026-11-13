@@ -1,0 +1,13 @@
+diff --git a/packages/core/src/session/compaction.ts b/packages/core/src/session/compaction.ts
+index b9d19d2..af09eeb 100644
+--- a/packages/core/src/session/compaction.ts
++++ b/packages/core/src/session/compaction.ts
+@@ -170,7 +170,7 @@ export const buildPrompt = (input: {
+   readonly instructions?: string
+   readonly context: readonly string[]
+ }) => {
+-  const instructions = input.instructions?.trim()
++  const instructions = input.instructions?.trimStart()
+   const tag = instructions ? instructionTag([instructions, input.previousSummary ?? "", ...input.context]) : undefined
+   return [
+     input.previousSummary

@@ -1,0 +1,8 @@
+diff --git a/packages/app/src/components/dialog-compact-instructions.ts b/packages/app/src/components/dialog-compact-instructions.ts
+index 8c98c49..f7d74c5 100644
+--- a/packages/app/src/components/dialog-compact-instructions.ts
++++ b/packages/app/src/components/dialog-compact-instructions.ts
+@@ -1,2 +1,2 @@
+ // Blank input compacts exactly as before instructions existed.
+-export const compactInstructions = (text: string) => text.trim() || undefined
++export const compactInstructions = (text: string) => text.trim() ? text : undefined

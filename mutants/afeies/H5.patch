@@ -1,0 +1,13 @@
+diff --git a/packages/app/src/pages/session/timeline/rows.ts b/packages/app/src/pages/session/timeline/rows.ts
+index 3daab50..2f27e8a 100644
+--- a/packages/app/src/pages/session/timeline/rows.ts
++++ b/packages/app/src/pages/session/timeline/rows.ts
+@@ -115,7 +115,7 @@ export namespace Timeline {
+     const previousUserMessage = index > 0
+     const userParts = getMessageParts(userMessage.id)
+     const comments = userParts.flatMap((p) => MessageComment.fromPart(p) ?? [])
+-    const compaction = userParts.find((p): p is CompactionPart => p.type === "compaction")
++    const compaction = (userParts.at(-1)?.type === "compaction" ? (userParts.at(-1) as CompactionPart) : undefined)
+     const interruptedMessageIndex = assistantMessages.findIndex((m) => m.error?.name === "MessageAbortedError")
+     const interrupted = interruptedMessageIndex !== -1
+     const latestError = assistantMessages.at(-1)?.error
