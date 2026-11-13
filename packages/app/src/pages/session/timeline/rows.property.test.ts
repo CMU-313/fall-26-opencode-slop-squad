@@ -67,6 +67,11 @@ const history = fc
       showReasoning: fc.boolean(),
       inlineComments: fc.boolean(),
       diffs: fc.boolean(),
+      // Other user parts (e.g. pasted text) around the compaction part. Added
+      // in P5 for H5: before this, the compaction part was always last, so code
+      // that only looked at the last part passed every property.
+      partsBefore: fc.nat({ max: 2 }),
+      partsAfter: fc.nat({ max: 2 }),
     }),
   )
 
@@ -97,15 +102,27 @@ function build(h: History, override?: { instructions: string | undefined }) {
       summary: h.diffs ? { diffs: [{ file: `f${i}.ts`, additions: 1, deletions: 0 }] } : undefined,
     })
     const userParts: Part[] = [{ id: `${userID}:text`, sessionID, messageID: userID, type: "text", text: `turn ${i}` }]
-    if (i === h.compactAt)
-      userParts.push({
-        id: `${userID}:compaction`,
+    const extra = (name: string, count: number): Part[] =>
+      Array.from({ length: count }, (_, k) => ({
+        id: `${userID}:${name}:${k}`,
         sessionID,
         messageID: userID,
-        type: "compaction",
-        auto: h.auto,
-        instructions: compactionInstructions,
-      })
+        type: "text" as const,
+        text: `${name} ${k}`,
+      }))
+    if (i === h.compactAt)
+      userParts.push(
+        ...extra("before", h.partsBefore),
+        {
+          id: `${userID}:compaction`,
+          sessionID,
+          messageID: userID,
+          type: "compaction",
+          auto: h.auto,
+          instructions: compactionInstructions,
+        },
+        ...extra("after", h.partsAfter),
+      )
     parts.push([userID, userParts])
 
     turn.assistants.forEach((assistant, j) => {
@@ -192,6 +209,13 @@ describe("compaction timeline row properties", () => {
         expect(user).toBeGreaterThanOrEqual(0)
         expect(dividers[0]).toBe(user + 1)
         expect(rows[dividers[0]!]!.userMessageID).toBe(compactionUserID(h))
+        // The compaction divider is the only divider in its turn, even when a
+        // reply in that turn was aborted (added in P5: an "interrupted"
+        // divider next to it would make two dividers for one compaction).
+        const turnDividers = rows.filter(
+          (row) => row._tag === "TurnDivider" && row.userMessageID === compactionUserID(h),
+        )
+        expect(turnDividers).toHaveLength(1)
         // Every row of earlier turns comes before the divider, so nothing
         // from before the compaction is rendered after it.
         const firstLater = rows.findIndex((row) => row.userMessageID > compactionUserID(h))

@@ -75,15 +75,23 @@ describe("compact guard properties", () => {
   // toward "submit" so double-clicks (C-5, S-5), submits while working (S-1),
   // and cross-session interleavings are common; stray "finished"/"idle" events
   // check that one session's events never unblock or block another. The oracle
-  // is checked after every event, not just at the end.
+  // is checked after every event, not just at the end, and every step must
+  // leave the previous pending set unchanged (the app relies on a new set to
+  // re-enable Compact).
   test("R4+R7/P7: sends and Compact enabled state match a per-session model", () => {
     fc.assert(
       fc.property(events, (trace) => {
         const model = initialModel()
         const real = { pending: emptyCompactPending, working: new Set<Session>(), sent: { a: 0, b: 0, c: 0 } }
         for (const e of trace) {
+          // The app keeps the pending set in a Solid signal, which skips an
+          // update when the setter returns the same object. So a step must
+          // never change the set it was given (added in P5 for H4).
+          const held = real.pending
+          const snapshot = [...held].sort()
           stepModel(model, e)
           stepReal(real, e)
+          expect([...held].sort()).toEqual(snapshot)
           for (const s of sessions) {
             expect(real.sent[s]).toBe(model[s].sent)
             expect(canCompact(real.pending, s, real.working.has(s))).toBe(!model[s].pending && !model[s].working)

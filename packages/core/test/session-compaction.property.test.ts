@@ -75,4 +75,47 @@ describe("compaction prompt properties", () => {
       }),
     )
   })
+
+  // R2: The instructions are trimmed before sending. If nothing is left, the
+  // request has no instructions and behaves exactly like a plain compaction.
+  // Kind: invariant + metamorphic
+  // Added in P5 after Stryker showed that P2 and P2b only compare two prompts
+  // with each other, so a prompt with the instructions dropped (or no prompt
+  // at all) passed both. This property checks the trimmed instructions are
+  // actually sent:
+  // - they appear exactly once, on their own lines between `<T>` and `</T>`,
+  //   where T is the first of `user-compaction-instructions`,
+  //   `user-compaction-instructions-1`, ... that no user-supplied text
+  //   (instructions, previous summary, context) contains, so the model can
+  //   always tell where they end;
+  // - the instruction block is its own paragraph, and removing it gives back
+  //   exactly the plain-compaction prompt (no instructions), so instructions
+  //   add one paragraph and change nothing else.
+  // Generators: the same padded instructions as P2b, and the same context and
+  // previous summary, which often contain a delimiter so T is not always the
+  // base tag.
+  test("R2/P2c: the trimmed instructions are sent once, in a free delimiter, as one added paragraph", () => {
+    const tagName = (n: number) => `user-compaction-instructions${n === 0 ? "" : `-${n}`}`
+    fc.assert(
+      fc.property(base, blank, instructions, blank, (input, before, text, after) => {
+        const userText = [text, input.previousSummary ?? "", ...input.context]
+        let n = 0
+        while (userText.some((value) => value.includes(`<${tagName(n)}>`) || value.includes(`</${tagName(n)}>`))) n++
+        const tag = tagName(n)
+
+        const prompt = SessionCompaction.buildPrompt({ ...input, instructions: before + text + after })
+        const plain = SessionCompaction.buildPrompt(input)
+        expect(typeof prompt).toBe("string")
+
+        const block = `<${tag}>\n${text}\n</${tag}>\n\n`
+        expect(prompt.split(block)).toHaveLength(2)
+
+        const open = prompt.indexOf(`<${tag}>\n`)
+        const start = prompt.lastIndexOf("\n\n", open)
+        const end = prompt.indexOf(block) + block.length
+        expect(start).toBeGreaterThan(0)
+        expect(prompt.slice(0, start) + "\n\n" + prompt.slice(end)).toBe(plain)
+      }),
+    )
+  })
 })
