@@ -1,0 +1,35 @@
+{
+  "requirement": "R2",
+  "agent": { "tool": "opencode", "version": "1.19.5", "model": "opencode/big-pickle" },
+  "file": "packages/opencode/test/session/compaction.opencode.property.test.ts",
+  "unmodifiedCommit": "9765682",
+  "seed": 42,
+  "numRuns": 200,
+  "baseline": {
+    "opencodeProperty": { "unmutated": "1 pass, 0 fail", "expectCalls": 1000 },
+    "strengthened": { "unmutated": "2 pass, 0 fail (both tests)", "expectCalls": 2000 }
+  },
+  "mutants": [
+    { "id": "H1", "requirement": "R1", "opencodeProperty": "survives", "ajeanProperties": "killed by R1" },
+    { "id": "H2", "requirement": "R5", "opencodeProperty": "survives", "ajeanProperties": "killed by R5" },
+    { "id": "H3", "requirement": "R2", "opencodeProperty": "killed", "ajeanProperties": "killed by R2" },
+    { "id": "H4", "requirement": "R4/R2", "opencodeProperty": "survives", "ajeanProperties": "killed by R2 and R4" },
+    { "id": "H5", "requirement": "R4/R2", "opencodeProperty": "survives", "ajeanProperties": "survives all four (requirements gap, R6)" }
+  ],
+  "chosen": {
+    "mutant": "H4",
+    "patch": "mutants/ajean/H4.patch",
+    "change": "input.instructions?.trim() -> input.instructions?.trim().slice(0, 2000)",
+    "cause": "generator that never reaches the bug",
+    "evidence": {
+      "opencodePropertyWithH4": "1 pass, 0 fail (survives)",
+      "strengthenedWithH4": "fails after 2 tests, shrunk 10 times",
+      "generatorRange": "18-165 characters over 5000 samples; H4 cuts at 2000"
+    }
+  },
+  "predictionWasWrong": {
+    "predicted": "H3 would survive",
+    "actual": "H3 is killed; opencode's oracle bounds every occurrence of the instruction text to the block interior",
+    "note": "Measured before anything was written down. See triage.md."
+  }
+}
