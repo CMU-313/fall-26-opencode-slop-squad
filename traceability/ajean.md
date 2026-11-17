@@ -9,7 +9,7 @@
 | ID | Interview evidence | Requirement | Acceptance Criteria | Changed in P4/P5? | Property (kind) | Test | Mutants it kills |
 |---|---|---|---|---|---|---|---|
 | R1 | C-12 | Whitespace-only instructions are treated exactly like no instructions. | For any instruction string consisting only of whitespace, `buildPrompt({ instructions: s, ... })` returns a prompt byte-identical to `buildPrompt({ ... })` with `instructions` omitted: no instruction block, no delimiter tag. | P4: evidence corrected (was mis-cited to C-9 / S-6 / O-7). P5: narrowed to C-12, and the property strengthened to pin the shape of the plain prompt. | Blanking the instructions is an identity perturbation on the prompt (**metamorphic**) | `R1: whitespace-only instructions produce the same prompt as no instructions` | H1; Stryker: both directive strings, the stray paragraph in the no-instructions branch, `.join("\n\n")` |
-| R2 | C-8 | User instructions appear only in the summarizer prompt, delimited, never in the agent's system prompt. | For any instruction string, the text appears in the summarizer prompt only inside the `<user-compaction-instructions...>` block. | P4: evidence corrected (was mis-cited to C-5 / O-3). P5: narrowed to C-8. | Instruction text never escapes its delimited block (**invariant**) | `R2: instruction text appears only inside its delimited block` | H3, H4 |
+| R2 | C-8 | User instructions appear only in the summarizer prompt, delimited, never in the agent's system prompt. | For any instruction string, the text appears in the summarizer prompt only inside the `<user-compaction-instructions...>` block. | P4: evidence corrected (was mis-cited to C-5 / O-3). P5: narrowed to C-8. | Instruction text never escapes its delimited block (**invariant**) | `R2: instruction text appears only inside its delimited block`<br>opencode (Agent failure case): `packages/opencode/test/session/compaction.opencode.property.test.ts::R2: instructions only appear inside the delimited summarizer block` (unmodified) and `…::R2 strengthened: instruction text stays inside the block at any length` | H3, H4 |
 | R3 | O-9, O-10 | A failed or cancelled compaction leaves the session unchanged. | After a compaction that fails or is cancelled, the session has the same messages and the same message count as before it started, and the next user message is accepted immediately — no half-summarized state. | P4: acceptance criteria rewritten to be checkable (was a verbatim restatement of the requirement); evidence corrected (was mis-cited to O-4 / O-5 / O-6). | Not property-tested — see note below | — | none (no property) |
 | R4 | C-9, C-10 | The instruction text the user typed is the text handed to the summarizer: it is carried in full, in order and exactly once, apart from leading and trailing whitespace, even when the transcript displays it abbreviated. | For any instruction string with at least one non-whitespace character, `buildPrompt` emits exactly one `<tag>...</tag>` block whose tag is the bare `user-compaction-instructions`, and the text recovered from between those delimiters is the original with only outer whitespace removed — nothing truncated, escaped, re-encoded, reordered or collapsed. | New in P4. **Revised in P5** — see Requirement changes. | Encode into the prompt, decode back out, recover what was typed (**round-trip**) | `R4: instructions survive the round trip into the prompt, outer whitespace aside` | H4; Stryker: the two tag-numbering mutants |
 | R5 | O-8 | The delimiter around the instructions cannot be forged by the instruction text itself or by anything else in the prompt. | For any instructions, previous summary, and context — including text that already contains `<user-compaction-instructions>`, its closing tag, or the numbered variants — `instructionTag` picks a tag that appears in none of those values, so the block has exactly one opening and one closing delimiter. | New in P4. P5: generator now pads its output, so the delivery check is no longer satisfied by accident. | No input can collide with the chosen tag (**invariant**) | `R5: the chosen delimiter cannot be forged from any input` | H2 |
@@ -22,7 +22,7 @@ Four requirements (R1, R2, R4, R5) carry fast-check properties, using three kind
 
 **Generator choices.** Documented in comments in the test file. In short: the blank-instruction generator emits every character `String.prototype.trim()` removes, including NBSP, the line/paragraph separators and the BOM, because the production code decides "blank" with `.trim()`; the meaningful-instruction generator deliberately includes strings *padded* with whitespace, since a stray `.trim()` on the way into the prompt is the most likely way to break R4 and an unpadded generator would never catch it; and the adversarial generator emits the numbered tag variants (`...-1`, `...-2`) directly, because the chance of fast-check producing the literal string `</user-compaction-instructions-1>` at random is nil, yet that is precisely the forgery O-8 described.
 
-**Properties written or suggested by opencode or another AI tool:** R1, R2, R4 and R5 — the property implementations and all generators in `compaction.property.test.ts` were written by Claude (Claude Code), as were the requirement wording and property design for R4 and R5. R1, R2 and R3 are my own requirements, carried over from Project 3. I reviewed every property, and I am responsible for each one being correct and tied to a real requirement.
+**Properties written or suggested by opencode or another AI tool:** R1, R2, R4 and R5 — the property implementations and all generators in `compaction.property.test.ts` were written by Claude (Claude Code), as were the requirement wording and property design for R4 and R5. R1, R2 and R3 are my own requirements, carried over from Project 3. I reviewed every property, and I am responsible for each one being correct and tied to a real requirement. Separately, **opencode** (`opencode/big-pickle`) wrote the first R2 property in `compaction.opencode.property.test.ts` for the agent failure case; its output is committed unmodified in `9765682` and the second test in that file is my strengthened version.
 
 ## Requirement changes
 
@@ -124,3 +124,116 @@ Two mutants survive the strengthened suite, and both are equivalent — no test 
 **2. `...(instructions && tag` → `...(instructions || tag`** (line 179). One line above, `tag` is assigned `instructions ? instructionTag(...) : undefined`, and `instructionTag` always returns a non-empty string. So `tag` is truthy exactly when `instructions` is truthy: the two can never disagree, and `A && B` and `A || B` have the same value whenever `A` and `B` always share a truth value. There is no input on which the branch taken differs.
 
 Excluding both, the suite kills every mutant that can be killed: **100% (31/31)**.
+
+## Agent failure case
+
+R1, R2, R4 and R5 were implemented with Claude Code, not opencode, so the assignment's fallback
+applies: I asked **opencode** for a property of its own and tested that. The target is **R2** —
+"user instructions appear only in the summarizer prompt, delimited, never in the agent's system
+prompt" — because it is the requirement whose oracle is easiest to get subtly wrong.
+
+**Provenance.** opencode v1.19.5, model `opencode/big-pickle`, anonymous free tier, session
+`ses_e18c3c7baffela9oe1VE4Nzyb8`, 2026-11-17T02:00:59Z, cost 0. This opencode version has no
+`--share` flag, so there is no share link; instead the complete raw event stream is committed at
+`mutants/ajean/agent-case/opencode-events.jsonl`, with the verbatim prompt
+(`prompt.txt`), the verbatim response (`response.md`) and `provenance.json`. The prompt forbade
+tool use, so the property was written from the prompt's description of `buildPrompt` alone, with
+no access to the repository. opencode's output is committed **unmodified** in `9765682`, before
+any strengthening, so what the agent wrote unaided is fixed in history.
+
+**Prompt** (full text in `mutants/ajean/agent-case/prompt.txt`):
+
+> For my CMU 17-313 P5 agent-test evaluation, write ONE Bun test with a fast-check property for
+> this requirement: R2: User instructions appear only in the summarizer prompt, delimited, never
+> in the agent's system prompt. For any instruction string, the instruction text appears in the
+> summarizer prompt only inside the `<user-compaction-instructions...>` block. […] Generate
+> meaningful non-empty instructions, and also generate the previousSummary and context arguments
+> rather than holding them fixed. Please use 200 runs and fix the seed to 42 […] Do not invoke
+> tools, edit files, or run commands; this is a test-design request only.
+
+**What opencode returned**, and what is genuinely good about it: a single property whose oracle
+parses the real opening tag with `/<(user-compaction-instructions(?:\d+)?)>([\s\S]*?)<\/\1>/`,
+matching the closing tag by **backreference** so a numbered delimiter cannot desynchronise it; it
+then collects *every* occurrence of the trimmed instruction text in the whole prompt and requires
+each one to lie strictly between the delimiters. That is a real invariant, not a restatement, and
+it passes on unmutated code — `1 pass, 0 fail`, 1000 `expect()` calls.
+
+**My prediction was wrong, and the measurement is what settled it.** I expected **H3** to survive,
+on the theory that an agent-written R2 property would assert the text *appears somewhere* rather
+than *only inside the block*. opencode did not make that mistake: bounding every occurrence is
+exactly the check H3 breaks, and H3 fails its property (`0 pass, 1 fail`). I ran all five
+hand-written mutants against it rather than assuming — the matrix is in
+`mutants/ajean/agent-case/triage.md`.
+
+**The mutant it lets survive: `mutants/ajean/H4.patch`**, which changes
+`input.instructions?.trim()` to `input.instructions?.trim().slice(0, 2000)` — instructions over
+2000 characters are silently cut. With H4 applied, opencode's property reports `1 pass, 0 fail`.
+My own R2 and R4 both kill it.
+
+H1 (R1) and H2 (R5) also survive, but they are outside the requirement opencode was given. H5
+survives too and is not a fair choice, because it survives my four properties as well — it is the
+requirements gap recorded above, not an agent failure.
+
+**Why it was too weak: a generator that never reaches the bug.** Not a weak oracle, and not an
+always-passing assertion. opencode's oracle already contains the assertion that catches H4 —
+`expect(body).toContain(trimmed)` fails the moment the body is truncated. The defect is upstream.
+Its `instruction` arbitrary is at most eight words from a twelve-word pool plus an 8–16 character
+nonce; measured over 5000 samples it spans **18 to 165 characters**, while H4 cuts at **2000**.
+The mutant is unreachable by a factor of twelve, so the assertion is never handed an input that
+reaches the cut. My `meaningfulInstructions` carries a 2000–6000 character branch, put there
+because C-10 expects the full typed text to be what reaches the summarizer; that single generator
+decision is the entire difference between the two properties. It is the cheapest kind of blind
+spot to introduce and the hardest to see by reading, because nothing in the oracle looks wrong.
+
+**Strengthened version.** opencode's test is left untouched; a second test is added to the same
+file, reusing opencode's oracle verbatim and replacing only the generator:
+
+```ts
+const longInstruction = fc
+  .tuple(
+    whitespace,
+    fc.array(fc.constantFrom(...words), { minLength: 1, maxLength: 8 }),
+    fc.integer({ min: 2000, max: 6000 }),
+    fc.stringMatching(/^[a-z0-9]{8,16}$/),
+    whitespace,
+  )
+  .map(
+    ([leading, body, pad, nonce, trailing]) =>
+      `${leading}Please ${body.join(" ")} ${"detail ".repeat(Math.ceil(pad / 7))}${nonce}${trailing}`,
+  )
+
+test("R2 strengthened: instruction text stays inside the block at any length", () => {
+  fc.assert(
+    fc.property(fc.oneof(instruction, longInstruction), previousSummary, context, /* …opencode's oracle, unchanged… */),
+  )
+})
+```
+
+Two details matter. The pad guarantees the instruction passes 2000 characters regardless of which
+words were drawn, and the nonce sits at the very **end**, where a truncation destroys it; and the
+generator is `fc.oneof(instruction, longInstruction)`, so the short regime opencode wrote for is
+still covered rather than traded away.
+
+**Evidence.** Run from `packages/opencode` with
+`bun test test/session/compaction.opencode.property.test.ts --timeout 30000`.
+
+| | opencode's property | strengthened |
+|---|---|---|
+| Unmutated | `1 pass, 0 fail` | `2 pass, 0 fail` (both tests) |
+| H4 applied | `1 pass, 0 fail` — **survives** | **fails** after 2 tests, shrunk 10× |
+
+With H4 applied, the strengthened property fails on a padded instruction whose trailing nonce has
+been cut off:
+
+```
+error: Property failed after 2 tests
+{ seed: 42, path: "1:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+Counterexample: ["Please please detail detail … detail 0a0aa00a",undefined,[]]
+Shrunk 10 time(s)
+(fail) R2 strengthened: instruction text stays inside the block at any length
+ 1 pass
+ 1 fail
+```
+
+The first line of that output is the point of the exercise: `1 pass` is opencode's property, still
+green on a mutant that silently drops the user's instructions.

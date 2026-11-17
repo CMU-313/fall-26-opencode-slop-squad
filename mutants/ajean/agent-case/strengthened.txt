@@ -1,0 +1,58 @@
+// ---------------------------------------------------------------------------------------------
+// Strengthened version (ajean, P5 Step 7). Everything above this line is opencode's output,
+// committed unmodified in the previous commit.
+//
+// opencode's oracle is sound: it finds the real delimiter, tolerates the numeric suffix via a
+// backreference, and requires every occurrence of the instruction text to fall inside the block.
+// The weakness is the generator, not the oracle. Its `instruction` arbitrary emits at most eight
+// words from a twelve-word pool plus a short nonce — 18 to 165 characters over 5000 samples — so
+// `mutants/ajean/H4.patch`, which truncates the instructions at 2000 characters, is unreachable:
+// the assertion that would catch H4 (`expect(body).toContain(trimmed)`) is never handed an input
+// long enough to be cut. H4 survives opencode's property and is killed by R2 and R4 in
+// compaction.property.test.ts, whose own generator deliberately spans 2000-6000 characters
+// because C-10 expects the full typed text to be what reaches the summarizer.
+//
+// The fix is to reach past the cut and to put a marker at the very end of the instructions, where
+// a truncation destroys it. The oracle below is otherwise opencode's, unchanged.
+
+const longInstruction = fc
+  .tuple(
+    whitespace,
+    fc.array(fc.constantFrom(...words), { minLength: 1, maxLength: 8 }),
+    fc.integer({ min: 2000, max: 6000 }),
+    fc.stringMatching(/^[a-z0-9]{8,16}$/),
+    whitespace,
+  )
+  .map(
+    ([leading, body, pad, nonce, trailing]) =>
+      `${leading}Please ${body.join(" ")} ${"detail ".repeat(Math.ceil(pad / 7))}${nonce}${trailing}`,
+  )
+
+test("R2 strengthened: instruction text stays inside the block at any length", () => {
+  fc.assert(
+    fc.property(
+      fc.oneof(instruction, longInstruction),
+      previousSummary,
+      context,
+      (instructions, previousSummary, context) => {
+        const prompt = SessionCompaction.buildPrompt({ previousSummary, instructions, context })
+        const trimmed = instructions.trim()
+        const match = prompt.match(/<(user-compaction-instructions(?:\d+)?)>([\s\S]*?)<\/\1>/)
+
+        expect(match).not.toBeNull()
+        const block = match![0]!
+        const body = match![2]!
+        expect(body).toContain(trimmed)
+
+        const blockStart = prompt.indexOf(block)
+        const contentStart = blockStart + block.indexOf(">") + 1
+        const contentEnd = blockStart + block.lastIndexOf("</")
+        expect(contentStart).toBeLessThan(contentEnd)
+
+        const positions = findOccurrences(prompt, trimmed)
+        expect(positions.length).toBeGreaterThan(0)
+        expect(positions.every((position) => contentStart <= position && position < contentEnd)).toBe(true)
+      },
+    ),
+  )
+})
