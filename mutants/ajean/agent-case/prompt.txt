@@ -1,0 +1,13 @@
+For my CMU 17-313 P5 agent-test evaluation, write ONE Bun test with a fast-check property for this requirement:
+
+R2: User instructions appear only in the summarizer prompt, delimited, never in the agent's system prompt. For any instruction string, the instruction text appears in the summarizer prompt only inside the <user-compaction-instructions...> block.
+
+The production function is SessionCompaction.buildPrompt({ previousSummary?: string, instructions?: string, context: string[] }): string, defined in packages/core/src/session/compaction.ts. It trims the instructions and places them between a pair of user-compaction-instructions tags, after a short preamble and before a fixed Markdown summary template. If that tag name already occurs anywhere in the inputs, a numeric suffix is chosen for the delimiter instead, so the tag name is not fixed. Whitespace-only instructions produce no block at all.
+
+Use imports from bun:test, fast-check, and import { SessionCompaction } from "@opencode-ai/core/session/compaction". The test will be executed from packages/opencode as:
+
+  bun test test/session/compaction.opencode.property.test.ts --timeout 30000
+
+Generate meaningful non-empty instructions, and also generate the previousSummary and context arguments rather than holding them fixed. Please use 200 runs and fix the seed to 42 with fc.configureGlobal.
+
+Return the complete test code, then briefly explain your generator and your oracle. Do not invoke tools, edit files, or run commands; this is a test-design request only.

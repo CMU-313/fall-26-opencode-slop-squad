@@ -1,0 +1,20 @@
+{
+  "tool": "opencode",
+  "version": "1.19.5",
+  "model": "opencode/big-pickle",
+  "tier": "anonymous free tier (cost 0, no credentials configured)",
+  "sessionID": "ses_e18c3c7baffela9oe1VE4Nzyb8",
+  "createdAt": "2026-11-17T02:00:59.311Z",
+  "command": "opencode run --format json \"$(cat mutants/ajean/agent-case/prompt.txt)\"",
+  "tokens": {
+    "total": 29822,
+    "input": 13147,
+    "output": 828,
+    "reasoning": 14055,
+    "cache": {
+      "write": 0,
+      "read": 1792
+    }
+  },
+  "generatedBy": "A real opencode CLI turn. The prompt forbade tool use; no tools, file reads or edits were requested or performed, so the property was written from the prompt description alone."
+}
