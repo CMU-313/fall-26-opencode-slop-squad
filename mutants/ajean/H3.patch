@@ -1,0 +1,12 @@
+diff --git a/packages/core/src/session/compaction.ts b/packages/core/src/session/compaction.ts
+index b9d19d2..dacb218 100644
+--- a/packages/core/src/session/compaction.ts
++++ b/packages/core/src/session/compaction.ts
+@@ -183,6 +183,7 @@ export const buildPrompt = (input: {
+       : []),
+     SUMMARY_TEMPLATE,
+     ...input.context,
++    ...(instructions ? [instructions] : []),
+   ].join("\n\n")
+ }
+ 
