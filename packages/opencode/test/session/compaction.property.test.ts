@@ -21,6 +21,11 @@ fc.configureGlobal({ seed: 42 })
 const BASE_TAG = "user-compaction-instructions"
 const PREAMBLE = "Apply the user-provided instructions below"
 
+// The first line of SUMMARY_TEMPLATE. The template is module-local to compaction.ts, so the
+// tests anchor on its opening sentence rather than importing it: that keeps the structural
+// checks in R1 from restating how the prompt is assembled.
+const TEMPLATE_HEAD = "Output exactly the Markdown structure shown inside <template>"
+
 // Resolve the delimiter buildPrompt actually chose.
 //
 // The scan MUST start at the preamble. A forged tag planted in previousSummary or in the
@@ -125,6 +130,10 @@ const meaningfulInstructions = fc
   // The helpers above anchor on the preamble, so an instruction containing it would make the
   // test ambiguous. Users cannot realistically type it; exclude it rather than mis-measure.
   .filter((s) => !s.includes(PREAMBLE))
+  // R4 asserts the plain base tag is chosen, which only holds when nothing collides with it.
+  // Random strings reach this essentially never, but the filter makes the assumption explicit
+  // rather than probabilistic. Forged delimiters are R5's job, with their own generator.
+  .filter((s) => !s.includes(BASE_TAG))
 
 const forgedDelimiters = fc
   .tuple(
@@ -182,6 +191,24 @@ test("R1: whitespace-only instructions produce the same prompt as no instruction
       expect(withBlank).toBe(withNone)
       expect(withBlank).not.toContain(`<${BASE_TAG}`)
       expect(resolveTag(withBlank)).toBeUndefined()
+
+      // Strengthened in P5. Comparing the two prompts only shows they agree; it says nothing
+      // about what either one contains, so Stryker could empty the directive, append a stray
+      // paragraph in the no-instructions branch, or drop the blank lines between sections and
+      // both sides changed together. These checks pin the shape of the plain prompt: one
+      // non-empty directive, then the template, then the context, separated by blank lines.
+      const directiveEnd = withNone.indexOf("\n\n")
+      expect(directiveEnd).toBeGreaterThan(0)
+      expect(withNone.slice(0, directiveEnd)).toContain("anchored summary")
+
+      // The template follows the directive immediately: no section may be inserted between
+      // them when there are no instructions to put there.
+      expect(withNone.indexOf(TEMPLATE_HEAD)).toBe(directiveEnd + 2)
+
+      // Every context entry is still present and still preceded by a blank line, and the
+      // prompt ends with the last of them, so nothing is appended after the conversation.
+      for (const entry of context) expect(withNone).toContain(`\n\n${entry}`)
+      expect(withNone.endsWith(context[context.length - 1]!)).toBe(true)
     }),
     { numRuns: 200 },
   )
@@ -248,6 +275,12 @@ test("R4: instructions survive the round trip into the prompt, outer whitespace 
 
       const tag = resolveTag(prompt)
       expect(tag).toBeDefined()
+
+      // Strengthened in P5. None of these inputs contains the delimiter, so there is nothing
+      // to collide with and the plain base tag must be chosen. Without this, a numbering
+      // scheme that starts at "-0" instead of at the bare name goes unnoticed: the regex in
+      // resolveTag accepts any numeric suffix.
+      expect(tag).toBe(BASE_TAG)
 
       // Newlines, non-ASCII characters and length all come through; only padding may go.
       expectDelivered(recoverInstructions(prompt, tag!), instructions)

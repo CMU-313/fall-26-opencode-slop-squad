@@ -6,6 +6,7 @@
   },
   "mutate": ["packages/core/src/session/compaction.ts:161-187"],
   "coverageAnalysis": "off",
+  "inPlace": true,
   "concurrency": 2,
   "timeoutMS": 10000,
   "timeoutFactor": 2,
