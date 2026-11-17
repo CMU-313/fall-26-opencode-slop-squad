@@ -1,0 +1,13 @@
+diff --git a/packages/tui/src/util/compaction.ts b/packages/tui/src/util/compaction.ts
+index b843545..0643969 100644
+--- a/packages/tui/src/util/compaction.ts
++++ b/packages/tui/src/util/compaction.ts
+@@ -57,7 +57,7 @@ export function createCompactionRunner(
+       } catch {
+         return false
+       } finally {
+-        running = false
++        running = true
+       }
+     },
+   }

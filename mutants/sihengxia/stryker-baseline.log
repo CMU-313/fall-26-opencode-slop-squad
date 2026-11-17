@@ -1,0 +1,153 @@
+[32m17:11:10 (35492) INFO ProjectReader[39m Found 2 of 6470 file(s) to be mutated.
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[32m17:11:12 (35492) INFO Instrumenter[39m Instrumented 2 source file(s) with 56 mutant(s)
+[32m17:11:23 (35492) INFO ConcurrencyTokenProvider[39m Creating 2 test runner process(es).
+[32m17:11:39 (35492) INFO BroadcastReporter[39m Detected that current console does not support the "progress" reporter, downgrading to "progress-append-only" reporter
+[32m17:11:39 (35492) INFO DryRunExecutor[39m Starting initial test run (command test runner with "off" coverage analysis). This may take a while.
+[32m17:11:44 (35492) INFO DryRunExecutor[39m Initial test run succeeded. Ran 1 tests in 5 seconds (net 5498 ms, overhead 0 ms).
+Mutation testing 3% (elapsed: <1m, remaining: ~4m) 2/56 tested (0 survived, 0 timed out)
+Mutation testing 7% (elapsed: <1m, remaining: ~4m) 4/56 tested (1 survived, 0 timed out)
+Mutation testing 12% (elapsed: <1m, remaining: ~3m) 7/56 tested (2 survived, 1 timed out)
+Mutation testing 12% (elapsed: <1m, remaining: ~4m) 7/56 tested (2 survived, 1 timed out)
+Mutation testing 16% (elapsed: <1m, remaining: ~4m) 9/56 tested (2 survived, 3 timed out)
+Mutation testing 21% (elapsed: ~1m, remaining: ~3m) 12/56 tested (2 survived, 3 timed out)
+Mutation testing 23% (elapsed: ~1m, remaining: ~3m) 13/56 tested (2 survived, 3 timed out)
+Mutation testing 26% (elapsed: ~1m, remaining: ~3m) 15/56 tested (3 survived, 4 timed out)
+Mutation testing 26% (elapsed: ~1m, remaining: ~4m) 15/56 tested (3 survived, 4 timed out)
+Mutation testing 32% (elapsed: ~1m, remaining: ~3m) 18/56 tested (3 survived, 6 timed out)
+Mutation testing 39% (elapsed: ~1m, remaining: ~2m) 22/56 tested (4 survived, 6 timed out)
+Mutation testing 46% (elapsed: ~2m, remaining: ~2m) 26/56 tested (7 survived, 6 timed out)
+Mutation testing 53% (elapsed: ~2m, remaining: ~1m) 30/56 tested (9 survived, 6 timed out)
+Mutation testing 57% (elapsed: ~2m, remaining: ~1m) 32/56 tested (10 survived, 6 timed out)
+Mutation testing 64% (elapsed: ~2m, remaining: ~1m) 36/56 tested (12 survived, 6 timed out)
+Mutation testing 71% (elapsed: ~2m, remaining: ~1m) 40/56 tested (12 survived, 6 timed out)
+Mutation testing 78% (elapsed: ~2m, remaining: <1m) 44/56 tested (12 survived, 6 timed out)
+Mutation testing 85% (elapsed: ~3m, remaining: <1m) 48/56 tested (13 survived, 6 timed out)
+Mutation testing 92% (elapsed: ~3m, remaining: <1m) 52/56 tested (15 survived, 6 timed out)
+Mutation testing 96% (elapsed: ~3m, remaining: <1m) 54/56 tested (17 survived, 6 timed out)
+
+All tests
+  ✓ All tests (killed 33)
+
+[Survived] ConditionalExpression
+packages/core/src/session/compaction.ts:162:46
+-     const tag = `user-compaction-instructions${attempt === 0 ? "" : `-${attempt}`}`
++     const tag = `user-compaction-instructions${false ? "" : `-${attempt}`}`
+
+[Survived] EqualityOperator
+packages/core/src/session/compaction.ts:162:46
+-     const tag = `user-compaction-instructions${attempt === 0 ? "" : `-${attempt}`}`
++     const tag = `user-compaction-instructions${attempt !== 0 ? "" : `-${attempt}`}`
+
+[Survived] LogicalOperator
+packages/core/src/session/compaction.ts:163:30
+-     if (values.some((value) => value.includes(`<${tag}>`) || value.includes(`</${tag}>`)))
++     if (values.some((value) => value.includes(`<${tag}>`) && value.includes(`</${tag}>`)))
+
+[Survived] MethodExpression
+packages/core/src/session/compaction.ts:173:24
+-     const instructions = input.instructions?.trim()
++     const instructions = input.instructions
+
+[Survived] StringLiteral
+packages/core/src/session/compaction.ts:174:85
+-     const tag = instructions ? instructionTag([instructions, input.previousSummary ?? "", ...input.context]) : undefined
++     const tag = instructions ? instructionTag([instructions, input.previousSummary ?? "Stryker was here!", ...input.context]) : undefined
+
+[Survived] StringLiteral
+packages/core/src/session/compaction.ts:177:9
+-         ? `Update the anchored summary below using the conversation history above.\nPreserve still-true details, remove stale details, and merge in the new facts.\n<previous-summary>\n${input.previousSummary}\n</previous-summary>`
++         ? ``
+
+[Survived] StringLiteral
+packages/core/src/session/compaction.ts:178:9
+-         : "Create a new anchored summary from the conversation history.",
++         : "",
+
+[Survived] ConditionalExpression
+packages/core/src/session/compaction.ts:179:9
+-       ...(instructions && tag
++       ...(true
+
+[Survived] LogicalOperator
+packages/core/src/session/compaction.ts:179:9
+-       ...(instructions && tag
++       ...(instructions || tag
+
+[Survived] ArrayDeclaration
+packages/core/src/session/compaction.ts:183:9
+-         : []),
++         : ["Stryker was here"]),
+
+[Survived] StringLiteral
+packages/core/src/session/compaction.ts:186:10
+-     ].join("\n\n")
++     ].join("")
+
+[Survived] ConditionalExpression
+packages/tui/src/util/compaction.ts:25:7
+-     if (instructions === null) return undefined
+
++     if (false) return undefined
+
+
+[Survived] ConditionalExpression
+packages/tui/src/util/compaction.ts:50:11
+-         if (running) return false
+
++         if (false) return false
+
+
+[Survived] BooleanLiteral
+packages/tui/src/util/compaction.ts:50:27
+-         if (running) return false
+
++         if (running) return true
+
+
+[Survived] BooleanLiteral
+packages/tui/src/util/compaction.ts:52:17
+-         running = true
+
++         running = false
+
+
+[Survived] BlockStatement
+packages/tui/src/util/compaction.ts:57:15
+-         } catch {
+
+-           return false
+
+-         } finally {
+
++         } catch {} finally {
+
+
+[Survived] BooleanLiteral
+packages/tui/src/util/compaction.ts:58:16
+-           return false
+
++           return true
+
+
+Ran 0.89 tests per mutant on average.
+------------------|------------------|----------|-----------|------------|----------|----------|
+                  | % Mutation score |          |           |            |          |          |
+File              |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+------------------|--------|---------|----------|-----------|------------|----------|----------|
+All files         |  69.64 |   69.64 |       33 |         6 |         17 |        0 |        0 |
+ core             |  66.67 |   66.67 |       16 |         6 |         11 |        0 |        0 |
+  src             |  66.67 |   66.67 |       16 |         6 |         11 |        0 |        0 |
+   session        |  66.67 |   66.67 |       16 |         6 |         11 |        0 |        0 |
+    compaction.ts |  66.67 |   66.67 |       16 |         6 |         11 |        0 |        0 |
+ tui              |  73.91 |   73.91 |       17 |         0 |          6 |        0 |        0 |
+  src             |  73.91 |   73.91 |       17 |         0 |          6 |        0 |        0 |
+   util           |  73.91 |   73.91 |       17 |         0 |          6 |        0 |        0 |
+    compaction.ts |  73.91 |   73.91 |       17 |         0 |          6 |        0 |        0 |
+------------------|--------|---------|----------|-----------|------------|----------|----------|
+[32m17:15:05 (35492) INFO MutationTestReportHelper[39m Final mutation score of 69.64 is greater than or equal to break threshold 0
+[32m17:15:05 (35492) INFO JsonReporter[39m Your report can be found at: file:///E:/00%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E7%A8%8B/00Foundations%20of%20Software%20Engineering/fall-26-opencode-slop-squad/packages/opencode/reports/sihengxia/mutation.json
+[32m17:15:05 (35492) INFO HtmlReporter[39m Your report can be found at: file:///E:/00%E5%A4%A7%E4%B8%89%E4%B8%8A%E8%AF%BE%E7%A8%8B/00Foundations%20of%20Software%20Engineering/fall-26-opencode-slop-squad/packages/opencode/reports/sihengxia/mutation.html
+[32m17:15:05 (35492) INFO MutationTestExecutor[39m Done in 3 minutes and 56 seconds.

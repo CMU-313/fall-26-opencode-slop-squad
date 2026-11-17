@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": 1794521445008,
+    "message": "The 'gpt-5.4-mini' model is not supported when using Codex with a ChatGPT account.",
+    "statusCode": 400
+  },
+  {
+    "timestamp": 1794521518260,
+    "message": "The 'gpt-5.4' model is not supported when using Codex with a ChatGPT account.",
+    "statusCode": 400
+  }
+]

@@ -1,0 +1,14 @@
+diff --git a/packages/app/src/pages/session/compact-guard.ts b/packages/app/src/pages/session/compact-guard.ts
+index bd7ba5b..d980c91 100644
+--- a/packages/app/src/pages/session/compact-guard.ts
++++ b/packages/app/src/pages/session/compact-guard.ts
+@@ -17,7 +17,6 @@ export function beginCompact(pending: CompactPending, sessionID: string, working
+ 
+ export function finishCompact(pending: CompactPending, sessionID: string): CompactPending {
+   if (!pending.has(sessionID)) return pending
+-  const next = new Set(pending)
+-  next.delete(sessionID)
+-  return next
++  ;(pending as Set<string>).delete(sessionID)
++  return pending
+ }

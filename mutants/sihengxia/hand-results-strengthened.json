@@ -1,0 +1,55 @@
+[
+  {
+    "id": "H1",
+    "phase": "strengthened",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R1 invariant: normalized instructions reach the prompt unchanged [9.94ms]",
+      "sihengxia R2 metamorphic: outer whitespace leaves request and prompt unchanged [5.25ms]",
+      "sihengxia R3 model: canceled and blank submissions preserve ordinary compaction [2.32ms]"
+    ],
+    "log": "strengthened-H1.txt"
+  },
+  {
+    "id": "H2",
+    "phase": "strengthened",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R1 invariant: literal delimiter text does not truncate instructions [4.57ms]"
+    ],
+    "log": "strengthened-H2.txt"
+  },
+  {
+    "id": "H3",
+    "phase": "strengthened",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R5 invariant: conflicting instructions retain the fixed summary template [5.43ms]"
+    ],
+    "log": "strengthened-H3.txt"
+  },
+  {
+    "id": "H4",
+    "phase": "strengthened",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R4 metamorphic: reordering and resubmitting preserve both instructions [9.83ms]",
+      "sihengxia R7 invariant: pending requests are rejected and every outcome permits retry [4.43ms]"
+    ],
+    "log": "strengthened-H4.txt"
+  },
+  {
+    "id": "H5",
+    "phase": "strengthened",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R7 invariant: pending requests are rejected and every outcome permits retry [9.38ms]"
+    ],
+    "log": "strengthened-H5.txt"
+  }
+]

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "H1",
+    "phase": "baseline",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R1 invariant: normalized instructions reach the prompt unchanged [14.28ms]",
+      "sihengxia R2 metamorphic: outer whitespace leaves request and prompt unchanged [4.35ms]"
+    ],
+    "log": "baseline-H1.txt"
+  },
+  {
+    "id": "H2",
+    "phase": "baseline",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R1 invariant: literal delimiter text does not truncate instructions [15.30ms]"
+    ],
+    "log": "baseline-H2.txt"
+  },
+  {
+    "id": "H3",
+    "phase": "baseline",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R5 invariant: conflicting instructions retain the fixed summary template [14.41ms]"
+    ],
+    "log": "baseline-H3.txt"
+  },
+  {
+    "id": "H4",
+    "phase": "baseline",
+    "status": "Killed",
+    "exitCode": 1,
+    "killedBy": [
+      "sihengxia R4 metamorphic: reordering and resubmitting preserve both instructions [14.91ms]"
+    ],
+    "log": "baseline-H4.txt"
+  },
+  {
+    "id": "H5",
+    "phase": "baseline",
+    "status": "Survived",
+    "exitCode": 0,
+    "killedBy": [],
+    "log": "baseline-H5.txt"
+  }
+]

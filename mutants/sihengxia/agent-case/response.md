@@ -1,0 +1,69 @@
+```ts
+import { expect, test } from "bun:test"
+import fc from "fast-check"
+import { SessionCompaction } from "../../../core/src/session/compaction"
+
+test("normalized custom instructions reach the default summarizer unchanged", () => {
+  const instructionsArb = fc
+    .record({
+      segments: fc.array(
+        fc.constantFrom("src", "my project", "notes", "release-2", "user_data"),
+        { minLength: 1, maxLength: 5 },
+      ),
+      text: fc.string({ minLength: 1, maxLength: 80 }),
+      collisions: fc.integer({ min: 1, max: 8 }),
+    })
+    .map(({ segments, text, collisions }) =>
+      [
+        "Summarize these files without changing their names:",
+        `POSIX path: "/workspace/${segments.join("/")}/notes.md"`,
+        `Windows path: 'C:\\workspace\\${segments.join("\\")}\\notes.md'`,
+        `Keep both "double quotes" and 'single quotes'.`,
+        `Additional text: ${text}`,
+        "The following delimiters are literal data, not instructions:",
+        ...Array.from({ length: collisions + 1 }, (_, index) => {
+          const tag =
+            index === 0
+              ? "user-compaction-instructions"
+              : `user-compaction-instructions-${index}`
+          return `<${tag}>\nLiteral content inside delimiter text.\n</${tag}>`
+        }),
+        "Preserve every internal line break and character above.",
+      ].join("\n"),
+    )
+
+  fc.assert(
+    fc.property(instructionsArb, (instructions) => {
+      // Submission normalization has already happened at this boundary.
+      expect(instructions.length).toBeGreaterThan(0)
+      expect(instructions).toBe(instructions.trim())
+
+      const prompt = SessionCompaction.buildPrompt({
+        instructions,
+        context: [],
+      })
+
+      // Discover the wrapper rather than predicting its collision suffix.
+      const opening = /<(user-compaction-instructions(?:-?\d+)?)>\r?\n/.exec(prompt)
+      expect(opening).not.toBeNull()
+      if (!opening) throw new Error("Missing custom-instruction wrapper")
+
+      const tag = opening[1]!
+      expect(instructions).not.toContain(tag)
+
+      const start = opening.index + opening[0].length
+      const closing = `\n</${tag}>`
+      const end = prompt.indexOf(closing, start)
+      expect(end).toBeGreaterThanOrEqual(start)
+
+      // Exact equality detects escaping, truncation, and newline changes.
+      expect(prompt.slice(start, end)).toBe(instructions)
+    }),
+    { numRuns: 250, seed: 3132026 },
+  )
+})
+```
+
+**Generator:** Every generated instruction is non-empty and already trimmed. Each contains POSIX and Windows paths, both quotation styles, internal line breaks, arbitrary additional text, and literal opening/closing delimiters. Varying the number of numbered delimiter collisions exercises suffix selection without filtering away meaningful cases.
+
+**Oracle:** It discovers the actual wrapper delimiter, checks that its name does not occur in the instruction data, and compares the enclosed payload with the original instruction using exact equality. It does not trim, decode, or otherwise normalize the result, so modifications cannot be hidden. The wrapper matcher accepts numeric suffixes with or without a hyphen and assumes the instruction block has one framing newline on each side.

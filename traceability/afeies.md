@@ -1,0 +1,157 @@
+# Traceability: Alex Feies (afeies)
+
+**Target feature:** Custom instructions for session compaction in the web app. Main source files: `packages/app/src/components/dialog-compact.tsx` (instructions dialog, trimming), `packages/app/src/pages/session/use-session-commands.tsx` (`session.compact` command and request), `packages/app/src/pages/session/timeline/rows.ts` (compaction divider rows), and `packages/core/src/session/compaction.ts` (`buildPrompt`, compaction prompt).
+
+## Requirements
+
+| ID | Interview evidence | Requirement | Acceptance Criteria | Changed in P4? | Property (kind) | Test | Mutants it kills |
+|---|---|---|---|---|---|---|---|
+| R2 | C-9, O-6: "Empty and only spaces should act the same, a normal compaction." | The instructions are trimmed before sending. If nothing is left, the request has no instructions and behaves exactly like a plain compaction. (Already implemented.) | Submitting `""` or `"   \n\t "` sends one compact request with `instructions` undefined. Submitting `"  keep the file list  "` sends `instructions: "keep the file list"`. | No | P1: For any string, the sent instructions equal its trimmed form, or are `undefined` when the trimmed form is empty (invariant). P2: For any whitespace-only instructions, the compaction prompt is identical to the prompt with no instructions (metamorphic). P2b: Adding leading or trailing whitespace to non-blank instructions does not change the compaction prompt (metamorphic). *Failed on first run; fixed in code (see Triage).* P2c (added in P5): the trimmed instructions appear exactly once, between the first `user-compaction-instructions[-n]` delimiter that no user text contains, as one added paragraph; removing that paragraph gives the plain-compaction prompt (invariant + metamorphic). | P1: `packages/app/src/components/dialog-compact.property.test.ts::R2/P1: sent instructions are the trimmed input or undefined`<br>P2: `packages/core/test/session-compaction.property.test.ts::R2/P2: whitespace-only instructions give the same prompt as none`<br>P2b: `packages/core/test/session-compaction.property.test.ts::R2/P2b: outer whitespace on instructions does not change the prompt`<br>P2c: `packages/core/test/session-compaction.property.test.ts::R2/P2c: the trimmed instructions are sent once, in a free delimiter, as one added paragraph` | H1 (P1), H2 (P2b, P2c) |
+| R3 | C-7, O-4: "Exactly the same as before. Nothing should be sent and no divider should show up." | Closing the compact dialog with Cancel or Escape sends no request and leaves the session unchanged. (Already implemented.) | Open the dialog, type `"keep the file list"`, then click Cancel. Repeat and press Escape. In both cases zero compact requests are sent, and the session's messages and timeline rows are identical to before the dialog opened. | No | None | — | none (no property) |
+| R4 | C-5, S-5: "Double-clicking shouldn't make two summaries." | Each compaction sends exactly one request, and the Compact command is disabled for a session while a compaction for that session is in progress. (New.) | Double-click the Compact submit button: exactly one compact request is sent. While that request is pending, the `session.compact` command (and `/compact`) is disabled. When it finishes, the timeline has exactly one new compaction divider and the command is enabled again. | No | P7: For any interleaving of submit, request-finished, assistant-started, and assistant-idle events across sessions, the requests sent and the Compact enabled/disabled state match a simple per-session model, and no step changes the pending set it was given (model/oracle; no-mutation check added in P5). | P7: `packages/app/src/pages/session/compact-guard.property.test.ts::R4+R7/P7: sends and Compact enabled state match a per-session model` | H3, H4 (P7; H3 shared with R7) |
+| R5 | C-6, O-3: "A clear error message or toast, not just nothing happening. The dialog should stay open so they can try again without retyping." | If the compact request fails, the user sees an error toast with the failure reason, the session's messages are unchanged, and the dialog stays open with the typed instructions so they can retry. (Partly implemented: the toast exists, but the dialog closes before the request finishes.) | The server rejects the compact request with `"provider unavailable"`. An error toast showing `"provider unavailable"` appears, the session has the same messages as before, no divider is added, and the dialog is still open with the instructions text unchanged. | No | None | — | none (no property) |
+| R6 | C-5, C-8, C-10, O-5, O-7: "The compaction divider in the same spot and the summary." | A successful compaction adds exactly one divider, placed right after the last pre-compaction message. Its count and position are the same with or without instructions (non-blank instructions may be shown in it), and the rows are identical after reload. | Compact once with `"keep the file list"` after three user messages: exactly one compaction row appears after the third turn, and the rows are identical after reload. Compacting with blank instructions gives a divider in the same position with no instructions shown. | Yes | P3: For any session history with one compaction, the timeline has exactly one compaction row. It comes right after the user message that carries the compaction, and every row from earlier turns comes before it (invariant). P4: Adding or removing instructions on the compaction does not change the number, order, or position of rows (metamorphic). P5: Rebuilding rows from the same messages after a JSON serialize/parse gives identical rows (round-trip). *In P5 the generator also puts other user parts before and after the compaction part, and P3 checks the compaction divider is the only divider in its turn.* | P3: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P3: exactly one compaction divider, right after its user message`<br>P4: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P4: instructions do not change row count, order, or position`<br>P5: `packages/app/src/pages/session/timeline/rows.property.test.ts::R6/P5: rows are identical after a JSON round-trip of the history`<br>opencode (Agent failure case): `packages/app/src/pages/session/timeline/rows.opencode.property.test.ts::compaction divider count and position (R6) > exactly one compaction divider placed right after user message that carries compaction` (unmodified) and `…> divider count and position, and all other rows, are the same with or without instructions` (strengthened) | H5 (P3, P4), H7 (P4, strengthened opencode property) |
+| R7 | S-1: "You should not be able to hit Compact while the assistant is working. It should let the assistant finish first before compacting." | While the assistant is working, Compact is disabled for that session, so it never interrupts a reply. It is enabled again once the session is idle. (New.) | While `session_working(sessionID)` is true, `/compact` and `session.compact` do nothing, no request is sent, and the reply finishes fully. Once idle, submitting sends exactly one request. | No | P7 (shared with R4; model/oracle). | P7: `packages/app/src/pages/session/compact-guard.property.test.ts::R4+R7/P7: sends and Compact enabled state match a per-session model` | H3 (P7) |
+| R8 | S-6: "Enter should not submit. It should only add a new line, because compaction instructions could be long." | Enter in the instructions box adds a newline; only the Compact button submits, and newlines are sent unchanged. (Already implemented.) | Type `"keep the file list"`, Enter, `"and the schema decision"`: the dialog stays open and nothing is sent. Clicking Compact sends `instructions: "keep the file list\nand the schema decision"`. | No | P6: For any instructions with interior newlines, the sent instructions contain the same lines in the same order, byte-for-byte, apart from leading and trailing whitespace (invariant). | P6: `packages/app/src/components/dialog-compact.property.test.ts::R8/P6: interior newlines are preserved in order` | H1, H6 (P6) |
+
+Properties written or suggested by opencode or another AI tool: Claude Code (Claude Opus 5.5) suggested P1–P7 and P2b (R2, R4, R6, R7, R8) and the R6 revision. In P5 it also wrote P2c and the P3, P7 and generator strengthening. opencode (North Mini Code) wrote the first R6 test in `rows.opencode.property.test.ts` (see Agent failure case); the second test in that file is my strengthened version.
+
+## Triage (Step 3)
+
+| Property | Result on first run | Shrunk counterexample | Outcome | Fix |
+|---|---|---|---|---|
+| R2/P2b | Failed | `context: []`, `previousSummary: ""`, instructions `"<user-compaction-instructions>"` with trailing `" "` | **Code bug.** `buildPrompt` used the trimmed instructions to decide whether to add the tag and to pick it, but put the untrimmed `input.instructions` inside it, so the model got different prompts for `"x "` and `"x"`. That breaks R2 ("the instructions are trimmed before sending"). | `packages/core/src/session/compaction.ts:181`: put the trimmed `instructions` inside the tag instead of `input.instructions`. P2b now passes, and the existing `session-compaction.test.ts` and `session-runner.test.ts` still pass. |
+| R2/P1, R2/P2, R6/P3, R6/P4, R6/P5, R8/P6, R4+R7/P7 | Passed | — | No change needed. Also passed with `numRuns: 2000`. | — |
+
+## Requirement changes
+
+| ID | Original requirement (P3) | Revised requirement | Why it changed |
+|---|---|---|---|
+| R6 | A successful compaction adds exactly one divider after the last pre-compaction message. It looks the same with or without instructions and stays in place after reload. | A successful compaction adds exactly one divider, placed right after the last pre-compaction message. Its count and position are the same with or without instructions (non-blank instructions may be shown in it), and the rows are identical after reload. | **Conflict and checkability.** The web divider already shows the user's instructions (commit `ccce975`, `packages/app/src/pages/session/timeline/rows.ts:168`), so "looks the same" conflicts with a shipped feature. "Looks the same" also can't be checked without a visual definition. What interviewees needed (C-5, C-8, O-5) was one divider in a predictable spot that survives reload, and O-7 "didn't care much about the divider" as long as it was short. The revision keeps count, position, and persistence, which can be checked on the timeline rows, and allows the instructions to be shown. |
+
+All other requirements are kept as written. R2, R3, and R8 are already implemented and have concrete, checkable acceptance criteria. R4, R5, and R7 are not implemented yet but are feasible in the web client: R4 and R7 need a per-session guard on the `session.compact` command (`use-session-commands.tsx`), and R5 needs the dialog to wait for the request to finish before closing (`dialog-compact.tsx`). Nothing on the server or provider side prevents any of them.
+
+## Hand-written mutants
+
+Predictions were written before applying each mutant, from reading the generators in the four property test files (seed fixed at `42`). Each mutant is one patch in `mutants/afeies/H<n>.patch`, and each was run with `bun run test:property` in the package it touches.
+
+| ID | Requirement targeted | Change | Predicted killer | Reasoning behind the prediction | Actual result | After strengthening (Step 6) |
+|---|---|---|---|---|---|---|
+| H1 | R2 | `packages/app/src/components/dialog-compact-instructions.ts:2`: `text.trim() \|\| undefined` → `text.trim() ? text : undefined` (decides on the trimmed text but sends the untrimmed text) | **Killed** by R2/P1 (also R8/P6) | P1's second check pads `core` with `blank` on both sides and expects exactly `core`. `blank` is often non-empty, so the untrimmed padding shows up in the result. P6's `before`/`after` padding fails the same way. | **Killed**, as predicted. R2/P1 fails with counterexample `["", "!", " "]` (`"! "` is sent untrimmed), and R8/P6 fails with `after: " "`. | Still killed. |
+| H2 | R2 | `packages/core/src/session/compaction.ts:173`: `input.instructions?.trim()` → `input.instructions?.trimStart()` (partial trim) | **Killed** by R2/P2b, **survives** R2/P2 | P2b draws its `after` padding independently, and it is usually non-empty, so trailing whitespace ends up inside the tag. P2 alone can't kill it: `trimStart` of whitespace-only text is still `""`, so the "no instructions" branch is unchanged. | **Killed** by R2/P2b, as predicted. Counterexample: `context: []`, instructions `"<user-compaction-instructions>"` with `after: " "`. R2/P2 passes, as predicted. | Still killed (also by P2c). |
+| H3 | R7 | `packages/app/src/pages/session/compact-guard.ts:9`: `!working && !pending.has(sessionID)` → `!pending.has(sessionID)` (guard written for R4 only, R7 forgotten) | **Killed** by R4+R7/P7 | Up to 40 events, 3/4 of them `submit` and 1/12 `working`. A `working` followed by a `submit` for the same session is very likely in 100 runs. The model doesn't send, but the mutant does. `canCompact` is also checked after every event, so it fails right after the first `working` event. | **Killed** by R4+R7/P7, as predicted. Shrunk to a single event, `[{session: "a", kind: "working"}]`: `canCompact` returns true while the model says Compact is disabled. | Still killed. |
+| H4 | R4 | `packages/app/src/pages/session/compact-guard.ts:20-22`: `finishCompact` deletes from `pending` in place and returns the same set (`(pending as Set<string>).delete(sessionID); return pending`) | **Survives** P7 | `stepReal` always reassigns `real.pending` to the result and never keeps an older set. `beginCompact` still copies, and `emptyCompactPending` is never mutated because of the early return. So every value P7 checks is unchanged. In the app it is a real bug: `use-session-commands.tsx:442` passes the same object back to a Solid `setCompactPending`, which skips the update, so Compact stays disabled after the request finishes. P7 checks values, not object identity. | **Survived**, as predicted. All 6 app properties pass. Needs a property that checks `finishCompact` never mutates its input (see Step 6). | **Killed** by strengthened P7. |
+| H5 | R6 | `packages/app/src/pages/session/timeline/rows.ts:118`: `userParts.find((p) => p.type === "compaction")` → `userParts.at(-1)?.type === "compaction" ? userParts.at(-1) : undefined` (assumes the compaction part is the last part) | **Survives** P3, P4, P5 | `build()` always makes the compaction turn's parts `[text, compaction]`, so the compaction part is always last and `at(-1)` finds the same part `find` does. The generator never puts a part after it. (The opposite assumption, `userParts[0]`, would be killed right away by P3, because the compaction part is never first.) | **Survived**, as predicted. All 6 app properties pass, because the generator never puts a part after the compaction part. | **Killed** by P3, P4 with the wider generator. |
+| H6 | R8 | `packages/app/src/components/dialog-compact-instructions.ts:2`: trims every line (`text.split("\n").map((l) => l.trim()).join("\n").trim() \|\| undefined`) | **Killed** by R8/P6 (possibly R2/P1) | P6's `innerLine` is whitespace-only half the time (`" "`, `"\t"`, NBSP, so `"  "` becomes `""`), and `line` can have leading or trailing spaces. With the `"\r\n"` separator, every split line ends in `"\r"`, which `trim()` removes. So P6's byte-for-byte check fails. P1 may also fail when a `core` string has a space next to an interior newline, but that is less certain. | **Killed** by R8/P6, as predicted. Counterexample: `lines: ["!", "ᚁ"]` with `newline: "\r\n"`, where the `"\r"` is trimmed from the first line. R2/P1 passed, so the "possibly P1" part did not happen. | Still killed. |
+| H7 | R6 | `packages/app/src/pages/session/timeline/rows.ts:149`: `comments.length > 0 && !inlineComments` → `(comments.length > 0 \|\| compaction?.instructions?.trim()) && !inlineComments` (shows the instructions in a comment strip, which adds a row only when instructions are present). *Added in Step 7, after reading opencode's property.* | **Killed** by R6/P4, **survives** opencode's property | P4 compares the keys of every row with and without instructions, and `inlineComments` is `false` half the time, so the extra `CommentStrip` shows up quickly. opencode's property only checks positions relative to the compaction user message and never compares a history with and without instructions. The strip comes *before* the user message, so the divider is still at `user + 1`. | **Killed** by R6/P4 after 1 run (counterexample: 2 turns, `inlineComments: false`, instructions `undefined` vs `"!"`). **Survived** opencode's property (`1 pass, 0 fail`). See Agent failure case. | Killed by the strengthened opencode property too. |
+
+## Stryker comparison
+
+**Seed:** `42`, set with `fc.configureGlobal({ seed: 42 })` in all four property files. **Stryker:** `@stryker-mutator/core` 10.1.1, `command` test runner, `coverageAnalysis: "off"` (so there are no "no coverage" mutants; every mutant runs the full property suite).
+
+**Configs:** `packages/app/stryker.afeies.config.json` mutates `dialog-compact-instructions.ts`, `compact-guard.ts`, and `rows.ts:115-171` (the compaction-row logic P3–P5 exercise). `packages/core/stryker.afeies.config.json` mutates `compaction.ts:161-187` (`instructionTag` and `buildPrompt`). Run with `bunx stryker run stryker.afeies.config.json` in each package.
+
+**Mutation score (raw, before strengthening):** because the feature spans two packages, there are two configs and two reports (`mutants/afeies/mutation-app.html` and `mutants/afeies/mutation-core.html`).
+
+| Package | Mutants | Killed | Timeout | Survived | No coverage | Score |
+|---|---|---|---|---|---|---|
+| app | 100 | 44 | 0 | 56 | 0 | 44.0% |
+| core | 33 | 4 | 6 | 23 | 0 | 30.3% |
+| **Combined** | **133** | **48** | **6** | **79** | **0** | **40.6%** |
+
+The spec asks for one `mutation.html`, but Stryker writes one report per package and the feature spans two packages, so both are committed. The reports in `mutants/afeies/` are the **final** runs (after strengthening, see below).
+
+### Which hand-written mutants did Stryker never generate? Why not?
+
+Stryker never generated any of H1–H7. Its mutators make a single small change, such as swapping an operator, forcing a condition to `true` or `false`, emptying a block or literal, or removing a method call, while each of my mutants rewrites a small piece of code:
+
+- **H1** checks the trimmed text but sends the untrimmed text, whereas Stryker can only remove `trim()` entirely.
+- **H2** turns `trim()` into `trimStart()`, and Stryker has no rule for that swap.
+- **H3** deletes one side of an `&&`, but Stryker can only change the operator or force the whole condition.
+- **H4** moves the `delete` from the copy onto the input set, a change that spans three statements.
+- **H5** replaces `find` with `at(-1)`, and `find` isn't on Stryker's list of methods to mutate.
+- **H6** adds a `split`/`map`/`join` chain, and Stryker never adds code.
+- **H7** adds a new `|| compaction?.instructions?.trim()` operand to a condition, which is also adding code.
+
+### Which Stryker survivors would you never have thought of? Are any plausible bugs?
+
+Three groups of survivors are bugs a real developer could plausibly write, and I hadn't thought of any of them:
+
+- **`compaction.ts:179` `instructions && tag` → `false`** drops the instructions from the prompt entirely, yet the core properties still pass. This is the most serious gap: P2 and P2b only compare two prompts with each other, so neither one checks that the instructions actually appear.
+- **The collision check in `compaction.ts:163-174`** survives `some` → `every`, `||` → `&&`, and `instructionTag([])`, all of which are easy slips, because no property checks which tag `instructionTag` picks or whether it avoids a collision.
+- **`rows.ts:130` `!compaction` → `compaction`** adds an "interrupted" divider to the compaction turn, which P3 misses because it only counts dividers labelled `"compaction"`.
+
+The rest, like empty function bodies and `"Stryker was here"` literals, aren't realistic bugs.
+
+### What does each approach find that the other doesn't?
+
+Hand-written mutants start from the requirements, so they find corner cases the generators miss. H4 showed that P7 never checks that `finishCompact` leaves its input unchanged, and H5 showed that the generator always puts the compaction part last. Stryker starts from the code instead, so it finds places where an assertion never checks something, like the instructions missing from the prompt. I didn't write mutants for those cases because I was targeting what each property was meant to check, not what it actually checks.
+
+### Strengthening
+
+All changes are to properties (no example tests), with the seed still `42`. Same Stryker configs as above.
+
+| Change | Kind | Kills |
+|---|---|---|
+| New **R2/P2c** (`session-compaction.property.test.ts`): the trimmed instructions appear exactly once inside the first delimiter no user text contains, and removing that paragraph gives the prompt with no instructions. | New property | H2, and 21 of 23 core survivors (e.g. `instructions && tag` → `false`, all `instructionTag` mutants, `join("")`) |
+| **R4+R7/P7** checks that each step leaves the pending set it was given unchanged. | Stronger assertion | H4 |
+| **R6 generator** adds 0–2 other user parts before and after the compaction part. | Wider generator | H5 |
+| **R6/P3** checks the compaction divider is the only divider in its turn. | Stronger assertion | 3 survivors at `rows.ts:130` (`interrupted && !compaction` → `true`, `\|\|`, `interrupted && compaction`) |
+
+**Equivalent mutants**
+
+- `compaction.ts:174` `?? ""` → `?? "Stryker was here!"`: the value is only searched for `<user-compaction-instructions…>` tags, and neither string contains a `<`, so the same tag is chosen and the prompt is identical.
+- `compaction.ts:179` `instructions && tag` → `instructions || tag`: `tag` is a non-empty string exactly when `instructions` is non-empty, so both conditions are always equally truthy and pick the same branch.
+- `compact-guard.ts:19` `if (!pending.has(sessionID)) return pending` → `if (false) …`: when the session isn't pending, the mutant returns a copy with the same contents instead of the same object. Callers only call `has`, so every result is the same.
+
+**Final mutation score**
+
+| Package | Total | Detected (killed + timeout) | Survived | Equivalent | Raw | Equivalents excluded |
+|---|---|---|---|---|---|---|
+| app | 100 | 47 | 53 | 1 | 47.0% | 47 / 99 = 47.5% |
+| core | 33 | 31 | 2 | 2 | 93.9% | 31 / 31 = 100% |
+| **Combined** | **133** | **78** | **55** | **3** | **58.6%** | **78 / 130 = 60.0%** |
+
+Core: 25 killed + 6 timeout. App: 47 killed. These match the reports in `mutants/afeies/`.
+
+All hand-written mutants are now killed. The other 52 app survivors are in `rows.ts:115–159`, in code for turn gaps, comment strips, interrupted dividers on turns without a compaction, and error rows. None of my requirements cover that code.
+
+## Agent failure case
+
+P1–P7 were written with Claude Code, so I asked **opencode** (v1.18.30, North Mini Code (free)) for a new R6 property. Its unmodified output is in commit `8f4e874`.
+
+**Prompt:**
+
+> Write a fast-check property test for R6 (compaction divider count and position) in packages/app/src/pages/session/timeline/rows.ts. R6: a successful compaction adds exactly one divider, placed right after the user message that carries the compaction. Its count and position are the same with or without instructions. Put it in a new file packages/app/src/pages/session/timeline/rows.opencode.property.test.ts using bun:test and fast-check, and run it with: cd packages/app && bun test --conditions=solid --preload ./happydom.ts src/pages/session/timeline/rows.opencode.property.test.ts
+
+**Response:** see `mutants/afeies/opencode-prompt-and-response.png`. opencode wrote one test and claimed it verifies that the divider's "count and position are consistent with or without instructions. Result: ✓ All tests passed".
+
+**Mutant it let survive:** `mutants/afeies/H7.patch`. When the compaction has instructions, `rows.ts:149` adds an extra `CommentStrip` row, so the row count depends on the instructions. With H7 applied, opencode's test passes (`1 pass, 0 fail`).
+
+**Why it was too weak (missing metamorphic check):** the test never builds the same history with and without instructions and compares the two, so the instructions half of R6 is never tested. Its checks all measure from the compaction user message (divider at `user + 1`), and H7's extra row goes *before* that message, so they all still pass.
+
+**Strengthened version** (added to the same file; opencode's test is unchanged):
+
+```ts
+test("divider count and position, and all other rows, are the same with or without instructions", () => {
+  fc.assert(
+    fc.property(history, instructions, (h, other) => {
+      const before = rowsFor(h, build(h, { instructions: undefined }))
+      const after = rowsFor(h, build(h, { instructions: other }))
+      expect(after.map(TimelineRow.key)).toEqual(before.map(TimelineRow.key))
+      expect(after.findIndex(isCompactionDivider)).toBe(before.findIndex(isCompactionDivider))
+      expect(after.filter(isCompactionDivider)).toHaveLength(1)
+    }),
+  )
+})
+```
+
+**Evidence:** without the patch, `2 pass, 0 fail`. With H7 applied:
+
+```
+error: Property failed after 1 tests
+Counterexample: [{"turns":[{"assistants":[]},{"assistants":[]}],"compactAt":0,"auto":false,"instructions":undefined,"status":"idle","showReasoning":false,"inlineComments":false,"diffs":false,"partsBefore":0,"partsAfter":0},"!"]
+(fail) compaction divider count and position (R6) > divider count and position, and all other rows, are the same with or without instructions
+ 1 pass
+ 1 fail
+```

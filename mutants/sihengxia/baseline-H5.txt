@@ -1,0 +1,15 @@
+bun test v1.3.14 (0d9b296a)
+P4 sihengxia: R1 invariant passed (250 generated cases)
+P4 sihengxia: R1 delimiter invariant passed (250 generated cases)
+P4 sihengxia: R2 metamorphic passed (250 generated cases)
+P4 sihengxia: R4 metamorphic passed (250 generated cases)
+P4 sihengxia: R5 invariant passed (250 generated cases)
+
+$ bun test --timeout 30000 --only-failures --timeout "30000" test/session/sihengxia-compaction.property.test.ts --only-failures
+
+test\session\sihengxia-compaction.property.test.ts:
+
+ 5 pass
+ 0 fail
+ 15233 expect() calls
+Ran 5 tests across 1 file. [4.54s]

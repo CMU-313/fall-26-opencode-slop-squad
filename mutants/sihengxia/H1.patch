@@ -1,0 +1,13 @@
+diff --git a/packages/tui/src/util/compaction.ts b/packages/tui/src/util/compaction.ts
+index b843545..f2cce16 100644
+--- a/packages/tui/src/util/compaction.ts
++++ b/packages/tui/src/util/compaction.ts
+@@ -28,7 +28,7 @@ export function createCompactionRequest(
+     sessionID,
+     modelID: model.modelID,
+     providerID: model.providerID,
+-    instructions: instructions.trim() || undefined,
++    instructions: instructions || undefined,
+   }
+ }
+ 

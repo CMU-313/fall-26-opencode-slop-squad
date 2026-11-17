@@ -1,0 +1,32 @@
+bun test v1.3.14 (0d9b296a)
+P4 sihengxia: R1 invariant passed (250 generated cases)
+P4 sihengxia: R1 delimiter invariant passed (250 generated cases)
+P4 sihengxia: R2 metamorphic passed (250 generated cases)
+P4 sihengxia: R4 metamorphic passed (250 generated cases)
+
+$ bun test --timeout 30000 --only-failures --timeout "30000" test/session/sihengxia-compaction.property.test.ts --only-failures
+
+test\session\sihengxia-compaction.property.test.ts:
+2471 | 	return error;
+2472 | }
+2473 | /** @internal */
+2474 | function throwIfFailed(out) {
+2475 | 	if (!out.failed) return;
+2476 | 	throw buildError(defaultReportMessage(out), out);
+                                                       ^
+error: Property failed after 1 tests
+{ seed: 3132026, path: "0:0:0:0:0:0:0:0:0", endOnFailure: true }
+Counterexample: ["Preserve \"packages/00000000-0000-1000-8000-000000000000/unfinished.test.ts\".\nKeep this note exactly: \nThe timeout tests are unfinished.","Omit the Objective section.",{"previousSummary":undefined,"context":[]}]
+Shrunk 8 time(s)
+
+Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+      at throwIfFailed (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2476:49)
+      at assert (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\node_modules\fast-check\lib\fast-check.js:2662:7)
+      at <anonymous> (E:\00大三上课程\00Foundations of Software Engineering\fall-26-opencode-slop-squad\packages\opencode\test\session\sihengxia-compaction.property.test.ts:204:6)
+(fail) sihengxia R5 invariant: conflicting instructions retain the fixed summary template [14.41ms]
+
+ 4 pass
+ 1 fail
+ 13778 expect() calls
+Ran 5 tests across 1 file. [4.15s]
+error: script "test" exited with code 1

@@ -1,0 +1,13 @@
+diff --git a/packages/core/src/session/compaction.ts b/packages/core/src/session/compaction.ts
+index 4a107c8..356369d 100644
+--- a/packages/core/src/session/compaction.ts
++++ b/packages/core/src/session/compaction.ts
+@@ -31,7 +31,7 @@ const SUMMARY_TEMPLATE = `Output exactly the Markdown structure shown inside <te
+ ### Blocked
+ - [blockers, failing commands, or unknowns; otherwise "(none)"]
+ 
+-## Next Move
++## Next Steps
+ 1. [immediate concrete action, or "(none)"]
+ 2. [next action if known, or "(none)"]
+ 

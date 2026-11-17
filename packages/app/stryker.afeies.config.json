@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "bun test --conditions=solid --preload ./happydom.ts src/components/dialog-compact.property.test.ts src/pages/session/compact-guard.property.test.ts src/pages/session/timeline/rows.property.test.ts"
+  },
+  "mutate": [
+    "src/components/dialog-compact-instructions.ts",
+    "src/pages/session/compact-guard.ts",
+    "src/pages/session/timeline/rows.ts:115-171"
+  ],
+  "coverageAnalysis": "off",
+  "reporters": ["html", "clear-text", "progress"]
+}

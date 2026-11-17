@@ -20,6 +20,8 @@ import { Message, Part, UserMessage } from "@opencode-ai/sdk/v2"
 import { useSessionLayout } from "@/pages/session/session-layout"
 import { createSessionOwnership } from "./session-ownership"
 import { useLocal } from "@/context/local"
+import { createSignal } from "solid-js"
+import { beginCompact, canCompact, emptyCompactPending, finishCompact } from "./compact-guard"
 
 export type SessionCommandContext = {
   navigateMessageByOffset: (offset: number) => void
@@ -68,6 +70,10 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
     input.updatePrompt(input.prompt)
     input.owner.run(input.updateViewport)
   }
+
+  const [compactPending, setCompactPending] = createSignal(emptyCompactPending)
+  const compactAllowed = (sessionID: string) =>
+    canCompact(compactPending(), sessionID, sync().data.session_working(sessionID))
 
   const info = () => {
     const id = params.id
@@ -396,6 +402,8 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
   const compact = () => {
     const sessionID = params.id
     if (!sessionID) return
+    // The slash command can bypass `disabled`, so check the guard here too.
+    if (!compactAllowed(sessionID)) return
 
     const model = local.model.current()
     if (!model) {
@@ -411,7 +419,12 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
       (x) =>
         dialog.show(() => (
           <x.DialogCompact
-            onSubmit={(instructions) =>
+            onSubmit={(instructions) => {
+              // Re-check at submit time: a double-click or a reply that started
+              // while the dialog was open must not send a request.
+              const next = beginCompact(compactPending(), sessionID, sync().data.session_working(sessionID))
+              if (!next) return
+              setCompactPending(next)
               void sdk()
                 .api.session.compact({
                   sessionID,
@@ -426,7 +439,8 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
                       err instanceof Error ? err.message : language.t("toast.session.compact.failed.description"),
                   }),
                 )
-            }
+                .finally(() => setCompactPending((pending) => finishCompact(pending, sessionID)))
+            }}
           />
         )),
     )
@@ -498,7 +512,7 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
       title: language.t("command.session.compact"),
       description: language.t("command.session.compact.description"),
       slash: "compact",
-      disabled: !params.id || visibleUserMessages().length === 0,
+      disabled: !params.id || visibleUserMessages().length === 0 || !compactAllowed(params.id),
       onSelect: compact,
     }),
     sessionCommand({
